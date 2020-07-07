@@ -1,0 +1,11 @@
+.idea/
+*.iml
+out/
+gen/
+idea-gitignore.jar
+resources/
+build/
+build.properties
+.gradle
+.DS_Store
+bin/
