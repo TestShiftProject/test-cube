@@ -8,8 +8,6 @@ import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.File;
-
 public class InspectTestCubeResultsAction extends AnAction {
 
     private String testClass;
@@ -36,12 +34,8 @@ public class InspectTestCubeResultsAction extends AnAction {
 //        ToolWindow testCubeWindow = ToolWindowManager.getInstance(currentProject).registerToolWindow(
 //                RegisterToolWindowTask.closable("Test Cube", AllIcons.Actions.Colors));
 
-        String amplifiedTestClassPath = currentProject.getBasePath() +
-                Config.OUTPUT_PATH + File.separator +
-                testClass.replaceAll("\\.", File.separator) + ".java";
-
         // TODO handle no amplified tests (no new class generated then)
-        VirtualFile file = LocalFileSystem.getInstance().findFileByPath(amplifiedTestClassPath);
+        VirtualFile file = LocalFileSystem.getInstance().findFileByPath(Util.getAmplifiedTestClassPath(currentProject, testClass));
         if (file != null) {
             FileEditorManager.getInstance(currentProject).openFile(file, true);
         }

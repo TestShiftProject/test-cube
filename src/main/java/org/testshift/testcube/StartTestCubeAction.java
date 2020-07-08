@@ -80,7 +80,7 @@ public class StartTestCubeAction extends AnAction {
                 }
                 AmplificationCompletedNotifier notifier = new AmplificationCompletedNotifier();
                 notifier.notify(currentProject,
-                        "Amplification completed, find the amplified test classes in target/output/...",
+                        "Amplification completed, find the amplified test classes in " + Util.getAmplifiedTestClassPath(currentProject, testClass),
                         new InspectTestCubeResultsAction(testClass));
             }
         };

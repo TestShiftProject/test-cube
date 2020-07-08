@@ -4,7 +4,7 @@ plugins {
 }
 
 group 'org.testshift'
-version '1.0-SNAPSHOT'
+version '0.1-SNAPSHOT'
 
 repositories {
     mavenCentral()
@@ -22,6 +22,6 @@ intellij {
 }
 patchPluginXml {
     changeNotes """
-      Add change notes here.<br>
-      <em>most HTML tags may be used</em>"""
+     Add basic amplification with DSpot as a 'Run' Gutter Action
+     """
 }
