@@ -12,3 +12,11 @@ Find out more about our research project and how we want to help developers impr
 
 ### Local installation
 To install the Test Cube plugin locally, download the jar from the [releases](releases) folder and install in IntelliJ through "Preferences" > "Plugins" > "⚙️" > "Install Plugin from Disk...".
+
+## Usage
+
+![Select the "Run" gutter icon next to your JUnit test case](img/instructions-0.png)
+![Select "Amplify" to start the test amplification tool](img/instructions-1.png)
+![The amplification runs in the background an pops up a notification when it finishes](img/instructions-2.png)
+![Click on the link in the notification to inspect the newly generated test cases](img/instructions-3.png)
+
