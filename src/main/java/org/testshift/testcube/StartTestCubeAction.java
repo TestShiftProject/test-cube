@@ -12,6 +12,8 @@ import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.testshift.testcube.icons.TestCubeIcons;
+import org.testshift.testcube.settings.AppSettingsState;
+import org.testshift.testcube.settings.AskJavaPathDialogWrapper;
 
 import java.io.*;
 
@@ -48,7 +50,17 @@ public class StartTestCubeAction extends AnAction {
     }
 
     private void runDSpot(Project currentProject) throws IOException, InterruptedException {
-        String javaHome = "/Library/Java/JavaVirtualMachines/adoptopenjdk-8.jdk/Contents/Home";//System.getProperty("java.home");
+
+        if (AppSettingsState.getInstance().java8Path.isEmpty()) {
+            AskJavaPathDialogWrapper dialog = new AskJavaPathDialogWrapper();
+            dialog.showAndGet();
+            boolean pathValid = dialog.setJavaPathIfValid();
+            // todo handle non valid
+        }
+
+
+
+        String javaHome = AppSettingsState.getInstance().java8Path; //"/Library/Java/JavaVirtualMachines/adoptopenjdk-8.jdk/Contents/Home";//System.getProperty("java.home");
         String javaBin = javaHome + File.separator + "bin" + File.separator + "java";
 
         String pluginPath = PathManager.getPluginsPath();
