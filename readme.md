@@ -8,7 +8,8 @@ Find out more about our research project and how we want to help developers impr
 ## Install Test Cube
 
 ### JetBrains Marketplace
-[TBA]
+To install from the JetBrains Marketplace follow this link: https://plugins.jetbrains.com/plugin/14678-test-cube
+Or search for "Test Cube" in IntelliJ "Preferences" > "Plugins" > "Marketplace". Make sure to install version `0.1.1-SNAPSHOT` or later 🙂
 
 ### Local installation
 To install the Test Cube plugin locally, download the jar from the [releases](releases) folder and install in IntelliJ through "Preferences" > "Plugins" > "⚙️" > "Install Plugin from Disk...".
