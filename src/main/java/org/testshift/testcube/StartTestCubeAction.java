@@ -76,20 +76,12 @@ public class StartTestCubeAction extends AnAction {
                         "--test-cases", testMethod,
                         "--output-directory", currentProject.getBasePath() + Config.OUTPUT_PATH,
                         "--with-comment");
+                
                 System.out.println(pb);
-                try {
-                    pb.redirectErrorStream(true);
-                    Process p = pb.start();
-                    InputStream is = p.getInputStream();
-                    BufferedReader br = new BufferedReader(new InputStreamReader(is));
-                    for (String line = br.readLine(); line != null; line = br.readLine()) {
-                        System.out.println(line);
-                    }
-                    p.waitFor();
-                    System.out.println(p.exitValue());
-                } catch (InterruptedException | IOException e) {
-                    e.printStackTrace();
-                }
+                pb.redirectErrorStream(true);
+                File output = new File(currentProject.getBasePath() + Config.OUTPUT_PATH + "terminal_output_dspot.txt");
+                pb.redirectOutput(output);
+
                 AmplificationCompletedNotifier notifier = new AmplificationCompletedNotifier();
                 notifier.notify(currentProject,
                         "Amplification completed, find the amplified test classes in " + Util.getAmplifiedTestClassPath(currentProject, testClass),
