@@ -27,6 +27,7 @@ patchPluginXml {
      
      Improve:
      - write DSpot output to file, ceates new folder `test-cube`
+     - options to configure the amplification with DSpot
      """
 }
 

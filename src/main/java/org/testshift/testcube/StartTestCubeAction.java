@@ -16,6 +16,9 @@ import org.testshift.testcube.settings.AppSettingsState;
 import org.testshift.testcube.settings.AskJavaPathDialogWrapper;
 
 import java.io.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class StartTestCubeAction extends AnAction {
 
@@ -67,20 +70,28 @@ public class StartTestCubeAction extends AnAction {
         String dSpotPath =  pluginPath + File.separator + "test-cube" + File.separator + "lib" + File.separator + "dspot-3.1.1-SNAPSHOT-jar-with-dependencies.jar";
 
         Task.Backgroundable dspotTask = new Task.Backgroundable(currentProject, "Running DSpot", true) {
+
             public void run(ProgressIndicator indicator) {
-                ProcessBuilder pb = new ProcessBuilder(javaBin, "-jar", dSpotPath,
+                List<String> dSpotStarter = new ArrayList<>(Arrays.asList(javaBin, "-jar", dSpotPath,
                         "--absolute-path-to-project-root", currentProject.getBasePath(),
-                        "--test-criterion", "JacocoCoverageSelector",
+                        "--test-criterion", AppSettingsState.getInstance().selectorCriterion,
+                        "--input-ampl-distributor", AppSettingsState.getInstance().inputAmplificationDistributor,
                         "--test", testClass,
                         // TODO handlle null on testMethod
                         "--test-cases", testMethod,
                         "--output-directory", currentProject.getBasePath() + Config.OUTPUT_PATH_DSPOT,
                         "--amplifiers", Config.AMPLIFIERS_ALL,
-                        "--with-comment");
-                
-                System.out.println(pb);
+                        //"--generate-new-test-class",
+                        //"--keep-original-test-methods",
+                        "--with-comment"));
+
+                if (!AppSettingsState.getInstance().generateAssertions) {
+                    dSpotStarter.add("--only-input-amplification");
+                }
+
+                ProcessBuilder pb = new ProcessBuilder(dSpotStarter);
+
                 pb.redirectErrorStream(true);
-                //pb.redirectOutput(output);
                 try {
                     Process p = pb.start();
 

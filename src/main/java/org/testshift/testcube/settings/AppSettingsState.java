@@ -23,7 +23,13 @@ public class AppSettingsState implements PersistentStateComponent<AppSettingsSta
     //public boolean ideaStatus = false;
 
     // DSpot Config
-    public boolean generateAssertions;
+    public boolean generateAssertions = true;
+    public String selectorCriterion = "JacocoCoverageSelector";
+    public static final String[] SELECTOR_CRITERION_OPTIONS = {"PitMutantScoreSelector", "JacocoCoverageSelector", "TakeAllSelector"};
+    public String inputAmplificationDistributor = "RandomInputAmplDistributor";
+    public static final String[] INPUT_AMPLIFICATION_DISTRIBUTOR_OPTIONS = {"RandomInputAmplDistributor", "TextualDistanceInputAmplDistributor", "SimpleInputAmplDistributor"};
+
+
 
     public static AppSettingsState getInstance() {
         return ServiceManager.getService(AppSettingsState.class);
