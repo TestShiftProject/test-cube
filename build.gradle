@@ -4,7 +4,7 @@ plugins {
 }
 
 group 'org.testshift'
-version '0.1-SNAPSHOT'
+version '0.1.1-SNAPSHOT'
 
 repositories {
     mavenCentral()
@@ -22,6 +22,14 @@ intellij {
 }
 patchPluginXml {
     changeNotes """
-     Add setting for necessary path to Java 8 installation
+     Fix:
+     - start DSpot Process
+     
+     Improve:
+     - write DSpot output to file, ceates new folder `test-cube`
      """
+}
+
+publishPlugin {
+    token = System.getenv("ORG_GRADLE_PROJECT_intellijPublishToken")
 }

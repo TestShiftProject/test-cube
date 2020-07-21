@@ -74,13 +74,42 @@ public class StartTestCubeAction extends AnAction {
                         "--test", testClass,
                         // TODO handlle null on testMethod
                         "--test-cases", testMethod,
-                        "--output-directory", currentProject.getBasePath() + Config.OUTPUT_PATH,
+                        "--output-directory", currentProject.getBasePath() + Config.OUTPUT_PATH_DSPOT,
+                        "--amplifiers", Config.AMPLIFIERS_ALL,
                         "--with-comment");
                 
                 System.out.println(pb);
                 pb.redirectErrorStream(true);
-                File output = new File(currentProject.getBasePath() + Config.OUTPUT_PATH + "terminal_output_dspot.txt");
-                pb.redirectOutput(output);
+                //pb.redirectOutput(output);
+                try {
+                    Process p = pb.start();
+
+                    File outputDir = new File(currentProject.getBasePath() + Config.OUTPUT_PATH_TESTCUBE);
+                    if (!outputDir.exists()) {
+                        if (!outputDir.mkdirs()) {
+                            System.out.println("Could not create Test Cube output directory!");
+                        }
+                    }
+
+                    String dSpotOutputPath = currentProject.getBasePath() + Config.OUTPUT_PATH_TESTCUBE + File.separator + "terminal_output_dspot.txt";
+                    File output = new File(dSpotOutputPath);
+
+                    try (BufferedWriter writer = new BufferedWriter(new FileWriter(output))) {
+                        InputStream is = p.getInputStream();
+                        BufferedReader br = new BufferedReader(new InputStreamReader(is));
+                        for (String line = br.readLine(); line != null; line = br.readLine()) {
+                            System.out.println(line);
+                            writer.write(line);
+                            writer.newLine();
+                        }
+                    }
+                    p.waitFor();
+                    System.out.println(p.exitValue());
+
+                } catch (InterruptedException | IOException e) {
+                    System.out.println(e.getMessage());
+                    //e.printStackTrace();
+                }
 
                 AmplificationCompletedNotifier notifier = new AmplificationCompletedNotifier();
                 notifier.notify(currentProject,

@@ -8,7 +8,7 @@ public class Util {
 
     public static String getAmplifiedTestClassPath(Project currentProject, String testClass) {
         return currentProject.getBasePath() +
-                Config.OUTPUT_PATH + File.separator +
+                Config.OUTPUT_PATH_DSPOT + File.separator +
                 testClass.replaceAll("\\.", File.separator) + ".java";
     }
 }

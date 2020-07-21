@@ -22,6 +22,9 @@ public class AppSettingsState implements PersistentStateComponent<AppSettingsSta
     public String java8Path = "";
     //public boolean ideaStatus = false;
 
+    // DSpot Config
+    public boolean generateAssertions;
+
     public static AppSettingsState getInstance() {
         return ServiceManager.getService(AppSettingsState.class);
     }
