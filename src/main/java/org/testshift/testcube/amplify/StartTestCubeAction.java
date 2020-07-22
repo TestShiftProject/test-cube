@@ -1,4 +1,4 @@
-package org.testshift.testcube;
+package org.testshift.testcube.amplify;
 
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
@@ -11,6 +11,9 @@ import com.intellij.openapi.project.Project;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.testshift.testcube.Config;
+import org.testshift.testcube.inspect.InspectTestCubeResultsAction;
+import org.testshift.testcube.Util;
 import org.testshift.testcube.icons.TestCubeIcons;
 import org.testshift.testcube.settings.AppSettingsState;
 import org.testshift.testcube.settings.AskJavaPathDialogWrapper;

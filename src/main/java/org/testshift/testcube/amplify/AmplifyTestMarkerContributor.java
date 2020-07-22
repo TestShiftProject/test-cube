@@ -1,4 +1,4 @@
-package org.testshift.testcube;
+package org.testshift.testcube.amplify;
 
 import com.intellij.execution.lineMarker.RunLineMarkerContributor;
 import com.intellij.psi.PsiElement;
