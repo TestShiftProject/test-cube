@@ -3,9 +3,7 @@ package org.testshift.testcube.inspect;
 import com.intellij.ide.highlighter.JavaFileType;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.psi.PsiDocumentManager;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.PsiManager;
+import com.intellij.psi.*;
 import com.intellij.ui.content.Content;
 import org.testshift.testcube.Config;
 import org.testshift.testcube.model.AmplificationResult;
@@ -18,6 +16,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Arrays;
 
 public class AmplificationResultWindow extends Component {
 
@@ -88,10 +87,16 @@ public class AmplificationResultWindow extends Component {
         //editor = new TestCaseEditorField(JavaLanguage.INSTANCE, amplificationResult.project, "value");
         VirtualFile file = LocalFileSystem.getInstance().findFileByPath(testCase.filePath);
         if (file != null) {
-            PsiFile psiFile = PsiManager.getInstance(amplificationResult.project).findFile(file);
+            PsiJavaFile psiFile = (PsiJavaFile) PsiManager.getInstance(amplificationResult.project).findFile(file);
             if (psiFile != null) {
                 editor.setNewDocumentAndFileType(JavaFileType.INSTANCE, PsiDocumentManager.getInstance(amplificationResult.project).getDocument(psiFile));
-                System.out.println(psiFile.getFileType());
+                PsiClass psiClass = Arrays.stream(psiFile.getClasses()).filter((PsiClass c) -> c.getQualifiedName().equals(amplificationResult.testClass)).findFirst().get();
+                PsiMethod[] methods = psiClass.findMethodsByName(amplificationResult.testMethod, false);
+                if (methods.length == 1) {
+                    editor.setCaretPosition(methods[0].getTextOffset());
+                } else {
+                    System.out.println("more than one method found!");
+                }
             }
         }
     }

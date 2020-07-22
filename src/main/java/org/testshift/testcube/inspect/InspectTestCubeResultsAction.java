@@ -53,6 +53,8 @@ public class InspectTestCubeResultsAction extends AnAction {
         }
 
         AmplificationResult result = new AmplificationResult(currentProject,
+                testClass,
+                testMethod,
                 new OriginalTest(Util.getOriginalTestClassPath(currentProject, testClass)),
                 new ArrayList<>(Arrays.asList(new AmplifiedTest(Util.getAmplifiedTestClassPath(currentProject, testClass)))));
 
