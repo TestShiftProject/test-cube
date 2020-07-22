@@ -65,8 +65,7 @@ public class StartTestCubeAction extends AnAction {
         }
 
 
-
-        String javaHome = AppSettingsState.getInstance().java8Path; //"/Library/Java/JavaVirtualMachines/adoptopenjdk-8.jdk/Contents/Home";//System.getProperty("java.home");
+        String javaHome = AppSettingsState.getInstance().java8Path;
         String javaBin = javaHome + File.separator + "bin" + File.separator + "java";
 
         String pluginPath = PathManager.getPluginsPath();
@@ -83,7 +82,7 @@ public class StartTestCubeAction extends AnAction {
                         // TODO handlle null on testMethod
                         "--test-cases", testMethod,
                         "--output-directory", currentProject.getBasePath() + Config.OUTPUT_PATH_DSPOT,
-                        "--amplifiers", Config.AMPLIFIERS_ALL,
+                        "--amplifiers", Config.AMPLIFIERS_FAST_LITERAL,
                         //"--generate-new-test-class",
                         //"--keep-original-test-methods",
                         "--with-comment"));
@@ -121,14 +120,13 @@ public class StartTestCubeAction extends AnAction {
                     System.out.println(p.exitValue());
 
                 } catch (InterruptedException | IOException e) {
-                    System.out.println(e.getMessage());
-                    //e.printStackTrace();
+                    e.printStackTrace();
                 }
 
                 AmplificationCompletedNotifier notifier = new AmplificationCompletedNotifier();
                 notifier.notify(currentProject,
                         "Amplification completed, find the amplified test classes in " + Util.getAmplifiedTestClassPath(currentProject, testClass),
-                        new InspectTestCubeResultsAction(testClass));
+                        new InspectTestCubeResultsAction(testClass, testMethod));
             }
         };
         BackgroundableProcessIndicator processIndicator = new BackgroundableProcessIndicator(dspotTask);

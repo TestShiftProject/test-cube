@@ -16,17 +16,22 @@ import org.testshift.testcube.model.AmplificationResult;
 import org.testshift.testcube.model.AmplifiedTest;
 import org.testshift.testcube.model.OriginalTest;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 public class InspectTestCubeResultsAction extends AnAction {
 
     private String testClass;
+    private String testMethod;
 
     public InspectTestCubeResultsAction() {
         super();
     }
 
-    public InspectTestCubeResultsAction(String testClass) {
+    public InspectTestCubeResultsAction(String testClass, String testMethod) {
         super("Inspect Amplification Results");
         this.testClass = testClass;
+        this.testMethod = testMethod;
     }
 
     @Override
@@ -47,17 +52,19 @@ public class InspectTestCubeResultsAction extends AnAction {
             FileEditorManager.getInstance(currentProject).openFile(file, true);
         }
 
-        AmplificationResult result = new AmplificationResult();
-        result.originalTest = new OriginalTest(Util.getOriginalTestClassPath(currentProject, testClass));
-        result.amplifiedTests.add(new AmplifiedTest(Util.getAmplifiedTestClassPath(currentProject, testClass)));
+        AmplificationResult result = new AmplificationResult(currentProject,
+                new OriginalTest(Util.getOriginalTestClassPath(currentProject, testClass)),
+                new ArrayList<>(Arrays.asList(new AmplifiedTest(Util.getAmplifiedTestClassPath(currentProject, testClass)))));
 
         AmplificationResultWindow amplificationResultWindow = new AmplificationResultWindow(result);
 
         ToolWindow toolWindow = ToolWindowManager.getInstance(currentProject).getToolWindow("Test Cube");
         if (toolWindow != null) {
             ContentFactory contentFactory = ContentFactory.SERVICE.getInstance();
-            Content content = contentFactory.createContent(amplificationResultWindow.getContent(), "Amplification Result A", false);
+            Content content = contentFactory.createContent(amplificationResultWindow.getContent(), "Amplification of " + testMethod, false);
+            content.setCloseable(true);
             toolWindow.getContentManager().addContent(content);
+            toolWindow.getContentManager().setSelectedContent(content);
 
             toolWindow.show();
         }

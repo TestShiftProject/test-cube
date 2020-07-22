@@ -37,7 +37,7 @@ public class AmplifyTestMarkerContributor extends RunLineMarkerContributor {
 //                if (testClassName == null) {
 //                    return null;
 //                }
-                return testInfo == null ? null : new Info(TestCubeIcons.AMPLIFY_TEST, tooltipProvider, new StartTestCubeAction("Amplify '" + element.getText() + "'", testClassName, testMethodName));
+                return testInfo == null ? null : new Info(TestCubeIcons.AMPLIFY_TEST, tooltipProvider, new StartTestCubeAction("Amplify '" + element.getText() + "()'", testClassName, testMethodName));
             }
         }
         return null;

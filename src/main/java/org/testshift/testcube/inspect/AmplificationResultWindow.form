@@ -24,7 +24,9 @@
             <preferred-size width="200" height="200"/>
           </grid>
         </constraints>
-        <properties/>
+        <properties>
+          <continuousLayout value="true"/>
+        </properties>
         <border type="none"/>
         <children>
           <grid id="d055d" binding="originalSide" layout-manager="GridLayoutManager" row-count="2" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
@@ -35,7 +37,7 @@
             <properties/>
             <border type="none"/>
             <children>
-              <component id="9c95" class="javax.swing.JEditorPane" binding="originalTestCase">
+              <component id="da6a" class="org.testshift.testcube.inspect.TestCaseEditorField" binding="originalTestCase">
                 <constraints>
                   <grid row="0" column="0" row-span="1" col-span="2" vsize-policy="6" hsize-policy="6" anchor="0" fill="3" indent="0" use-parent-layout="false">
                     <preferred-size width="150" height="50"/>
@@ -87,7 +89,7 @@
                   <text value="Information about the amplified test case"/>
                 </properties>
               </component>
-              <component id="157d5" class="javax.swing.JEditorPane" binding="amplifiedTestCase">
+              <component id="9b4b5" class="org.testshift.testcube.inspect.TestCaseEditorField" binding="amplifiedTestCase">
                 <constraints>
                   <grid row="0" column="0" row-span="1" col-span="2" vsize-policy="6" hsize-policy="6" anchor="0" fill="3" indent="0" use-parent-layout="false">
                     <preferred-size width="150" height="50"/>
