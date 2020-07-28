@@ -14,9 +14,12 @@ public class AmplificationCompletedNotifier {
 
     public Notification notify(Project project, String content, AnAction action) {
         final Notification notification = NOTIFICATION_GROUP.createNotification(content, NotificationType.INFORMATION);
-        notification.addAction(action);
+        if (action != null) {
+            notification.addAction(action);
+        }
         notification.setIcon(TestCubeIcons.AMPLIFY_TEST);
         notification.notify(project);
         return notification;
+
     }
 }

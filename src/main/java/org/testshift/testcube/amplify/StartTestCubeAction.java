@@ -9,10 +9,13 @@ import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.progress.impl.BackgroundableProcessIndicator;
 import com.intellij.openapi.project.Project;
+import eu.stamp_project.dspot.common.report.output.selector.coverage.json.TestClassJSON;
+import org.apache.commons.io.FileUtils;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.testshift.testcube.Config;
+import org.testshift.testcube.Util;
 import org.testshift.testcube.icons.TestCubeIcons;
 import org.testshift.testcube.inspect.InspectTestCubeResultsAction;
 import org.testshift.testcube.settings.AppSettingsState;
@@ -74,6 +77,14 @@ public class StartTestCubeAction extends AnAction {
         Task.Backgroundable dspotTask = new Task.Backgroundable(currentProject, "Running DSpot", true) {
 
             public void run(@NotNull ProgressIndicator indicator) {
+                // clean output directory
+                // todo close open amplification result windows or split output into different directories
+                try {
+                    FileUtils.cleanDirectory(new File(currentProject.getBasePath() + Config.OUTPUT_PATH_DSPOT));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
                 List<String> dSpotStarter = new ArrayList<>(Arrays.asList(javaBin, "-jar", dSpotPath,
                         "--absolute-path-to-project-root", currentProject.getBasePath(),
                         "--test-criterion", AppSettingsState.getInstance().selectorCriterion,
@@ -124,13 +135,17 @@ public class StartTestCubeAction extends AnAction {
                     e.printStackTrace();
                 }
 
-                // TODO handle no amplified tests (no new class generated then)
-                AmplificationCompletedNotifier notifier = new AmplificationCompletedNotifier();
-                //if ()
-                notifier.notify(currentProject,
-                        "Amplification completed",
-                        new InspectTestCubeResultsAction(currentProject, testClass, testMethod));
+                TestClassJSON result = Util.getResultJSON(currentProject, testClass);
+                int amplifiedTestCasesCount = result.getTestCases().size();
 
+                AmplificationCompletedNotifier notifier = new AmplificationCompletedNotifier();
+                if (amplifiedTestCasesCount == 0) {
+                    notifier.notify(currentProject, "Could find no new test cases through amplification.", null);
+                } else {
+                    notifier.notify(currentProject,
+                            "Test Cube found " + amplifiedTestCasesCount + " amplified test cases.",
+                            new InspectTestCubeResultsAction(currentProject, testClass, testMethod));
+                }
             }
         };
 
