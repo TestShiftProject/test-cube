@@ -14,8 +14,8 @@ import org.apache.commons.io.FileUtils;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.testshift.testcube.Config;
-import org.testshift.testcube.Util;
+import org.testshift.testcube.misc.Config;
+import org.testshift.testcube.misc.Util;
 import org.testshift.testcube.icons.TestCubeIcons;
 import org.testshift.testcube.inspect.InspectTestCubeResultsAction;
 import org.testshift.testcube.settings.AppSettingsState;
@@ -80,7 +80,7 @@ public class StartTestCubeAction extends AnAction {
                 // clean output directory
                 // todo close open amplification result windows or split output into different directories
                 try {
-                    File outputDirectory = new File(currentProject.getBasePath() + Config.OUTPUT_PATH_DSPOT);
+                    File outputDirectory = new File(Util.getDSpotOutputPath(currentProject));
                     if (outputDirectory.exists()) {
                         FileUtils.cleanDirectory(outputDirectory);
                     }
@@ -95,7 +95,7 @@ public class StartTestCubeAction extends AnAction {
                         "--test", testClass,
                         // TODO handlle null on testMethod
                         "--test-cases", testMethod,
-                        "--output-directory", currentProject.getBasePath() + Config.OUTPUT_PATH_DSPOT,
+                        "--output-directory", Util.getDSpotOutputPath(currentProject),
                         "--amplifiers", Config.AMPLIFIERS_ALL,
                         //"--generate-new-test-class",
                         //"--keep-original-test-methods",
@@ -112,17 +112,16 @@ public class StartTestCubeAction extends AnAction {
                 try {
                     Process p = pb.start();
 
-                    File outputDir = new File(currentProject.getBasePath() + Config.OUTPUT_PATH_TESTCUBE);
+                    File outputDir = new File(Util.getTestCubeOutputPath(currentProject));
                     if (!outputDir.exists()) {
                         if (!outputDir.mkdirs()) {
                             logger.error("Could not create Test Cube output directory!");
                         }
                     }
 
-                    String dSpotOutputPath = currentProject.getBasePath() + Config.OUTPUT_PATH_TESTCUBE + File.separator + "terminal_output_dspot.txt";
-                    File output = new File(dSpotOutputPath);
+                    File dSpotTerminalOutput = new File(Util.getTestCubeOutputPath(currentProject) + File.separator + "terminal_output_dspot.txt");
 
-                    try (BufferedWriter writer = new BufferedWriter(new FileWriter(output))) {
+                    try (BufferedWriter writer = new BufferedWriter(new FileWriter(dSpotTerminalOutput))) {
                         InputStream is = p.getInputStream();
                         BufferedReader br = new BufferedReader(new InputStreamReader(is));
                         for (String line = br.readLine(); line != null; line = br.readLine()) {

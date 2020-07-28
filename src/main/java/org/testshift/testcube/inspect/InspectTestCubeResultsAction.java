@@ -9,6 +9,7 @@ import com.intellij.openapi.wm.ToolWindowManager;
 import com.intellij.ui.content.Content;
 import com.intellij.ui.content.ContentFactory;
 import org.jetbrains.annotations.NotNull;
+import org.testshift.testcube.icons.TestCubeIcons;
 import org.testshift.testcube.model.AmplificationResult;
 
 public class InspectTestCubeResultsAction extends NotificationAction {
@@ -43,6 +44,7 @@ public class InspectTestCubeResultsAction extends NotificationAction {
             ContentFactory contentFactory = ContentFactory.SERVICE.getInstance();
             Content content = contentFactory.createContent(amplificationResultWindow.getContent(), amplificationResultWindow.getDisplayName(), false);
             content.setCloseable(true);
+            content.setIcon(TestCubeIcons.AMPLIFY_TEST);
             toolWindow.getContentManager().addContent(content);
             toolWindow.getContentManager().setSelectedContent(content);
 

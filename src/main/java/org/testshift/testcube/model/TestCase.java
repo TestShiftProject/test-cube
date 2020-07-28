@@ -13,19 +13,21 @@ public abstract class TestCase {
 
     private static final Logger logger = Logger.getInstance(AmplificationResultWindow.class);
 
-    public TestCase(String filePath, String name, PsiJavaFile psiFile) {
-        this.filePath = filePath;
-        this.name = name;
-        this.psiFile = psiFile;
-    }
-
     public String filePath;
     public String name;
     public PsiJavaFile psiFile;
+    protected final AmplificationResult result;
+
+    public TestCase(String filePath, String name, PsiJavaFile psiFile, AmplificationResult result) {
+        this.filePath = filePath;
+        this.name = name;
+        this.psiFile = psiFile;
+        this.result = result;
+    }
 
     @Nullable
-    public PsiMethod getTestMethod(String testClass) {
-        PsiClass psiClass = Arrays.stream(psiFile.getClasses()).filter((PsiClass c) -> c.getQualifiedName().equals(testClass)).findFirst().get();
+    public PsiMethod getTestMethod() {
+        PsiClass psiClass = Arrays.stream(psiFile.getClasses()).filter((PsiClass c) -> c.getQualifiedName().equals(result.testClass)).findFirst().get();
         PsiMethod[] methods = psiClass.findMethodsByName(name, false);
         if (methods.length != 1) {
             logger.error("More than one method named '" + name + "' found in class '" + psiFile.getName() + "'");

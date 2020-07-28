@@ -5,10 +5,9 @@ import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowManager;
-import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiMethod;
-import org.testshift.testcube.Config;
+import org.testshift.testcube.misc.Util;
 import org.testshift.testcube.model.AmplificationResult;
 import org.testshift.testcube.model.AmplifiedTestCase;
 import org.testshift.testcube.model.TestCase;
@@ -19,7 +18,6 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.Arrays;
 
 public class AmplificationResultWindow extends Component {
 
@@ -55,14 +53,11 @@ public class AmplificationResultWindow extends Component {
     }
 
     public AmplificationResultWindow(AmplificationResult amplificationResult) {
-        //close.addActionListener(e -> toolWindow.hide(null));
         this.amplificationResult = amplificationResult;
         this.currentAmplificationTestCaseIndex = 0;
         this.currentAmplificationTestCase = amplificationResult.amplifiedTestCases.get(currentAmplificationTestCaseIndex);
-        originalInformation.setToolTipText(amplificationResult.originalTestCase.filePath);
-        amplifiedInformation.setToolTipText(currentAmplificationTestCase.filePath);
 
-        retrieveOverallAmplificationReport();
+        displayOverallAmplificationReport();
         showTestCaseInEditor(amplificationResult.originalTestCase, originalTestCase);
         setOriginalInformation();
         showTestCaseInEditor(currentAmplificationTestCase, amplifiedTestCase);
@@ -78,11 +73,11 @@ public class AmplificationResultWindow extends Component {
     /**
      * Writes the content of DSpot's report file into the header text of the window for this amplification result
      */
-    private void retrieveOverallAmplificationReport() {
+    private void displayOverallAmplificationReport() {
         try {
-            header.setText(String.join("\n", Files.readAllLines(Paths.get(amplificationResult.project.getBasePath() + Config.OUTPUT_PATH_DSPOT + File.separator + "report.txt"))));
+            header.setText(String.join("---", Files.readAllLines(Paths.get(Util.getDSpotOutputPath(amplificationResult.project) + File.separator + "report.txt"))));
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.warn(e);
         }
     }
 
@@ -92,7 +87,7 @@ public class AmplificationResultWindow extends Component {
     }
 
     private void moveCaretToTestCase(TestCase testCase, TestCaseEditorField editor) {
-        PsiMethod method = testCase.getTestMethod(amplificationResult.testClass);
+        PsiMethod method = testCase.getTestMethod();
         if (method != null) {
             editor.setCaretPosition(method.getTextOffset());
             try {
@@ -104,18 +99,22 @@ public class AmplificationResultWindow extends Component {
         }
     }
 
-    private void navigateTestCases(boolean forward) {
-        if (forward) {
-            if (currentAmplificationTestCaseIndex + 1 == amplificationResult.amplifiedTestCases.size()) {
-                currentAmplificationTestCaseIndex = 0;
-            } else {
-                currentAmplificationTestCaseIndex++;
-            }
+    private void navigateTestCases(boolean forward, boolean removeCurrent) {
+        if (removeCurrent) {
+            amplificationResult.amplifiedTestCases.remove(currentAmplificationTestCase);
         } else {
-            if (currentAmplificationTestCaseIndex == 0) {
-                currentAmplificationTestCaseIndex = amplificationResult.amplifiedTestCases.size() - 1;
+            if (forward) {
+                if (currentAmplificationTestCaseIndex + 1 == amplificationResult.amplifiedTestCases.size()) {
+                    currentAmplificationTestCaseIndex = 0;
+                } else {
+                    currentAmplificationTestCaseIndex++;
+                }
             } else {
-                currentAmplificationTestCaseIndex--;
+                if (currentAmplificationTestCaseIndex == 0) {
+                    currentAmplificationTestCaseIndex = amplificationResult.amplifiedTestCases.size() - 1;
+                } else {
+                    currentAmplificationTestCaseIndex--;
+                }
             }
         }
         currentAmplificationTestCase = amplificationResult.amplifiedTestCases.get(currentAmplificationTestCaseIndex);
@@ -128,22 +127,19 @@ public class AmplificationResultWindow extends Component {
 
         AmplifiedTestCase testToAdd = currentAmplificationTestCase;
 
-        PsiMethod method = testToAdd.getTestMethod(amplificationResult.testClass);
+        PsiMethod method = testToAdd.getTestMethod();
         WriteCommandAction.runWriteCommandAction(amplificationResult.project, () -> {
             if (method != null) {
                 PsiMethod methodSave = (PsiMethod) method.copy();
                 method.delete();
 
-                PsiClass psiClass = Arrays.stream(amplificationResult.originalTestCase.psiFile.getClasses())
-                        .filter((PsiClass c) -> c.getQualifiedName().equals(amplificationResult.testClass))
-                        .findFirst()
-                        .get();
-                PsiMethod originalMethod = amplificationResult.originalTestCase.getTestMethod(amplificationResult.testClass);
-                psiClass.addAfter(methodSave, originalMethod);
+                PsiMethod originalMethod = amplificationResult.originalTestCase.getTestMethod();
+                if (originalMethod != null) {
+                    originalMethod.getContainingClass().addAfter(methodSave, originalMethod);
+                }
                 PsiDocumentManager.getInstance(amplificationResult.project).commitAllDocuments();
 
-                amplificationResult.amplifiedTestCases.remove(testToAdd);
-                navigateTestCases(true);
+                navigateTestCases(true, true);
             }
         });
 
@@ -151,17 +147,15 @@ public class AmplificationResultWindow extends Component {
     }
 
     public void ignoreTestCase() {
-        AmplifiedTestCase testToRemove = currentAmplificationTestCase;
-        navigateTestCases(true);
-        amplificationResult.removeAmplifiedTest(testToRemove);
+        navigateTestCases(true, true);
     }
 
     public void nextTestCase() {
-        navigateTestCases(true);
+        navigateTestCases(true, false);
     }
 
     public void previousTestCase() {
-        navigateTestCases(false);
+        navigateTestCases(false, false);
     }
 
     private void setAmplifiedInformation() {
@@ -188,7 +182,7 @@ public class AmplificationResultWindow extends Component {
     }
 
     public String getDisplayName() {
-        return "Amplification of " + amplificationResult.originalTestCase.name;
+        return "Amplification of '" + amplificationResult.originalTestCase.name + "()'";
     }
 
 }

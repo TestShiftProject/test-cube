@@ -1,4 +1,4 @@
-package org.testshift.testcube;
+package org.testshift.testcube.misc;
 
 import com.google.gson.Gson;
 import com.intellij.openapi.project.Project;
@@ -24,6 +24,15 @@ public class Util {
                 (original ? File.separator + "original" : "") +
                 File.separator + testClass.replaceAll("\\.", File.separator) + ".java";
     }
+
+    public static String getDSpotOutputPath(Project project) {
+        return project.getBasePath() + Config.OUTPUT_PATH_DSPOT;
+    }
+
+    public static String getTestCubeOutputPath(Project project) {
+        return project.getBasePath() + Config.OUTPUT_PATH_TESTCUBE;
+    }
+
 
     public static TestClassJSON getResultJSON(Project project, String testClass) {
         Gson gson = new Gson();
