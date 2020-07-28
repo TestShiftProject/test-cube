@@ -1,6 +1,7 @@
 package org.testshift.testcube.inspect;
 
 import com.intellij.ide.highlighter.JavaFileType;
+import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowManager;
@@ -91,18 +92,15 @@ public class AmplificationResultWindow extends Component {
     }
 
     private void moveCaretToTestCase(TestCase testCase, TestCaseEditorField editor) {
-        PsiClass psiClass = Arrays.stream(testCase.psiFile.getClasses()).filter((PsiClass c) -> c.getQualifiedName().equals(amplificationResult.testClass)).findFirst().get();
-        PsiMethod[] methods = psiClass.findMethodsByName(testCase.name, false);
-        if (methods.length == 1) {
-            editor.setCaretPosition(methods[0].getTextOffset());
+        PsiMethod method = testCase.getTestMethod(amplificationResult.testClass);
+        if (method != null) {
+            editor.setCaretPosition(method.getTextOffset());
             try {
                 editor.getEditor().getScrollingModel().scrollVertically(
                         ((int) editor.getEditor().offsetToPoint2D(editor.getEditor().getCaretModel().getOffset()).getY()));
             } catch (NullPointerException ignored) {
                 // first time we used the editor text field the editor is null
             }
-        } else {
-            System.out.println("more than one method found!");
         }
     }
 
@@ -128,9 +126,26 @@ public class AmplificationResultWindow extends Component {
     public void addTestCaseToTestSuite() {
         amplifiedInformation.setText("Added Test Case no. " + currentAmplificationTestCaseIndex);
 
-        // todo copy over current test case to project
         AmplifiedTestCase testToAdd = currentAmplificationTestCase;
-        navigateTestCases(true);
+
+        PsiMethod method = testToAdd.getTestMethod(amplificationResult.testClass);
+        WriteCommandAction.runWriteCommandAction(amplificationResult.project, () -> {
+            if (method != null) {
+                PsiMethod methodSave = (PsiMethod) method.copy();
+                method.delete();
+
+                PsiClass psiClass = Arrays.stream(amplificationResult.originalTestCase.psiFile.getClasses())
+                        .filter((PsiClass c) -> c.getQualifiedName().equals(amplificationResult.testClass))
+                        .findFirst()
+                        .get();
+                PsiMethod originalMethod = amplificationResult.originalTestCase.getTestMethod(amplificationResult.testClass);
+                psiClass.addAfter(methodSave, originalMethod);
+                PsiDocumentManager.getInstance(amplificationResult.project).commitAllDocuments();
+
+                amplificationResult.amplifiedTestCases.remove(testToAdd);
+                navigateTestCases(true);
+            }
+        });
 
         // todo handle adding last amplified test case
     }

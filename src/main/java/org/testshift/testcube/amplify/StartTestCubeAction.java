@@ -80,7 +80,10 @@ public class StartTestCubeAction extends AnAction {
                 // clean output directory
                 // todo close open amplification result windows or split output into different directories
                 try {
-                    FileUtils.cleanDirectory(new File(currentProject.getBasePath() + Config.OUTPUT_PATH_DSPOT));
+                    File outputDirectory = new File(currentProject.getBasePath() + Config.OUTPUT_PATH_DSPOT);
+                    if (outputDirectory.exists()) {
+                        FileUtils.cleanDirectory(outputDirectory);
+                    }
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

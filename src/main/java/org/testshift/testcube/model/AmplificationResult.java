@@ -46,6 +46,7 @@ public class AmplificationResult {
         if (originalFile != null) {
             PsiJavaFile psiFile = (PsiJavaFile) PsiManager.getInstance(project).findFile(originalFile);
             result.originalTestCase = new OriginalTestCase(originalTestClassPath, testMethod, psiFile);
+            result.originalTestCase.psiFile = result.originalTestCase.getFileInProjectSource(project,testClass);
         }
 
         String amplifiedTestClassPath = Util.getAmplifiedTestClassPath(project, testClass);
