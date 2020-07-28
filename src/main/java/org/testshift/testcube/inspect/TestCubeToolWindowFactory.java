@@ -9,9 +9,6 @@ public class TestCubeToolWindowFactory implements ToolWindowFactory {
 
     @Override
     public void createToolWindowContent(@NotNull Project project, @NotNull ToolWindow toolWindow) {
-//        TestCubeToolWindow window = new TestCubeToolWindow(toolWindow);
-//        ContentFactory contentFactory = ContentFactory.SERVICE.getInstance();
-//        Content content = contentFactory.createContent(window.getContent(), "Test Cube Content", false);
-//        toolWindow.getContentManager().addContent(content);
+
     }
 }

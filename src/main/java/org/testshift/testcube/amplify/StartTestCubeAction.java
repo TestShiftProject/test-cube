@@ -3,6 +3,7 @@ package org.testshift.testcube.amplify;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.application.PathManager;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.progress.Task;
@@ -12,9 +13,8 @@ import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.testshift.testcube.Config;
-import org.testshift.testcube.inspect.InspectTestCubeResultsAction;
-import org.testshift.testcube.Util;
 import org.testshift.testcube.icons.TestCubeIcons;
+import org.testshift.testcube.inspect.InspectTestCubeResultsAction;
 import org.testshift.testcube.settings.AppSettingsState;
 import org.testshift.testcube.settings.AskJavaPathDialogWrapper;
 
@@ -24,6 +24,8 @@ import java.util.Arrays;
 import java.util.List;
 
 public class StartTestCubeAction extends AnAction {
+
+    private static final Logger logger = Logger.getInstance(StartTestCubeAction.class);
 
     private String testClass;
     private String testMethod;
@@ -56,14 +58,12 @@ public class StartTestCubeAction extends AnAction {
     }
 
     private void runDSpot(Project currentProject) throws IOException, InterruptedException {
-
         if (AppSettingsState.getInstance().java8Path.isEmpty()) {
             AskJavaPathDialogWrapper dialog = new AskJavaPathDialogWrapper();
             dialog.showAndGet();
             boolean pathValid = dialog.setJavaPathIfValid();
             // todo handle non valid
         }
-
 
         String javaHome = AppSettingsState.getInstance().java8Path;
         String javaBin = javaHome + File.separator + "bin" + File.separator + "java";
@@ -73,7 +73,7 @@ public class StartTestCubeAction extends AnAction {
 
         Task.Backgroundable dspotTask = new Task.Backgroundable(currentProject, "Running DSpot", true) {
 
-            public void run(ProgressIndicator indicator) {
+            public void run(@NotNull ProgressIndicator indicator) {
                 List<String> dSpotStarter = new ArrayList<>(Arrays.asList(javaBin, "-jar", dSpotPath,
                         "--absolute-path-to-project-root", currentProject.getBasePath(),
                         "--test-criterion", AppSettingsState.getInstance().selectorCriterion,
@@ -82,9 +82,10 @@ public class StartTestCubeAction extends AnAction {
                         // TODO handlle null on testMethod
                         "--test-cases", testMethod,
                         "--output-directory", currentProject.getBasePath() + Config.OUTPUT_PATH_DSPOT,
-                        "--amplifiers", Config.AMPLIFIERS_FAST_LITERAL,
+                        "--amplifiers", Config.AMPLIFIERS_ALL,
                         //"--generate-new-test-class",
                         //"--keep-original-test-methods",
+                        //"--verbose",
                         "--with-comment"));
 
                 if (!AppSettingsState.getInstance().generateAssertions) {
@@ -100,7 +101,7 @@ public class StartTestCubeAction extends AnAction {
                     File outputDir = new File(currentProject.getBasePath() + Config.OUTPUT_PATH_TESTCUBE);
                     if (!outputDir.exists()) {
                         if (!outputDir.mkdirs()) {
-                            System.out.println("Could not create Test Cube output directory!");
+                            logger.error("Could not create Test Cube output directory!");
                         }
                     }
 
@@ -123,12 +124,16 @@ public class StartTestCubeAction extends AnAction {
                     e.printStackTrace();
                 }
 
+                // TODO handle no amplified tests (no new class generated then)
                 AmplificationCompletedNotifier notifier = new AmplificationCompletedNotifier();
+                //if ()
                 notifier.notify(currentProject,
-                        "Amplification completed, find the amplified test classes in " + Util.getAmplifiedTestClassPath(currentProject, testClass),
-                        new InspectTestCubeResultsAction(testClass, testMethod));
+                        "Amplification completed",
+                        new InspectTestCubeResultsAction(currentProject, testClass, testMethod));
+
             }
         };
+
         BackgroundableProcessIndicator processIndicator = new BackgroundableProcessIndicator(dspotTask);
         ProgressManager.getInstance().runProcessWithProgressAsynchronously(dspotTask, processIndicator);
     }

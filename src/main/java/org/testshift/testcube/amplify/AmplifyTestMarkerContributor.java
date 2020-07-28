@@ -18,7 +18,7 @@ public class AmplifyTestMarkerContributor extends RunLineMarkerContributor {
     @Override
     public @Nullable Info getInfo(@NotNull PsiElement element) {
         Function<PsiElement, String> tooltipProvider = element1 -> {
-            return "Amplify unit test " + element1.getText();
+            return "Amplify Test";
         };
         if (element instanceof PsiIdentifier) {
             PsiElement parent = element.getParent();

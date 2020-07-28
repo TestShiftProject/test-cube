@@ -21,9 +21,11 @@ public class TestCaseEditorField extends LanguageTextField {
         editor.setHorizontalScrollbarVisible(true);
         editor.setColorsScheme(EditorColorsManager.getInstance().getGlobalScheme());
         editor.setCaretEnabled(true);
+        editor.setCaretVisible(true);
 
         EditorSettings settings = editor.getSettings();
         settings.setLineNumbersShown(true);
+        settings.setAdditionalPageAtBottom(true);
 
         return editor;
     }

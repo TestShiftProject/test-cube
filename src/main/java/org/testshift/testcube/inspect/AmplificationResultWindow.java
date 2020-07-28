@@ -1,14 +1,16 @@
 package org.testshift.testcube.inspect;
 
 import com.intellij.ide.highlighter.JavaFileType;
-import com.intellij.openapi.vfs.LocalFileSystem;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.psi.*;
-import com.intellij.ui.content.Content;
+import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.openapi.wm.ToolWindow;
+import com.intellij.openapi.wm.ToolWindowManager;
+import com.intellij.psi.PsiClass;
+import com.intellij.psi.PsiDocumentManager;
+import com.intellij.psi.PsiMethod;
 import org.testshift.testcube.Config;
 import org.testshift.testcube.model.AmplificationResult;
-import org.testshift.testcube.model.AmplifiedTest;
-import org.testshift.testcube.model.Test;
+import org.testshift.testcube.model.AmplifiedTestCase;
+import org.testshift.testcube.model.TestCase;
 
 import javax.swing.*;
 import java.awt.*;
@@ -19,6 +21,8 @@ import java.nio.file.Paths;
 import java.util.Arrays;
 
 public class AmplificationResultWindow extends Component {
+
+    private static final Logger logger = Logger.getInstance(AmplificationResultWindow.class);
 
     private JPanel amplificationResultPanel;
 
@@ -43,7 +47,7 @@ public class AmplificationResultWindow extends Component {
 
     public AmplificationResult amplificationResult;
     private int currentAmplificationTestCaseIndex;
-    private AmplifiedTest currentAmplificationTestCase;
+    private AmplifiedTestCase currentAmplificationTestCase;
 
     public AmplificationResultWindow() {
 
@@ -53,23 +57,21 @@ public class AmplificationResultWindow extends Component {
         //close.addActionListener(e -> toolWindow.hide(null));
         this.amplificationResult = amplificationResult;
         this.currentAmplificationTestCaseIndex = 0;
-        this.currentAmplificationTestCase = amplificationResult.amplifiedTests.get(currentAmplificationTestCaseIndex);
-        originalInformation.setToolTipText(amplificationResult.originalTest.filePath);
+        this.currentAmplificationTestCase = amplificationResult.amplifiedTestCases.get(currentAmplificationTestCaseIndex);
+        originalInformation.setToolTipText(amplificationResult.originalTestCase.filePath);
         amplifiedInformation.setToolTipText(currentAmplificationTestCase.filePath);
 
         retrieveOverallAmplificationReport();
-        updateRender();
+        showTestCaseInEditor(amplificationResult.originalTestCase, originalTestCase);
+        setOriginalInformation();
+        showTestCaseInEditor(currentAmplificationTestCase, amplifiedTestCase);
+        setAmplifiedInformation();
 
-        close.addActionListener(l -> this.getParent().remove(this));
+        close.addActionListener(l -> close());
         add.addActionListener(l -> addTestCaseToTestSuite());
         ignore.addActionListener(l -> ignoreTestCase());
         next.addActionListener(l -> nextTestCase());
         previous.addActionListener(l -> previousTestCase());
-    }
-
-    private void updateRender() {
-        showTestCaseInEditor(amplificationResult.originalTest, originalTestCase);
-        showTestCaseInEditor(currentAmplificationTestCase, amplifiedTestCase);
     }
 
     /**
@@ -83,79 +85,95 @@ public class AmplificationResultWindow extends Component {
         }
     }
 
-    private void showTestCaseInEditor(Test testCase, TestCaseEditorField editor) {
-        //editor = new TestCaseEditorField(JavaLanguage.INSTANCE, amplificationResult.project, "value");
-        VirtualFile file = LocalFileSystem.getInstance().findFileByPath(testCase.filePath);
-        if (file != null) {
-            PsiJavaFile psiFile = (PsiJavaFile) PsiManager.getInstance(amplificationResult.project).findFile(file);
-            if (psiFile != null) {
-                editor.setNewDocumentAndFileType(JavaFileType.INSTANCE, PsiDocumentManager.getInstance(amplificationResult.project).getDocument(psiFile));
-                PsiClass psiClass = Arrays.stream(psiFile.getClasses()).filter((PsiClass c) -> c.getQualifiedName().equals(amplificationResult.testClass)).findFirst().get();
-                PsiMethod[] methods = psiClass.findMethodsByName(amplificationResult.testMethod, false);
-                if (methods.length == 1) {
-                    editor.setCaretPosition(methods[0].getTextOffset());
-                } else {
-                    System.out.println("more than one method found!");
-                }
+    private void showTestCaseInEditor(TestCase testCase, TestCaseEditorField editor) {
+        editor.setNewDocumentAndFileType(JavaFileType.INSTANCE, PsiDocumentManager.getInstance(amplificationResult.project).getDocument(testCase.psiFile));
+        moveCaretToTestCase(testCase, editor);
+    }
+
+    private void moveCaretToTestCase(TestCase testCase, TestCaseEditorField editor) {
+        PsiClass psiClass = Arrays.stream(testCase.psiFile.getClasses()).filter((PsiClass c) -> c.getQualifiedName().equals(amplificationResult.testClass)).findFirst().get();
+        PsiMethod[] methods = psiClass.findMethodsByName(testCase.name, false);
+        if (methods.length == 1) {
+            editor.setCaretPosition(methods[0].getTextOffset());
+            try {
+                editor.getEditor().getScrollingModel().scrollVertically(
+                        ((int) editor.getEditor().offsetToPoint2D(editor.getEditor().getCaretModel().getOffset()).getY()));
+            } catch (NullPointerException ignored) {
+                // first time we used the editor text field the editor is null
             }
+        } else {
+            System.out.println("more than one method found!");
         }
     }
 
     private void navigateTestCases(boolean forward) {
         if (forward) {
-            if (currentAmplificationTestCaseIndex + 1 == amplificationResult.amplifiedTests.size()) {
+            if (currentAmplificationTestCaseIndex + 1 == amplificationResult.amplifiedTestCases.size()) {
                 currentAmplificationTestCaseIndex = 0;
             } else {
                 currentAmplificationTestCaseIndex++;
             }
         } else {
             if (currentAmplificationTestCaseIndex == 0) {
-                currentAmplificationTestCaseIndex = amplificationResult.amplifiedTests.size() - 1;
+                currentAmplificationTestCaseIndex = amplificationResult.amplifiedTestCases.size() - 1;
             } else {
                 currentAmplificationTestCaseIndex--;
             }
         }
-        currentAmplificationTestCase = amplificationResult.amplifiedTests.get(currentAmplificationTestCaseIndex);
-        updateRender();
+        currentAmplificationTestCase = amplificationResult.amplifiedTestCases.get(currentAmplificationTestCaseIndex);
+        moveCaretToTestCase(currentAmplificationTestCase, amplifiedTestCase);
+        setAmplifiedInformation();
     }
 
     public void addTestCaseToTestSuite() {
         amplifiedInformation.setText("Added Test Case no. " + currentAmplificationTestCaseIndex);
 
         // todo copy over current test case to project
-        AmplifiedTest testToAdd = currentAmplificationTestCase;
+        AmplifiedTestCase testToAdd = currentAmplificationTestCase;
         navigateTestCases(true);
 
         // todo handle adding last amplified test case
     }
 
     public void ignoreTestCase() {
-        AmplifiedTest testToRemove = currentAmplificationTestCase;
+        AmplifiedTestCase testToRemove = currentAmplificationTestCase;
         navigateTestCases(true);
         amplificationResult.removeAmplifiedTest(testToRemove);
     }
 
     public void nextTestCase() {
-        amplifiedInformation.setText("Navigated to Test Case no. " + currentAmplificationTestCaseIndex);
         navigateTestCases(true);
     }
 
     public void previousTestCase() {
-        amplifiedInformation.setText("Navigated to Test Case no. " + currentAmplificationTestCaseIndex);
         navigateTestCases(false);
     }
 
+    private void setAmplifiedInformation() {
+        amplifiedInformation.setText("Navigated to Test Case no. " + currentAmplificationTestCaseIndex + " named: " + currentAmplificationTestCase.name);
+    }
+
+    private void setOriginalInformation() {
+        originalInformation.setText("Original Test Case " + amplificationResult.originalTestCase.name);
+    }
+
     public void close() {
-        ((Content) getContent()).release();
+        ToolWindow toolWindow = ToolWindowManager.getInstance(amplificationResult.project).getToolWindow("Test Cube");
+        if (toolWindow != null) {
+            toolWindow.getContentManager().removeContent(toolWindow.getContentManager().findContent(getDisplayName()), true);
+        }
     }
 
     private void createUIComponents() {
-        // TODO: place custom component creation code here
+        // place custom component creation code here
     }
 
     public JPanel getContent() {
         return amplificationResultPanel;
     }
 
+    public String getDisplayName() {
+        return "Amplification of " + amplificationResult.originalTestCase.name;
+    }
 
 }
