@@ -1,0 +1,35 @@
+<idea-plugin>
+    <id>org.testshift.testcube</id>
+    <name>Test Cube</name>
+    <vendor email="c.e.brandt@tudelft.nl" url="https://testshiftproject.github.io/">Test Shift Project</vendor>
+
+    <description><![CDATA[
+    Test Cube proposes amplifed test cases to developers with the help of visualizations.
+    ]]></description>
+
+    <!-- please see https://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
+         on how to target different products -->
+    <depends>com.intellij.modules.platform</depends>
+    <depends>com.intellij.modules.java</depends>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <!-- Add your extensions here -->
+        <toolWindow id="Test Cube" anchor="bottom" factoryClass="org.testshift.testcube.inspect.TestCubeToolWindowFactory" icon="/icons/amplifyTestsToolWindow.svg"/>
+
+        <runLineMarkerContributor language="JAVA" order="after applicationRunLineMarkerProvider" implementationClass="org.testshift.testcube.amplify.AmplifyTestMarkerContributor"/>
+        <applicationService serviceImplementation="org.testshift.testcube.settings.AppSettingsState"/>
+        <applicationConfigurable parentId="tools" instance="org.testshift.testcube.settings.AppSettingsConfigurable"
+                                 id="org.testshift.testcube.settings.AppSettingsConfigurable"
+                                 displayName="Test Cube Settings"/>
+    </extensions>
+
+    <actions>
+        <!-- Add your actions here -->
+<!--        <action id="org.testshift.testcube.amplify.StartTestCubeAction" class="org.testshift.testcube.amplify.StartTestCubeAction" text="Start Test Cube" description="SDK action example">-->
+<!--            <add-to-group group-id="ToolsMenu" anchor="first"/>-->
+<!--        </action>-->
+<!--        <action id="org.testshift.testcube.InspectTestCubeResultsAction" class="org.testshift.testcube.InspectTestCubeResultsAction" text="Inspect Test Cube Results" description="SDK action example">-->
+<!--            <add-to-group group-id="ToolsMenu" anchor="first"/>-->
+<!--        </action>-->
+    </actions>
+</idea-plugin>
