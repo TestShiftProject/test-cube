@@ -17,21 +17,21 @@ dependencies {
 
 // See https://github.com/JetBrains/gradle-intellij-plugin/
 intellij {
-    version '2020.1.2'
+    version '2020.2'
     plugins 'java'
 }
 patchPluginXml {
     changeNotes """
-     Fix:
-     - start DSpot Process
-     
-     Improve:
-     - write DSpot output to file, creates new folder `test-cube`
-     - options to configure the amplification with DSpot
-     
-     Features:
-     - inspect amplified test cases in new tool window
-     - add test cases to your original test suite with one click
+     Fix:  
+     - start DSpot Process  
+       
+     Improve:  
+     - write DSpot output to file, creates new folder `test-cube`  
+     - options to configure the amplification with DSpot  
+       
+     Features:  
+     - inspect amplified test cases in new tool window  
+     - add test cases to your original test suite with one click  
      """
 }
 
