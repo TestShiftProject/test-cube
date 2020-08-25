@@ -4,7 +4,7 @@ plugins {
 }
 
 group 'org.testshift'
-version '0.1.2-SNAPSHOT'
+version '0.1.3-SNAPSHOT'
 
 repositories {
     mavenCentral()
@@ -33,6 +33,7 @@ patchPluginXml {
      Features:<br>
      - inspect amplified test cases in new tool window<br>
      - add test cases to your original test suite with one click<br>
+     - inspect DSpot terminal output after amplification<br>
      """
 }
 
