@@ -19,7 +19,7 @@ public class InspectTestCubeResultsAction extends NotificationAction {
     private final String testMethod;
 
     public InspectTestCubeResultsAction(Project project, String testClass, String testMethod) {
-        super("Inspect Amplification Results");
+        super("Inspect amplification results");
         this.project = project;
         this.testClass = testClass;
         this.testMethod = testMethod;
@@ -50,7 +50,7 @@ public class InspectTestCubeResultsAction extends NotificationAction {
 
             toolWindow.show();
         }
-        notification.expire();
+        //notification.expire();
     }
 
 }

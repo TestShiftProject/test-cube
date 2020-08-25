@@ -149,17 +149,18 @@ public class StartTestCubeAction extends AnAction {
 
                 AmplificationCompletedNotifier notifier = new AmplificationCompletedNotifier();
                 TestClassJSON result = Util.getResultJSON(currentProject, testClass);
-                if (result == null) {
-                    notifier.notify(currentProject, "An error occured during amplification, no new test cases found.", null);
+                if (result == null || result.getTestCases() == null) {
+                    notifier.notify(currentProject, "An error occured during amplification, no new test cases found.",
+                            new InspectDSpotTerminalOutputAction());
                 } else {
                     int amplifiedTestCasesCount = result.getTestCases().size();
 
                     if (amplifiedTestCasesCount == 0) {
-                        notifier.notify(currentProject, "Could find no new test cases through amplification.", null);
+                        notifier.notify(currentProject, "Could find no new test cases through amplification.");
                     } else {
                         notifier.notify(currentProject,
                                 "Test Cube found " + amplifiedTestCasesCount + " amplified test cases.",
-                                new InspectTestCubeResultsAction(currentProject, testClass, testMethod));
+                                new InspectTestCubeResultsAction(currentProject, testClass, testMethod), new InspectDSpotTerminalOutputAction());
                     }
                 }
             }

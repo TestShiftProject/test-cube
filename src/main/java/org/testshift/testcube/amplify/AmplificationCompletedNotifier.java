@@ -12,9 +12,9 @@ public class AmplificationCompletedNotifier {
     private final NotificationGroup NOTIFICATION_GROUP = new NotificationGroup("Test Cube",
             NotificationDisplayType.STICKY_BALLOON, true);
 
-    public Notification notify(Project project, String content, AnAction action) {
+    public Notification notify(Project project, String content, AnAction... actions) {
         final Notification notification = NOTIFICATION_GROUP.createNotification(content, NotificationType.INFORMATION);
-        if (action != null) {
+        for (AnAction action : actions) {
             notification.addAction(action);
         }
         notification.setIcon(TestCubeIcons.AMPLIFY_TEST);
