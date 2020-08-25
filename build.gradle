@@ -12,7 +12,7 @@ repositories {
 
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.12'
-    compile fileTree(dir: 'src/main/resources/dspot', include: ['*.jar'])
+    implementation fileTree(dir: 'src/main/resources/dspot', include: ['*.jar'])
 }
 
 // See https://github.com/JetBrains/gradle-intellij-plugin/
@@ -20,18 +20,19 @@ intellij {
     version '2020.2'
     plugins 'java'
 }
+
 patchPluginXml {
     changeNotes """
-     Fix:  
-     - start DSpot Process  
-       
-     Improve:  
-     - write DSpot output to file, creates new folder `test-cube`  
-     - options to configure the amplification with DSpot  
-       
-     Features:  
-     - inspect amplified test cases in new tool window  
-     - add test cases to your original test suite with one click  
+     Fix:<br>  
+     - start DSpot Process<br>
+     <br>
+     Improve:<br>
+     - write DSpot output to file, creates new folder `test-cube`<br>
+     - options to configure the amplification with DSpot<br>
+     <br>
+     Features:<br>
+     - inspect amplified test cases in new tool window<br>
+     - add test cases to your original test suite with one click<br>
      """
 }
 

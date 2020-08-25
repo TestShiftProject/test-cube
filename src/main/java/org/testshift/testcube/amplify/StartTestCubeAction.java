@@ -14,12 +14,13 @@ import org.apache.commons.io.FileUtils;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.testshift.testcube.misc.Config;
-import org.testshift.testcube.misc.Util;
 import org.testshift.testcube.icons.TestCubeIcons;
 import org.testshift.testcube.inspect.InspectTestCubeResultsAction;
+import org.testshift.testcube.misc.Config;
+import org.testshift.testcube.misc.Util;
 import org.testshift.testcube.settings.AppSettingsState;
 import org.testshift.testcube.settings.AskJavaPathDialogWrapper;
+import org.testshift.testcube.settings.AskMavenHomeDialogWrapper;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -68,6 +69,13 @@ public class StartTestCubeAction extends AnAction {
             // todo handle non valid
         }
 
+        if (AppSettingsState.getInstance().mavenHome.isEmpty()) {
+            AskMavenHomeDialogWrapper dialog = new AskMavenHomeDialogWrapper();
+            dialog.showAndGet();
+            boolean mavenHomeValid = dialog.setMavenHomeIfValid();
+            // todo handle non valid
+        }
+
         String javaHome = AppSettingsState.getInstance().java8Path;
         String javaBin = javaHome + File.separator + "bin" + File.separator + "java";
 
@@ -108,6 +116,8 @@ public class StartTestCubeAction extends AnAction {
 
                 ProcessBuilder pb = new ProcessBuilder(dSpotStarter);
 
+                pb.environment().put("MAVEN_HOME", AppSettingsState.getInstance().mavenHome);
+
                 pb.redirectErrorStream(true);
                 try {
                     Process p = pb.start();
@@ -137,16 +147,20 @@ public class StartTestCubeAction extends AnAction {
                     e.printStackTrace();
                 }
 
-                TestClassJSON result = Util.getResultJSON(currentProject, testClass);
-                int amplifiedTestCasesCount = result.getTestCases().size();
-
                 AmplificationCompletedNotifier notifier = new AmplificationCompletedNotifier();
-                if (amplifiedTestCasesCount == 0) {
-                    notifier.notify(currentProject, "Could find no new test cases through amplification.", null);
+                TestClassJSON result = Util.getResultJSON(currentProject, testClass);
+                if (result == null) {
+                    notifier.notify(currentProject, "An error occured during amplification, no new test cases found.", null);
                 } else {
-                    notifier.notify(currentProject,
-                            "Test Cube found " + amplifiedTestCasesCount + " amplified test cases.",
-                            new InspectTestCubeResultsAction(currentProject, testClass, testMethod));
+                    int amplifiedTestCasesCount = result.getTestCases().size();
+
+                    if (amplifiedTestCasesCount == 0) {
+                        notifier.notify(currentProject, "Could find no new test cases through amplification.", null);
+                    } else {
+                        notifier.notify(currentProject,
+                                "Test Cube found " + amplifiedTestCasesCount + " amplified test cases.",
+                                new InspectTestCubeResultsAction(currentProject, testClass, testMethod));
+                    }
                 }
             }
         };

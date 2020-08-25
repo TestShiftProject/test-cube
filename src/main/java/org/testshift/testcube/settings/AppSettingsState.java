@@ -20,6 +20,7 @@ import org.jetbrains.annotations.Nullable;
 public class AppSettingsState implements PersistentStateComponent<AppSettingsState> {
 
     public String java8Path = "";
+    public String mavenHome = "";
     //public boolean ideaStatus = false;
 
     // DSpot Config
