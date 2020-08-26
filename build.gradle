@@ -12,7 +12,7 @@ repositories {
 
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.12'
-    implementation fileTree(dir: 'src/main/resources/dspot', include: ['*.jar'])
+    compile fileTree(dir: 'src/main/resources/dspot', include: ['*.jar'])
 }
 
 // See https://github.com/JetBrains/gradle-intellij-plugin/

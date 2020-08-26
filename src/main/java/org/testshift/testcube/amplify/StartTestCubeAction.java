@@ -134,6 +134,12 @@ public class StartTestCubeAction extends AnAction {
                         logger.error("Could not create workdir output directory!");
                     }
                 }
+                File workdirTarget = new File(workdir.getPath() + File.separator + "target" + File.separator + "dspot");
+                if (!workdirTarget.exists()) {
+                    if (!workdirTarget.mkdirs()) {
+                        logger.error("Could not create workdir/target/dspot output directory!");
+                    }
+                }
                 pb.directory(workdir);
 
                 pb.redirectErrorStream(true);
@@ -168,7 +174,7 @@ public class StartTestCubeAction extends AnAction {
                 AmplificationCompletedNotifier notifier = new AmplificationCompletedNotifier();
                 TestClassJSON result = Util.getResultJSON(currentProject, testClass);
                 if (result == null || result.getTestCases() == null) {
-                    notifier.notify(currentProject, "An error occured during amplification, no new test cases found.",
+                    notifier.notify(currentProject, "An error occurred during amplification, no new test cases found.",
                             new InspectDSpotTerminalOutputAction());
                 } else {
                     int amplifiedTestCasesCount = result.getTestCases().size();
