@@ -1,9 +1,12 @@
 package org.testshift.testcube.amplify;
 
+import com.intellij.ide.plugins.IdeaPluginDescriptor;
+import com.intellij.ide.plugins.PluginManagerCore;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.openapi.extensions.PluginId;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.progress.Task;
@@ -62,6 +65,13 @@ public class StartTestCubeAction extends AnAction {
     }
 
     private void runDSpot(Project currentProject) throws IOException, InterruptedException {
+
+        IdeaPluginDescriptor testCubePlugin = PluginManagerCore.getPlugin(PluginId.getId("org.testshift.testcube"));
+        if (testCubePlugin != null) {
+            testCubePlugin.getPluginClassLoader();
+        }
+
+
         if (AppSettingsState.getInstance().java8Path.isEmpty()) {
             AskJavaPathDialogWrapper dialog = new AskJavaPathDialogWrapper();
             dialog.showAndGet();
@@ -107,7 +117,7 @@ public class StartTestCubeAction extends AnAction {
                         "--amplifiers", Config.AMPLIFIERS_ALL,
                         //"--generate-new-test-class",
                         //"--keep-original-test-methods",
-                        //"--verbose",
+                        "--verbose",
                         "--with-comment"));
 
                 if (!AppSettingsState.getInstance().generateAssertions) {
@@ -117,6 +127,14 @@ public class StartTestCubeAction extends AnAction {
                 ProcessBuilder pb = new ProcessBuilder(dSpotStarter);
 
                 pb.environment().put("MAVEN_HOME", AppSettingsState.getInstance().mavenHome);
+
+                File workdir = new File(Util.getTestCubeOutputPath(currentProject) + File.separator + "workdir");
+                if (!workdir.exists()) {
+                    if (!workdir.mkdirs()) {
+                        logger.error("Could not create workdir output directory!");
+                    }
+                }
+                pb.directory(workdir);
 
                 pb.redirectErrorStream(true);
                 try {
