@@ -2,7 +2,7 @@ package org.testshift.testcube.misc;
 
 import com.google.gson.Gson;
 import com.intellij.openapi.project.Project;
-import eu.stamp_project.dspot.common.report.output.selector.coverage.json.TestClassJSON;
+import eu.stamp_project.dspot.common.report.output.selector.extendedcoverage.json.TestClassJSON;
 
 import java.io.File;
 import java.io.FileNotFoundException;

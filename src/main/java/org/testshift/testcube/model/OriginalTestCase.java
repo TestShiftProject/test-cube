@@ -11,6 +11,7 @@ public class OriginalTestCase extends TestCase {
     }
 
     public PsiJavaFile getFileInProjectSource() {
-        return (PsiJavaFile) JavaPsiFacade.getInstance(result.project).findClass(result.testClass, GlobalSearchScope.everythingScope(result.project)).getContainingFile();
+        return (PsiJavaFile) JavaPsiFacade.getInstance(result.project)
+                .findClass(result.testClass, GlobalSearchScope.everythingScope(result.project)).getContainingFile();
     }
 }

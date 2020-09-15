@@ -7,17 +7,14 @@ import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowManager;
 import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiMethod;
-import org.testshift.testcube.misc.Util;
+import org.jetbrains.annotations.Contract;
+import org.testshift.testcube.misc.TestCubeNotifier;
 import org.testshift.testcube.model.AmplificationResult;
 import org.testshift.testcube.model.AmplifiedTestCase;
 import org.testshift.testcube.model.TestCase;
 
 import javax.swing.*;
 import java.awt.*;
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 
 public class AmplificationResultWindow extends Component {
 
@@ -25,16 +22,16 @@ public class AmplificationResultWindow extends Component {
 
     private JPanel amplificationResultPanel;
 
-    private JLabel header;
+    private JTextArea header;
 
     private JPanel originalSide;
     private TestCaseEditorField originalTestCase;
     private JPanel originalVisualization;
-    private JLabel originalInformation;
+    private JTextArea originalInformation;
 
     private JPanel amplifiedSide;
     private JPanel amplifiedVisualization;
-    private JLabel amplifiedInformation;
+    private JTextArea amplifiedInformation;
     private TestCaseEditorField amplifiedTestCase;
 
     private JPanel buttons;
@@ -55,6 +52,8 @@ public class AmplificationResultWindow extends Component {
     public AmplificationResultWindow(AmplificationResult amplificationResult) {
         this.amplificationResult = amplificationResult;
         this.currentAmplificationTestCaseIndex = 0;
+
+        assert !amplificationResult.amplifiedTestCases.isEmpty();
         this.currentAmplificationTestCase = amplificationResult.amplifiedTestCases.get(currentAmplificationTestCaseIndex);
 
         displayOverallAmplificationReport();
@@ -74,11 +73,18 @@ public class AmplificationResultWindow extends Component {
      * Writes the content of DSpot's report file into the header text of the window for this amplification result
      */
     private void displayOverallAmplificationReport() {
-        try {
-            header.setText(String.join("---", Files.readAllLines(Paths.get(Util.getDSpotOutputPath(amplificationResult.project) + File.separator + "report.txt"))));
-        } catch (IOException e) {
-            logger.warn(e);
-        }
+        header.setText("Amplification of the test method " +
+                amplificationResult.originalTestCase.name + " was " +
+                "successful!\n" +
+                "On the right you see the original test case. Below we show the overall coverage improvement the " +
+                "amplification achieved.\n" +
+                "On the left you can see the amplified test cases. Below the code of the test case we show how many " +
+                "input modifications were applied and how many assertions were added. In addition we show where this " +
+                "test achieves more coverage than the original test case.\n\n" +
+                "Use 'Next' and 'Previous' explore the test cases!\n" +
+                "If you find one that you would like to include in your existing test suite: 'Add To Test Suite' " +
+                "automatically copies it over for you :)\n" +
+                "Fell free to edit the test cases before adding them!");
     }
 
     private void showTestCaseInEditor(TestCase testCase, TestCaseEditorField editor) {
@@ -99,22 +105,31 @@ public class AmplificationResultWindow extends Component {
         }
     }
 
+    @Contract("false, true -> fail")
     private void navigateTestCases(boolean forward, boolean removeCurrent) {
+        if (!forward & removeCurrent) throw new IllegalArgumentException();
+
         if (removeCurrent) {
             amplificationResult.amplifiedTestCases.remove(currentAmplificationTestCase);
-        } else {
-            if (forward) {
-                if (currentAmplificationTestCaseIndex + 1 == amplificationResult.amplifiedTestCases.size()) {
-                    currentAmplificationTestCaseIndex = 0;
-                } else {
-                    currentAmplificationTestCaseIndex++;
-                }
+            currentAmplificationTestCaseIndex--;
+            if (amplificationResult.amplifiedTestCases.isEmpty()) {
+                TestCubeNotifier notifier = new TestCubeNotifier();
+                notifier.notify(amplificationResult.project, "All amplified test cases were added or ignored. Thank " + "you for using Test Cube!", false);
+                close();
+                return;
+            }
+        }
+        if (forward) {
+            if (currentAmplificationTestCaseIndex + 1 == amplificationResult.amplifiedTestCases.size()) {
+                currentAmplificationTestCaseIndex = 0;
             } else {
-                if (currentAmplificationTestCaseIndex == 0) {
-                    currentAmplificationTestCaseIndex = amplificationResult.amplifiedTestCases.size() - 1;
-                } else {
-                    currentAmplificationTestCaseIndex--;
-                }
+                currentAmplificationTestCaseIndex++;
+            }
+        } else {
+            if (currentAmplificationTestCaseIndex == 0) {
+                currentAmplificationTestCaseIndex = amplificationResult.amplifiedTestCases.size() - 1;
+            } else {
+                currentAmplificationTestCaseIndex--;
             }
         }
         currentAmplificationTestCase = amplificationResult.amplifiedTestCases.get(currentAmplificationTestCaseIndex);
@@ -159,17 +174,21 @@ public class AmplificationResultWindow extends Component {
     }
 
     private void setAmplifiedInformation() {
-        amplifiedInformation.setText("Navigated to Test Case no. " + currentAmplificationTestCaseIndex + " named: " + currentAmplificationTestCase.name);
+        amplifiedInformation.setText(currentAmplificationTestCase.getDescription());
     }
 
     private void setOriginalInformation() {
-        originalInformation.setText("Original Test Case " + amplificationResult.originalTestCase.name);
+        originalInformation.setText("Original test case: " + amplificationResult.originalTestCase.name + "\n\n");
+        originalInformation.append(amplificationResult.amplifiedCoverage.toString());
     }
 
     public void close() {
         ToolWindow toolWindow = ToolWindowManager.getInstance(amplificationResult.project).getToolWindow("Test Cube");
         if (toolWindow != null) {
             toolWindow.getContentManager().removeContent(toolWindow.getContentManager().findContent(getDisplayName()), true);
+            if (toolWindow.getContentManager().getContentCount() == 0) {
+                toolWindow.hide();
+            }
         }
     }
 
@@ -184,5 +203,7 @@ public class AmplificationResultWindow extends Component {
     public String getDisplayName() {
         return "Amplification of '" + amplificationResult.originalTestCase.name + "()'";
     }
+
+
 
 }

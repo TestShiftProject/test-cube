@@ -12,7 +12,7 @@ import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.progress.impl.BackgroundableProcessIndicator;
 import com.intellij.openapi.project.Project;
-import eu.stamp_project.dspot.common.report.output.selector.coverage.json.TestClassJSON;
+import eu.stamp_project.dspot.common.report.output.selector.extendedcoverage.json.TestClassJSON;
 import org.apache.commons.io.FileUtils;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NotNull;
@@ -20,6 +20,7 @@ import org.jetbrains.annotations.Nullable;
 import org.testshift.testcube.icons.TestCubeIcons;
 import org.testshift.testcube.inspect.InspectTestCubeResultsAction;
 import org.testshift.testcube.misc.Config;
+import org.testshift.testcube.misc.TestCubeNotifier;
 import org.testshift.testcube.misc.Util;
 import org.testshift.testcube.settings.AppSettingsState;
 import org.testshift.testcube.settings.AskJavaPathDialogWrapper;
@@ -118,7 +119,9 @@ public class StartTestCubeAction extends AnAction {
                         //"--generate-new-test-class",
                         //"--keep-original-test-methods",
                         "--verbose",
-                        "--with-comment"));
+                        "--dev-friendly",
+                        "--clean",
+                        "--with-comment=Amplifier"));
 
                 if (!AppSettingsState.getInstance().generateAssertions) {
                     dSpotStarter.add("--only-input-amplification");
@@ -171,19 +174,20 @@ public class StartTestCubeAction extends AnAction {
                     e.printStackTrace();
                 }
 
-                AmplificationCompletedNotifier notifier = new AmplificationCompletedNotifier();
+                TestCubeNotifier notifier = new TestCubeNotifier();
                 TestClassJSON result = Util.getResultJSON(currentProject, testClass);
                 if (result == null || result.getTestCases() == null) {
-                    notifier.notify(currentProject, "An error occurred during amplification, no new test cases found.",
+                    notifier.notify(currentProject,
+                            "An error occurred during amplification, no new test cases found.", true,
                             new InspectDSpotTerminalOutputAction());
                 } else {
                     int amplifiedTestCasesCount = result.getTestCases().size();
 
                     if (amplifiedTestCasesCount == 0) {
-                        notifier.notify(currentProject, "Could find no new test cases through amplification.");
+                        notifier.notify(currentProject, "Could find no new test cases through amplification.", true);
                     } else {
                         notifier.notify(currentProject,
-                                "Test Cube found " + amplifiedTestCasesCount + " amplified test cases.",
+                                "Test Cube found " + amplifiedTestCasesCount + " amplified test cases.", true,
                                 new InspectTestCubeResultsAction(currentProject, testClass, testMethod), new InspectDSpotTerminalOutputAction());
                     }
                 }

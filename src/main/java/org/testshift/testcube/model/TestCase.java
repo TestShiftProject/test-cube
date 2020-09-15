@@ -27,7 +27,8 @@ public abstract class TestCase {
 
     @Nullable
     public PsiMethod getTestMethod() {
-        PsiClass psiClass = Arrays.stream(psiFile.getClasses()).filter((PsiClass c) -> c.getQualifiedName().equals(result.testClass)).findFirst().get();
+        PsiClass psiClass = Arrays.stream(psiFile.getClasses())
+                .filter((PsiClass c) -> c.getQualifiedName().equals(result.testClass)).findFirst().get();
         PsiMethod[] methods = psiClass.findMethodsByName(name, false);
         if (methods.length != 1) {
             logger.error("More than one method named '" + name + "' found in class '" + psiFile.getName() + "'");

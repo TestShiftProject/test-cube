@@ -1,4 +1,8 @@
-# Test Cube IntelliJ Plugin
+# Welcome to Test Cube!
+**The IntelliJ Plugin to help you automatically make your test suite better**
+
+<!-- todo: Amplify: link to explanation? paper? -->
+Test Cube *amplifies* your JUnit tests right from your IDE.
 
 This plugin can help you automatically amplify your JUnit tests to improve your test suite 😊  
 The heart of our amplification is [DSpot](https://github.com/STAMP-project/dspot).  
