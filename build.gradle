@@ -4,7 +4,7 @@ plugins {
 }
 
 group 'org.testshift'
-version '0.1.3-SNAPSHOT'
+version '0.1.4'
 
 repositories {
     mavenCentral()
@@ -23,17 +23,9 @@ intellij {
 
 patchPluginXml {
     changeNotes """
-     Fix:<br>  
-     - start DSpot Process<br>
-     <br>
-     Improve:<br>
-     - write DSpot output to file, creates new folder `test-cube`<br>
-     - options to configure the amplification with DSpot<br>
-     <br>
-     Features:<br>
-     - inspect amplified test cases in new tool window<br>
-     - add test cases to your original test suite with one click<br>
-     - inspect DSpot terminal output after amplification<br>
+     Better developer-friendly amplification<br>
+     Detailed report about instruction coverage improvement<br>
+     Explanatory text
      """
 }
 
