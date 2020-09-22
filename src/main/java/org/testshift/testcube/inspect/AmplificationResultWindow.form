@@ -3,23 +3,22 @@
   <grid id="27dc6" binding="amplificationResultPanel" layout-manager="GridLayoutManager" row-count="3" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
     <margin top="0" left="0" bottom="0" right="0"/>
     <constraints>
-      <xy x="20" y="20" width="1065" height="835"/>
+      <xy x="20" y="20" width="1065" height="1483"/>
     </constraints>
     <properties/>
     <border type="none"/>
     <children>
-      <component id="6678a" class="javax.swing.JTextArea" binding="header">
+      <component id="6ede" class="javax.swing.JTextPane" binding="header">
         <constraints>
           <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false">
             <preferred-size width="150" height="20"/>
           </grid>
         </constraints>
         <properties>
+          <contentType value="text/html"/>
           <editable value="false"/>
           <font swing-font="Label.font"/>
-          <lineWrap value="true"/>
-          <text value="Overall information about the amplification"/>
-          <wrapStyleWord value="true"/>
+          <text value="&lt;html&gt;&#10;  &lt;head&gt;&#10;    &#10;  &lt;/head&gt;&#10;  &lt;body&gt;&#10;  &lt;/body&gt;&#10;&lt;/html&gt;&#10;"/>
         </properties>
       </component>
       <splitpane id="d18a4">
@@ -30,7 +29,7 @@
         </constraints>
         <properties>
           <continuousLayout value="true"/>
-          <dividerLocation value="665"/>
+          <dividerLocation value="500"/>
           <enabled value="true"/>
         </properties>
         <border type="none"/>
@@ -60,21 +59,20 @@
                 <border type="none"/>
                 <children/>
               </grid>
-              <component id="f1cbd" class="javax.swing.JTextArea" binding="originalInformation">
+              <component id="7aa2b" class="javax.swing.JTextPane" binding="originalInformation">
                 <constraints>
                   <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="6" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
                 </constraints>
                 <properties>
+                  <contentType value="text/html"/>
                   <editable value="false"/>
                   <font swing-font="Label.font"/>
-                  <lineWrap value="true"/>
-                  <text value="Information about the original test case"/>
-                  <wrapStyleWord value="true"/>
+                  <text value="&lt;html&gt;&#10;  &lt;head&gt;&#10;    &#10;  &lt;/head&gt;&#10;  &lt;body&gt;&#10;  &lt;/body&gt;&#10;&lt;/html&gt;&#10;"/>
                 </properties>
               </component>
             </children>
           </grid>
-          <grid id="7be89" binding="amplifiedSide" layout-manager="GridLayoutManager" row-count="2" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+          <grid id="7be89" binding="amplifiedSide" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
             <margin top="0" left="0" bottom="0" right="0"/>
             <constraints>
               <splitpane position="right"/>
@@ -82,36 +80,55 @@
             <properties/>
             <border type="none"/>
             <children>
-              <grid id="68ba3" binding="amplifiedVisualization" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
-                <margin top="0" left="0" bottom="0" right="0"/>
+              <splitpane id="da1b0">
                 <constraints>
-                  <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
-                </constraints>
-                <properties/>
-                <border type="none"/>
-                <children/>
-              </grid>
-              <component id="728a5" class="javax.swing.JTextArea" binding="amplifiedInformation">
-                <constraints>
-                  <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="6" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
-                </constraints>
-                <properties>
-                  <autoscrolls value="true"/>
-                  <editable value="false"/>
-                  <font swing-font="Label.font"/>
-                  <lineWrap value="true"/>
-                  <text value="Information about the amplified test case"/>
-                  <wrapStyleWord value="true"/>
-                </properties>
-              </component>
-              <component id="9b4b5" class="org.testshift.testcube.inspect.TestCaseEditorField" binding="amplifiedTestCase">
-                <constraints>
-                  <grid row="0" column="0" row-span="1" col-span="2" vsize-policy="6" hsize-policy="6" anchor="0" fill="3" indent="0" use-parent-layout="false">
-                    <preferred-size width="150" height="50"/>
+                  <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false">
+                    <preferred-size width="200" height="200"/>
                   </grid>
                 </constraints>
-                <properties/>
-              </component>
+                <properties>
+                  <continuousLayout value="true"/>
+                </properties>
+                <border type="none"/>
+                <children>
+                  <grid id="1f46c" binding="amplifiedTCI" layout-manager="GridLayoutManager" row-count="2" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+                    <margin top="0" left="0" bottom="0" right="0"/>
+                    <constraints>
+                      <splitpane position="left"/>
+                    </constraints>
+                    <properties/>
+                    <border type="none"/>
+                    <children>
+                      <component id="9b4b5" class="org.testshift.testcube.inspect.TestCaseEditorField" binding="amplifiedTestCase">
+                        <constraints>
+                          <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false">
+                            <preferred-size width="150" height="50"/>
+                          </grid>
+                        </constraints>
+                        <properties/>
+                      </component>
+                      <component id="97a2" class="javax.swing.JTextPane" binding="amplifiedInformation">
+                        <constraints>
+                          <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                        </constraints>
+                        <properties>
+                          <autoscrolls value="true"/>
+                          <contentType value="text/html"/>
+                          <editable value="false"/>
+                          <font swing-font="Label.font"/>
+                          <text value="&lt;html&gt;&#10;  &lt;head&gt;&#10;    &#10;  &lt;/head&gt;&#10;  &lt;body&gt;&#10;  &lt;/body&gt;&#10;&lt;/html&gt;&#10;"/>
+                        </properties>
+                      </component>
+                    </children>
+                  </grid>
+                  <component id="b66db" class="org.testshift.testcube.inspect.CoverageHighlightingEditorField" binding="amplifiedCoverageEditor">
+                    <constraints>
+                      <splitpane position="right"/>
+                    </constraints>
+                    <properties/>
+                  </component>
+                </children>
+              </splitpane>
             </children>
           </grid>
         </children>

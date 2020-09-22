@@ -5,22 +5,22 @@ import eu.stamp_project.dspot.selector.extendedcoverageselector.CoverageImprovem
 
 public class AmplifiedTestCase extends TestCase {
 
-    public CoverageImprovement coverageImprovement;
+    public HtmlCoverageImprovement coverageImprovement;
     public int assertionsAdded;
     public int inputAdded;
 
     public AmplifiedTestCase(String filePath, String name, PsiJavaFile psiFile, AmplificationResult result,
                              CoverageImprovement coverageImprovement, int assertionsAdded, int inputAdded) {
         super(filePath, name, psiFile, result);
-        this.coverageImprovement = coverageImprovement;
+        this.coverageImprovement = new HtmlCoverageImprovement(coverageImprovement);
         this.assertionsAdded = assertionsAdded;
         this.inputAdded = inputAdded;
     }
 
     public String getDescription() {
-       return "Amplified test case '" + name + "'\n\n" +
-               "Input modifications: " + inputAdded + "\n" +
-               "Assert statements added: " + assertionsAdded + "\n\n"
-               + coverageImprovement;
+       return "Amplified test case '" + name + "'<br><br>" +
+               "Input modifications: " + inputAdded + "<br>" +
+               "Assert statements added: " + assertionsAdded + "<br><br>"
+               + coverageImprovement.toHtmlString();
     }
 }
