@@ -17,7 +17,7 @@ Find out more about our research project and how we want to help developers impr
 
 ### JetBrains Marketplace
 To install from the JetBrains Marketplace follow this link: https://plugins.jetbrains.com/plugin/14678-test-cube
-Or search for "Test Cube" in IntelliJ "Preferences" > "Plugins" > "Marketplace". Make sure to install version `0.1.1-SNAPSHOT` or later 🙂
+Or search for "Test Cube" in IntelliJ "Preferences" > "Plugins" > "Marketplace". 
 
 ## Usage
 
