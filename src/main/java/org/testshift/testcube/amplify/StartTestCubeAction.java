@@ -109,8 +109,8 @@ public class StartTestCubeAction extends AnAction {
 
                 List<String> dSpotStarter = new ArrayList<>(Arrays.asList(javaBin, "-jar", dSpotPath,
                         "--absolute-path-to-project-root", currentProject.getBasePath(),
-                        "--test-criterion", AppSettingsState.getInstance().selectorCriterion,
-                        "--input-ampl-distributor", AppSettingsState.getInstance().inputAmplificationDistributor,
+                        "--test-criterion", "ExtendedCoverageSelector",
+                        "--input-ampl-distributor", "RandomInputAmplDistributor",
                         "--test", testClass,
                         // TODO handlle null on testMethod
                         "--test-cases", testMethod,
@@ -123,9 +123,9 @@ public class StartTestCubeAction extends AnAction {
                         "--clean",
                         "--with-comment=Amplifier"));
 
-                if (!AppSettingsState.getInstance().generateAssertions) {
-                    dSpotStarter.add("--only-input-amplification");
-                }
+//                if (!AppSettingsState.getInstance().generateAssertions) {
+//                    dSpotStarter.add("--only-input-amplification");
+//                }
 
                 ProcessBuilder pb = new ProcessBuilder(dSpotStarter);
 

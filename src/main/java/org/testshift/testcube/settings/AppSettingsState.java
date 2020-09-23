@@ -24,12 +24,12 @@ public class AppSettingsState implements PersistentStateComponent<AppSettingsSta
     //public boolean ideaStatus = false;
 
     // DSpot Config
-    public boolean generateAssertions = true;
-    public String selectorCriterion = "ExtendedCoverageSelector";
-    public static final String[] SELECTOR_CRITERION_OPTIONS = {"PitMutantScoreSelector", "JacocoCoverageSelector",
-            "TakeAllSelector", "ExtendedCoverageSelector"};
-    public String inputAmplificationDistributor = "RandomInputAmplDistributor";
-    public static final String[] INPUT_AMPLIFICATION_DISTRIBUTOR_OPTIONS = {"RandomInputAmplDistributor", "TextualDistanceInputAmplDistributor", "SimpleInputAmplDistributor"};
+//    public boolean generateAssertions = true;
+//    public String selectorCriterion = "ExtendedCoverageSelector";
+//    public static final String[] SELECTOR_CRITERION_OPTIONS = {"PitMutantScoreSelector", "JacocoCoverageSelector",
+//            "TakeAllSelector", "ExtendedCoverageSelector"};
+//    public String inputAmplificationDistributor = "RandomInputAmplDistributor";
+//    public static final String[] INPUT_AMPLIFICATION_DISTRIBUTOR_OPTIONS = {"RandomInputAmplDistributor", "TextualDistanceInputAmplDistributor", "SimpleInputAmplDistributor"};
 
 
 
