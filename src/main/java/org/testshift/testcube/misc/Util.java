@@ -2,6 +2,8 @@ package org.testshift.testcube.misc;
 
 import com.google.gson.Gson;
 import com.intellij.openapi.project.Project;
+import com.intellij.psi.PsiMethod;
+import com.intellij.psi.util.ClassUtil;
 import eu.stamp_project.dspot.common.report.output.selector.extendedcoverage.json.TestClassJSON;
 
 import java.io.File;
@@ -42,5 +44,9 @@ public class Util {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public static boolean matchMethodNameAndDescriptor(PsiMethod psiMethod, String name, String descriptor) {
+        return psiMethod.getName().equals(name) && ClassUtil.getAsmMethodSignature(psiMethod).equals(descriptor);
     }
 }

@@ -14,8 +14,9 @@ public class HtmlCoverageImprovement extends CoverageImprovement {
         this.instructionImprovement.classCoverageMaps.forEach((className, classCoverageMap) -> {
             explanation.append("<a href=class>").append(className).append("</a>:<br>");
             classCoverageMap.methodCoverageMap.forEach((methodName, methodCoverage) -> {
-                explanation.append("<a href=method|").append(className)
-                        .append(">")
+                explanation.append("<a href=method|")
+                        .append(className).append("|")
+                        .append(methodCoverage.methodDescriptor).append(">")
                         .append(methodName).append("</a><br>");
                 int index = -1;
                 for (Integer instructionImprovement : methodCoverage.lineCoverage) {
@@ -25,13 +26,14 @@ public class HtmlCoverageImprovement extends CoverageImprovement {
                     }
                     explanation.append("L. <a href=line|")
                             .append(className).append("|")
-                            .append(methodName).append(">")
+                            .append(methodName).append("|")
+                            .append(methodCoverage.methodDescriptor).append(">")
                             .append(index + 1).append("</a> +")
                             .append(instructionImprovement).append(" instr.").append("<br>");
                 }
             });
-            explanation.replace(explanation.length() - 1, explanation.length(), "");
         });
+        explanation.replace(explanation.length() - 1, explanation.length(), "");
         return explanation.toString();
     }
 }

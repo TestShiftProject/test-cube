@@ -10,6 +10,7 @@ import com.intellij.psi.PsiManager;
 import com.intellij.psi.PsiMethod;
 import eu.stamp_project.dspot.common.report.output.selector.extendedcoverage.json.TestCaseJSON;
 import eu.stamp_project.dspot.common.report.output.selector.extendedcoverage.json.TestClassJSON;
+import eu.stamp_project.dspot.selector.extendedcoverageselector.CoverageImprovement;
 import eu.stamp_project.dspot.selector.extendedcoverageselector.ExtendedCoverage;
 import org.testshift.testcube.misc.Util;
 
@@ -30,7 +31,8 @@ public class AmplificationResult {
     public Project project;
     public String testClass;
     public ExtendedCoverage initialCoverage;
-    public HtmlCoverageImprovement amplifiedCoverage;
+    public HtmlCoverageImprovement amplifiedCoverageHTML;
+    public CoverageImprovement amplifiedCoverage;
     public OriginalTestCase originalTestCase;
     public List<AmplifiedTestCase> amplifiedTestCases = new ArrayList<>();
 
@@ -52,7 +54,8 @@ public class AmplificationResult {
         }
 
         result.initialCoverage = jsonResult.getInitialCoverage();
-        result.amplifiedCoverage = new HtmlCoverageImprovement(jsonResult.getAmplifiedCoverage());
+        result.amplifiedCoverage = new CoverageImprovement(jsonResult.getAmplifiedCoverage().getInstructionImprovement());
+        result.amplifiedCoverageHTML = new HtmlCoverageImprovement(jsonResult.getAmplifiedCoverage());
 
         String amplifiedTestClassPath = Util.getAmplifiedTestClassPath(project, testClass);
         VirtualFile file = LocalFileSystem.getInstance().findFileByPath(amplifiedTestClassPath);

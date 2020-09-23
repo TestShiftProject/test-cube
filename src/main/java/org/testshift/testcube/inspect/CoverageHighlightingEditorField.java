@@ -26,6 +26,7 @@ public class CoverageHighlightingEditorField extends LanguageTextField {
         EditorSettings settings = editor.getSettings();
         settings.setLineNumbersShown(true);
         settings.setAdditionalPageAtBottom(true);
+        settings.setLineMarkerAreaShown(true);
 
         return editor;
     }
