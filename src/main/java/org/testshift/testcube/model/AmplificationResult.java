@@ -36,7 +36,8 @@ public class AmplificationResult {
     public OriginalTestCase originalTestCase;
     public List<AmplifiedTestCase> amplifiedTestCases = new ArrayList<>();
 
-    public static AmplificationResult buildAmplificationResult(Project project, String testClass, String testMethod) {
+    public static AmplificationResult buildAmplificationResult(Project project, String testClass, String testMethod,
+                                                               int terminationCounter) {
 
         AmplificationResult result = new AmplificationResult(project, testClass);
         TestClassJSON jsonResult = Util.getResultJSON(project, testClass);
@@ -83,6 +84,10 @@ public class AmplificationResult {
                                 .getNbAssertionAdded(), testCaseJSON.get().getNbInputAdded()));
                     } else {
                         logger.warn("Found no matching json result for test case " + method.getName());
+//                        if (terminationCounter > 0) {
+//                            Util.sleepAndRefreshProject(project);
+//                            return buildAmplificationResult(project, testClass, testMethod, terminationCounter - 1);
+//                        }
                     }
                 }
             }

@@ -7,6 +7,8 @@ import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.extensions.PluginId;
+import com.intellij.openapi.module.Module;
+import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.progress.Task;
@@ -37,14 +39,18 @@ public class StartTestCubeAction extends AnAction {
 
     private String testClass;
     private String testMethod;
+    private Module targetModule;
 
     public StartTestCubeAction() {
     }
 
-    public StartTestCubeAction(@Nullable @Nls(capitalization = Nls.Capitalization.Title) String text, @NotNull String testClass, @Nullable("null means whole class") String testMethod) {
+    public StartTestCubeAction(@Nullable @Nls(capitalization = Nls.Capitalization.Title) String text,
+                               @NotNull String testClass, @Nullable("null means whole class") String testMethod,
+                               Module targetModule) {
         super(text, "Improves the selected test case by applying amplification operators", TestCubeIcons.AMPLIFY_TEST);
         this.testClass = testClass;
         this.testMethod = testMethod;
+        this.targetModule = targetModule;
     }
 
     @Override
@@ -107,6 +113,7 @@ public class StartTestCubeAction extends AnAction {
                     e.printStackTrace();
                 }
 
+
                 List<String> dSpotStarter = new ArrayList<>(Arrays.asList(javaBin, "-jar", dSpotPath,
                         "--absolute-path-to-project-root", currentProject.getBasePath(),
                         "--test-criterion", "ExtendedCoverageSelector",
@@ -126,6 +133,11 @@ public class StartTestCubeAction extends AnAction {
 //                if (!AppSettingsState.getInstance().generateAssertions) {
 //                    dSpotStarter.add("--only-input-amplification");
 //                }
+                @NotNull Module[] modules = ModuleManager.getInstance(currentProject).getModules();
+                if (modules.length > 1) {
+                    dSpotStarter.add("--target-module");
+                    dSpotStarter.add(targetModule.getName());
+                }
 
                 ProcessBuilder pb = new ProcessBuilder(dSpotStarter);
 
@@ -173,6 +185,8 @@ public class StartTestCubeAction extends AnAction {
                 } catch (InterruptedException | IOException e) {
                     e.printStackTrace();
                 }
+
+                Util.sleepAndRefreshProject(currentProject);
 
                 TestCubeNotifier notifier = new TestCubeNotifier();
                 TestClassJSON result = Util.getResultJSON(currentProject, testClass);

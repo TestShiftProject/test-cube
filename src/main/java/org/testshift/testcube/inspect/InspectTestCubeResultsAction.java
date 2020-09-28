@@ -35,7 +35,8 @@ public class InspectTestCubeResultsAction extends NotificationAction {
     @Override
     public void actionPerformed(@NotNull AnActionEvent event, @NotNull Notification notification) {
 
-        AmplificationResult amplificationResult = AmplificationResult.buildAmplificationResult(project, testClass, testMethod);
+        AmplificationResult amplificationResult = AmplificationResult.buildAmplificationResult(project, testClass,
+                testMethod, 3);
 
         AmplificationResultWindow amplificationResultWindow = new AmplificationResultWindow(amplificationResult);
 

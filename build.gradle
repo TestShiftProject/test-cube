@@ -4,7 +4,7 @@ plugins {
 }
 
 group 'org.testshift'
-version '0.1.4'
+version '1.0.0'
 
 repositories {
     mavenCentral()
@@ -23,9 +23,7 @@ intellij {
 
 patchPluginXml {
     changeNotes """
-     Better developer-friendly amplification<br>
-     Detailed report about instruction coverage improvement<br>
-     Explanatory text
+     Various fixes and extension to moduled projects
      """
 }
 

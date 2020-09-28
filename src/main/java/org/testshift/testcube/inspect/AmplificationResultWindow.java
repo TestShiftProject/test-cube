@@ -43,12 +43,9 @@ public class AmplificationResultWindow extends Component {
 
     private JTextPane header;
 
-    private JPanel originalSide;
     private TestCaseEditorField originalTestCase;
-    private JPanel originalVisualization;
     private JTextPane originalInformation;
 
-    private JPanel amplifiedSide;
     private JTextPane amplifiedInformation;
     private TestCaseEditorField amplifiedTestCase;
 
@@ -59,7 +56,11 @@ public class AmplificationResultWindow extends Component {
     private JButton previous;
     private JButton close;
     private CoverageHighlightingEditorField amplifiedCoverageEditor;
-    private JPanel amplifiedTCI;
+    private JSplitPane originalAmplifiedSplit;
+    private JSplitPane amplifiedCoverageSplit;
+    private JSplitPane headerContentSplit;
+    private JSplitPane originalEditorInformationSplit;
+    private JSplitPane amplifiedEditorInformationSplit;
 
     public AmplificationResult amplificationResult;
     private int currentAmplificationTestCaseIndex;
@@ -102,6 +103,8 @@ public class AmplificationResultWindow extends Component {
         ignore.addActionListener(l -> ignoreTestCase());
         next.addActionListener(l -> nextTestCase());
         previous.addActionListener(l -> previousTestCase());
+
+        hideCoverageEditor();
     }
 
     /**
@@ -161,6 +164,9 @@ public class AmplificationResultWindow extends Component {
         if (psiClass != null) {
             amplifiedCoverageEditor.setNewDocumentAndFileType(JavaFileType.INSTANCE, PsiDocumentManager
                     .getInstance(amplificationResult.project).getDocument(psiClass.getContainingFile()));
+            amplifiedCoverageEditor.setVisible(true);
+            amplifiedCoverageSplit.setDividerLocation(0.5);
+            //amplifiedCoverageEditor.setPreferredWidth(200);
 
 
             TextAttributes coveredLine = new TextAttributes();
@@ -176,7 +182,8 @@ public class AmplificationResultWindow extends Component {
                     Map<Integer, Integer> coveredInstructions = coverageImprovement.getCoverageForMethod(methodName)
                             .coveragePerLine();
                     for (Integer coverageLine : coveredInstructions.keySet()) {
-                        markupModel.addLineHighlighter(methodLine + coverageLine, HighlighterLayer.ERROR, coveredLine);
+                        markupModel.addLineHighlighter(methodLine + coverageLine + 1, HighlighterLayer.ERROR,
+                                coveredLine);
 
                     }
                 }
@@ -207,6 +214,10 @@ public class AmplificationResultWindow extends Component {
                 }
             }
         }
+    }
+
+    private void hideCoverageEditor() {
+        amplifiedCoverageEditor.setVisible(false);
     }
 
     /**
@@ -276,6 +287,7 @@ public class AmplificationResultWindow extends Component {
         currentAmplificationTestCase = amplificationResult.amplifiedTestCases.get(currentAmplificationTestCaseIndex);
         moveCaretToTestCase(currentAmplificationTestCase, amplifiedTestCase);
         setAmplifiedInformation();
+        hideCoverageEditor();
     }
 
     public void addTestCaseToTestSuite() {

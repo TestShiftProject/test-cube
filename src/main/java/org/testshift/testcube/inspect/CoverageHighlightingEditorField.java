@@ -22,6 +22,7 @@ public class CoverageHighlightingEditorField extends LanguageTextField {
         editor.setColorsScheme(EditorColorsManager.getInstance().getGlobalScheme());
         editor.setCaretEnabled(true);
         editor.setCaretVisible(true);
+        editor.getScrollPane().setBackground(editor.getBackgroundColor());
 
         EditorSettings settings = editor.getSettings();
         settings.setLineNumbersShown(true);

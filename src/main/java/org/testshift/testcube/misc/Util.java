@@ -49,4 +49,13 @@ public class Util {
     public static boolean matchMethodNameAndDescriptor(PsiMethod psiMethod, String name, String descriptor) {
         return psiMethod.getName().equals(name) && ClassUtil.getAsmMethodSignature(psiMethod).equals(descriptor);
     }
+
+    public static void sleepAndRefreshProject(Project project) {
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        project.getBaseDir().refresh(false,true);
+    }
 }
