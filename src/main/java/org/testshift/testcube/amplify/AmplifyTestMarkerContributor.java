@@ -1,8 +1,8 @@
 package org.testshift.testcube.amplify;
 
 import com.intellij.execution.lineMarker.RunLineMarkerContributor;
-import com.intellij.openapi.module.Module;
-import com.intellij.openapi.roots.ProjectRootManager;
+import com.intellij.openapi.roots.ProjectFileIndex;
+import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiIdentifier;
 import com.intellij.psi.PsiMethod;
@@ -39,11 +39,19 @@ public class AmplifyTestMarkerContributor extends RunLineMarkerContributor {
 //                if (testClassName == null) {
 //                    return null;
 //                }
-                Module module =
-                        ProjectRootManager.getInstance(parent.getProject()).getFileIndex().getModuleForFile(parent.getContainingFile().getVirtualFile());
+                VirtualFile moduleRoot =
+                        ProjectFileIndex.SERVICE.getInstance(parent.getProject())
+                                                .getContentRootForFile(parent.getContainingFile().getVirtualFile());
+                String moduleRootPath;
+                if (moduleRoot == null) {
+                    moduleRootPath = parent.getProject().getBasePath();
+                }
+                else {
+                    moduleRootPath = moduleRoot.getPath();
+                }
                 return testInfo == null ? null : new Info(TestCubeIcons.AMPLIFY_TEST, tooltipProvider,
                         new StartTestCubeAction("Amplify '" + element.getText() + "()'", testClassName,
-                                testMethodName, module));
+                                testMethodName, moduleRootPath));
             }
         }
         return null;

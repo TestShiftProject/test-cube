@@ -226,9 +226,10 @@ public class AmplificationResultWindow extends Component {
     private void displayOverallAmplificationReport() {
         header.setText(htmlStart() + "Amplification of the test method " + amplificationResult.originalTestCase.name +
                        " was successful!<br>" +
-                       "On the right you see the original test case. Below we show the overall coverage improvement " +
+                       "On the left you see the original test case. Below we show the overall coverage improvement " +
                        "the amplification achieved.<br>" +
-                       "On the left you can see the amplified test cases. Below the code of the test case we show how" +
+                       "On the right you can see the amplified test cases. Below the code of the test case we show " +
+                       "how" +
                        " many input modifications were applied and how many assertions were added. In addition we show " +
                        "where this test achieves more coverage than the original test case.<br><br>" +
                        "Use 'Next' and 'Previous' explore the test cases!<br>" +
@@ -291,8 +292,6 @@ public class AmplificationResultWindow extends Component {
     }
 
     public void addTestCaseToTestSuite() {
-        amplifiedInformation.setText("Added Test Case no. " + currentAmplificationTestCaseIndex);
-
         AmplifiedTestCase testToAdd = currentAmplificationTestCase;
 
         PsiMethod method = testToAdd.getTestMethod();
@@ -312,7 +311,18 @@ public class AmplificationResultWindow extends Component {
         });
     }
 
+    public void deleteAmplifiedTestCaseFromFile() {
+        PsiMethod method = currentAmplificationTestCase.getTestMethod();
+        WriteCommandAction.runWriteCommandAction(amplificationResult.project, () -> {
+            if (method != null) {
+                method.delete();
+                PsiDocumentManager.getInstance(amplificationResult.project).commitAllDocuments();
+            }
+        });
+    }
+
     public void ignoreTestCase() {
+        deleteAmplifiedTestCaseFromFile();
         navigateTestCases(true, true);
     }
 

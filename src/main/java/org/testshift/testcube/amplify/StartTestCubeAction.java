@@ -39,18 +39,18 @@ public class StartTestCubeAction extends AnAction {
 
     private String testClass;
     private String testMethod;
-    private Module targetModule;
+    private String moduleRootPath;
 
     public StartTestCubeAction() {
     }
 
     public StartTestCubeAction(@Nullable @Nls(capitalization = Nls.Capitalization.Title) String text,
                                @NotNull String testClass, @Nullable("null means whole class") String testMethod,
-                               Module targetModule) {
+                               String moduleRootPath) {
         super(text, "Improves the selected test case by applying amplification operators", TestCubeIcons.AMPLIFY_TEST);
         this.testClass = testClass;
         this.testMethod = testMethod;
-        this.targetModule = targetModule;
+        this.moduleRootPath = moduleRootPath;
     }
 
     @Override
@@ -113,6 +113,7 @@ public class StartTestCubeAction extends AnAction {
                     e.printStackTrace();
                 }
 
+                String targetModule = moduleRootPath.replace(currentProject.getBasePath() + "/","");
 
                 List<String> dSpotStarter = new ArrayList<>(Arrays.asList(javaBin, "-jar", dSpotPath,
                         "--absolute-path-to-project-root", currentProject.getBasePath(),
@@ -136,7 +137,7 @@ public class StartTestCubeAction extends AnAction {
                 @NotNull Module[] modules = ModuleManager.getInstance(currentProject).getModules();
                 if (modules.length > 1) {
                     dSpotStarter.add("--target-module");
-                    dSpotStarter.add(targetModule.getName());
+                    dSpotStarter.add(targetModule);
                 }
 
                 ProcessBuilder pb = new ProcessBuilder(dSpotStarter);
