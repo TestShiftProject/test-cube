@@ -1,6 +1,5 @@
 package org.testshift.testcube.settings;
 
-import com.intellij.ui.components.JBCheckBox;
 import com.intellij.ui.components.JBLabel;
 import com.intellij.ui.components.JBTextField;
 import com.intellij.util.ui.FormBuilder;
@@ -16,7 +15,7 @@ public class AppSettingsComponent {
     private final JBTextField java8Path = new JBTextField();
     private final JBTextField mavenHome = new JBTextField();
     //private final JBCheckBox myIdeaUserStatus = new JBCheckBox("Do You Use IntelliJ IDEA? ");
-    private final JBCheckBox generateAssertions = new JBCheckBox("Generate assertions during amplification");
+//    private final JBCheckBox generateAssertions = new JBCheckBox("Generate assertions during amplification");
 //    private final JBList<String> selectorCriterion = new JBList<>(AppSettingsState.SELECTOR_CRITERION_OPTIONS);
 //    private final JBList<String> inputAmplificationDistributor = new JBList<>(AppSettingsState.INPUT_AMPLIFICATION_DISTRIBUTOR_OPTIONS);
 
@@ -25,7 +24,7 @@ public class AppSettingsComponent {
                 .addLabeledComponent(new JBLabel("Absolute path to your java 1.8 installation"), java8Path, 1, false)
                 .addLabeledComponent(new JBLabel("Absolute path to your maven home (MAVEN_HOME)"), mavenHome)
                 //.addComponent(myIdeaUserStatus, 1)
-                .addComponent(generateAssertions)
+//                .addComponent(generateAssertions)
 //                .addLabeledComponent(new JBLabel("Criterion for selecting amplified tests"),selectorCriterion)
 //                .addLabeledComponent(new JBLabel("Value distribution for input amplification"),inputAmplificationDistributor)
                 .addComponentFillVertically(new JPanel(), 0)
@@ -58,13 +57,13 @@ public class AppSettingsComponent {
         mavenHome.setText(newText);
     }
 
-    public boolean getGenerateAssertions() {
-        return generateAssertions.isSelected();
-    }
-
-    public void setGenerateAssertions(boolean generateAssertions) {
-        this.generateAssertions.setSelected(generateAssertions);
-    }
+//    public boolean getGenerateAssertions() {
+//        return generateAssertions.isSelected();
+//    }
+//
+//    public void setGenerateAssertions(boolean generateAssertions) {
+//        this.generateAssertions.setSelected(generateAssertions);
+//    }
 
 //    public String getSelectorCriterion() {
 //        return selectorCriterion.getSelectedValue();

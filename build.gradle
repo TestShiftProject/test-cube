@@ -23,7 +23,9 @@ intellij {
 
 patchPluginXml {
     changeNotes """
-     Various fixes and extension to moduled projects
+     Support for multi-level module projects<br>
+     Ignoring test case removes it from amplified class<br>
+     Properly remove generate assertions option<br>
      """
 }
 
