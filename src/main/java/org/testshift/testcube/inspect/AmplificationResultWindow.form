@@ -71,7 +71,7 @@
         </constraints>
         <properties>
           <continuousLayout value="true"/>
-          <dividerLocation value="75"/>
+          <dividerLocation value="100"/>
           <dividerSize value="5"/>
           <orientation value="0"/>
         </properties>

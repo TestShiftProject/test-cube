@@ -5,6 +5,7 @@ import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.LogicalPosition;
 import com.intellij.openapi.editor.markup.HighlighterLayer;
+import com.intellij.openapi.editor.markup.HighlighterTargetArea;
 import com.intellij.openapi.editor.markup.MarkupModel;
 import com.intellij.openapi.editor.markup.TextAttributes;
 import com.intellij.openapi.wm.ToolWindow;
@@ -105,6 +106,11 @@ public class AmplificationResultWindow extends Component {
         previous.addActionListener(l -> previousTestCase());
 
         hideCoverageEditor();
+    }
+
+    public void addHighlights() {
+        showTestCaseInEditor(amplificationResult.originalTestCase, originalTestCase);
+        moveCaretToTestCase(currentAmplificationTestCase,amplifiedTestCase);
     }
 
     /**
@@ -254,6 +260,19 @@ public class AmplificationResultWindow extends Component {
             } catch (NullPointerException ignored) {
                 // first time we used the editor text field the editor is null
             }
+            try {
+                // Highlight name of test case
+                TextAttributes currentTestCase = new TextAttributes();
+                currentTestCase.setBackgroundColor(JBColor.blue.darker());
+                MarkupModel markupModel = editor.getEditor().getMarkupModel();
+
+                markupModel.removeAllHighlighters();
+                markupModel.addRangeHighlighter(method.getTextOffset(),
+                        method.getTextOffset() + method.getName().length(), HighlighterLayer.ERROR,
+                        currentTestCase, HighlighterTargetArea.EXACT_RANGE);
+            } catch (NullPointerException ignored) {
+                // first time we used the editor text field the editor is null
+            }
         }
     }
 
@@ -340,8 +359,9 @@ public class AmplificationResultWindow extends Component {
 
     private void setOriginalInformation() {
         originalInformation
-                .setText(htmlStart() + "Original test case: '" + amplificationResult.originalTestCase.name +
-                        "'<br><br>" + amplificationResult.amplifiedCoverageHTML.toHtmlString() + htmlEnd());
+                .setText(htmlStart() + "Above you see the <b>original test case</b> '" + amplificationResult.originalTestCase.name +
+                        "'<br><br><hr><br>Below you see the <b>overall coverage</b> that would be gained if you <b>add all</b> " +
+                         "proposed test cases:<br>" + amplificationResult.amplifiedCoverageHTML.toHtmlString() + htmlEnd());
     }
 
     public void close() {

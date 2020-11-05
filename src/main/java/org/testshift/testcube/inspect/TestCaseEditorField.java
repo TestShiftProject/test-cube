@@ -12,6 +12,7 @@ public class TestCaseEditorField extends LanguageTextField {
         super(JavaLanguage.INSTANCE, null, "placeholder value");
         setOneLineMode(false);
         setAutoscrolls(true);
+        setFontInheritedFromLAF(false);
     }
 
     @Override

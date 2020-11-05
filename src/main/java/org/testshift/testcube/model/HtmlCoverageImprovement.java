@@ -10,7 +10,7 @@ public class HtmlCoverageImprovement extends CoverageImprovement {
 
 
     public String toHtmlString() {
-        StringBuilder explanation = new StringBuilder("Coverage improved at<br>");
+        StringBuilder explanation = new StringBuilder("The coverage improved in these classes/methods/lines: <br>");
         this.instructionImprovement.classCoverageMaps.forEach((className, classCoverageMap) -> {
             explanation.append("<a href=class>").append(className).append("</a>:<br>");
             classCoverageMap.methodCoverageMap.forEach((methodName, methodCoverage) -> {

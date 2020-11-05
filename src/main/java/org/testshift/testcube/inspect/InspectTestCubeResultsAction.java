@@ -50,6 +50,7 @@ public class InspectTestCubeResultsAction extends NotificationAction {
             toolWindow.getContentManager().setSelectedContent(content);
 
             toolWindow.show();
+            amplificationResultWindow.addHighlights();
         }
         //notification.expire();
     }
