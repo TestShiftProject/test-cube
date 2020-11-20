@@ -14,7 +14,7 @@
 
     <extensions defaultExtensionNs="com.intellij">
         <!-- Add your extensions here -->
-        <toolWindow id="Test Cube" anchor="bottom" factoryClass="org.testshift.testcube.inspect.TestCubeToolWindowFactory" icon="/icons/amplifyTestsToolWindow.svg"/>
+        <toolWindow id="Test Cube" anchor="right" factoryClass="org.testshift.testcube.inspect.TestCubeToolWindowFactory" icon="/icons/amplifyTestsToolWindow.svg"/>
 
         <runLineMarkerContributor language="JAVA" order="after applicationRunLineMarkerProvider" implementationClass="org.testshift.testcube.amplify.AmplifyTestMarkerContributor"/>
         <applicationService serviceImplementation="org.testshift.testcube.settings.AppSettingsState"/>

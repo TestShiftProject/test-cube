@@ -57,10 +57,8 @@ public class AmplificationResultWindow extends Component {
     private JButton previous;
     private JButton close;
     private CoverageHighlightingEditorField amplifiedCoverageEditor;
-    private JSplitPane originalAmplifiedSplit;
     private JSplitPane amplifiedCoverageSplit;
     private JSplitPane headerContentSplit;
-    private JSplitPane originalEditorInformationSplit;
     private JSplitPane amplifiedEditorInformationSplit;
 
     public AmplificationResult amplificationResult;
@@ -68,13 +66,13 @@ public class AmplificationResultWindow extends Component {
     private AmplifiedTestCase currentAmplificationTestCase;
 
     public AmplificationResultWindow() {
-        originalInformation.setEditorKit(JEditorPane.createEditorKitForContentType("text/html"));
-        originalInformation.addHyperlinkListener(new HyperlinkListener() {
-            @Override
-            public void hyperlinkUpdate(HyperlinkEvent e) {
-                displayAndScrollToLinkedCoverage(e, amplificationResult.amplifiedCoverage);
-            }
-        });
+//        originalInformation.setEditorKit(JEditorPane.createEditorKitForContentType("text/html"));
+//        originalInformation.addHyperlinkListener(new HyperlinkListener() {
+//            @Override
+//            public void hyperlinkUpdate(HyperlinkEvent e) {
+//                displayAndScrollToLinkedCoverage(e, amplificationResult.amplifiedCoverage);
+//            }
+//        });
         amplifiedInformation.setEditorKit(JEditorPane.createEditorKitForContentType("text/html"));
         amplifiedInformation.addHyperlinkListener(new HyperlinkListener() {
             @Override
@@ -94,8 +92,8 @@ public class AmplificationResultWindow extends Component {
                 .get(currentAmplificationTestCaseIndex);
 
         displayOverallAmplificationReport();
-        showTestCaseInEditor(amplificationResult.originalTestCase, originalTestCase);
-        setOriginalInformation();
+//        showTestCaseInEditor(amplificationResult.originalTestCase, originalTestCase);
+//        setOriginalInformation();
         showTestCaseInEditor(currentAmplificationTestCase, amplifiedTestCase);
         setAmplifiedInformation();
 
@@ -109,7 +107,7 @@ public class AmplificationResultWindow extends Component {
     }
 
     public void addHighlights() {
-        showTestCaseInEditor(amplificationResult.originalTestCase, originalTestCase);
+//        showTestCaseInEditor(amplificationResult.originalTestCase, originalTestCase);
         moveCaretToTestCase(currentAmplificationTestCase,amplifiedTestCase);
     }
 
@@ -232,16 +230,17 @@ public class AmplificationResultWindow extends Component {
     private void displayOverallAmplificationReport() {
         header.setText(htmlStart() + "Amplification of the test method " + amplificationResult.originalTestCase.name +
                        " was successful!<br>" +
-                       "On the left you see the original test case. Below we show the overall coverage improvement " +
-                       "the amplification achieved.<br>" +
-                       "On the right you can see the amplified test cases. Below the code of the test case we show " +
-                       "how" +
-                       " many input modifications were applied and how many assertions were added. In addition we show " +
-                       "where this test achieves more coverage than the original test case.<br><br>" +
-                       "Use 'Next' and 'Previous' explore the test cases!<br>" +
-                       "If you find one that you would like to include in your existing test suite: 'Add To Test Suite' " +
+//                       "On the left you see the original test case. Below we show the overall coverage improvement " +
+//                       "the amplification achieved.<br>" +
+                       "Here you can see the amplified test cases.<br>" +
+                       "Underneath the code you can see<br>" +
+                       "- how many input modifications were applied<br>" +
+                       "- how many assertions were added<br>" +
+                       "- where this test achieves more coverage than the original test case<br><br>" +
+                       "Use <b>'Next'</b> and <b>'Previous'</b> on the bottom to explore the test cases!<br>" +
+                       "If you find one that you would like to include in your existing test suite: <b>'Add To Test Suite'</b> " +
                        "automatically copies it over for you :)<br>" +
-                       "Fell free to edit the test cases before adding them!" + htmlEnd());
+                       "Fell free to <b>edit</b> the test cases before/after adding them!" + htmlEnd());
     }
 
     private void showTestCaseInEditor(TestCase testCase, TestCaseEditorField editor) {
@@ -357,12 +356,12 @@ public class AmplificationResultWindow extends Component {
         amplifiedInformation.setText(htmlStart() + currentAmplificationTestCase.getDescription() + htmlEnd());
     }
 
-    private void setOriginalInformation() {
-        originalInformation
-                .setText(htmlStart() + "Above you see the <b>original test case</b> '" + amplificationResult.originalTestCase.name +
-                        "'<br><br><hr><br>Below you see the <b>overall coverage</b> that would be gained if you <b>add all</b> " +
-                         "proposed test cases:<br>" + amplificationResult.amplifiedCoverageHTML.toHtmlString() + htmlEnd());
-    }
+//    private void setOriginalInformation() {
+//        originalInformation
+//                .setText(htmlStart() + "Above you see the <b>original test case</b> '" + amplificationResult.originalTestCase.name +
+//                        "'<br><br><hr><br>Below you see the <b>overall coverage</b> that would be gained if you <b>add all</b> " +
+//                         "proposed test cases:<br>" + amplificationResult.amplifiedCoverageHTML.toHtmlString() + htmlEnd());
+//    }
 
     public void close() {
         ToolWindow toolWindow = ToolWindowManager.getInstance(amplificationResult.project).getToolWindow("Test Cube");

@@ -71,7 +71,7 @@
         </constraints>
         <properties>
           <continuousLayout value="true"/>
-          <dividerLocation value="100"/>
+          <dividerLocation value="200"/>
           <dividerSize value="5"/>
           <orientation value="0"/>
         </properties>
@@ -90,12 +90,13 @@
                   <contentType value="text/html"/>
                   <editable value="false"/>
                   <font swing-font="Label.font"/>
+                  <margin top="4" left="4" bottom="4" right="4"/>
                   <text value="&lt;html&gt;&#10;  &lt;head&gt;&#10;    &#10;  &lt;/head&gt;&#10;  &lt;body&gt;&#10;  &lt;/body&gt;&#10;&lt;/html&gt;&#10;"/>
                 </properties>
               </component>
             </children>
           </scrollpane>
-          <splitpane id="d18a4" binding="originalAmplifiedSplit">
+          <splitpane id="da1b0" binding="amplifiedCoverageSplit">
             <constraints>
               <splitpane position="right"/>
             </constraints>
@@ -103,108 +104,57 @@
               <continuousLayout value="true"/>
               <dividerLocation value="500"/>
               <dividerSize value="5"/>
-              <enabled value="true"/>
+              <focusCycleRoot value="false"/>
+              <orientation value="0"/>
             </properties>
             <border type="empty"/>
             <children>
-              <splitpane id="e338" binding="originalEditorInformationSplit">
+              <component id="b66db" class="org.testshift.testcube.inspect.CoverageHighlightingEditorField" binding="amplifiedCoverageEditor">
+                <constraints>
+                  <splitpane position="right"/>
+                </constraints>
+                <properties/>
+              </component>
+              <splitpane id="3e12" binding="amplifiedEditorInformationSplit">
                 <constraints>
                   <splitpane position="left"/>
                 </constraints>
                 <properties>
                   <continuousLayout value="true"/>
-                  <dividerLocation value="171"/>
+                  <dividerLocation value="271"/>
                   <dividerSize value="5"/>
                   <orientation value="0"/>
                 </properties>
                 <border type="empty"/>
                 <children>
-                  <component id="da6a" class="org.testshift.testcube.inspect.TestCaseEditorField" binding="originalTestCase">
+                  <component id="9b4b5" class="org.testshift.testcube.inspect.TestCaseEditorField" binding="amplifiedTestCase">
                     <constraints>
                       <splitpane position="left"/>
                     </constraints>
-                    <properties/>
+                    <properties>
+                      <foreground color="-15653439"/>
+                    </properties>
                   </component>
-                  <scrollpane id="9267f">
+                  <scrollpane id="b05a8">
                     <constraints>
                       <splitpane position="right"/>
                     </constraints>
                     <properties/>
                     <border type="etched"/>
                     <children>
-                      <component id="7aa2b" class="javax.swing.JTextPane" binding="originalInformation">
+                      <component id="97a2" class="javax.swing.JTextPane" binding="amplifiedInformation">
                         <constraints/>
                         <properties>
+                          <autoscrolls value="true"/>
                           <contentType value="text/html"/>
                           <editable value="false"/>
                           <font swing-font="Label.font"/>
+                          <margin top="4" left="4" bottom="4" right="4"/>
                           <text value="&lt;html&gt;&#10;  &lt;head&gt;&#10;    &#10;  &lt;/head&gt;&#10;  &lt;body&gt;&#10;  &lt;/body&gt;&#10;&lt;/html&gt;&#10;"/>
                         </properties>
                       </component>
                     </children>
                   </scrollpane>
-                </children>
-              </splitpane>
-              <splitpane id="da1b0" binding="amplifiedCoverageSplit">
-                <constraints>
-                  <splitpane position="right"/>
-                </constraints>
-                <properties>
-                  <continuousLayout value="true"/>
-                  <dividerLocation value="500"/>
-                  <dividerSize value="5"/>
-                  <focusCycleRoot value="false"/>
-                  <orientation value="1"/>
-                </properties>
-                <border type="empty"/>
-                <children>
-                  <component id="b66db" class="org.testshift.testcube.inspect.CoverageHighlightingEditorField" binding="amplifiedCoverageEditor">
-                    <constraints>
-                      <splitpane position="right"/>
-                    </constraints>
-                    <properties/>
-                  </component>
-                  <splitpane id="3e12" binding="amplifiedEditorInformationSplit">
-                    <constraints>
-                      <splitpane position="left"/>
-                    </constraints>
-                    <properties>
-                      <continuousLayout value="true"/>
-                      <dividerLocation value="171"/>
-                      <dividerSize value="5"/>
-                      <orientation value="0"/>
-                    </properties>
-                    <border type="empty"/>
-                    <children>
-                      <component id="9b4b5" class="org.testshift.testcube.inspect.TestCaseEditorField" binding="amplifiedTestCase">
-                        <constraints>
-                          <splitpane position="left"/>
-                        </constraints>
-                        <properties>
-                          <foreground color="-15653439"/>
-                        </properties>
-                      </component>
-                      <scrollpane id="b05a8">
-                        <constraints>
-                          <splitpane position="right"/>
-                        </constraints>
-                        <properties/>
-                        <border type="etched"/>
-                        <children>
-                          <component id="97a2" class="javax.swing.JTextPane" binding="amplifiedInformation">
-                            <constraints/>
-                            <properties>
-                              <autoscrolls value="true"/>
-                              <contentType value="text/html"/>
-                              <editable value="false"/>
-                              <font swing-font="Label.font"/>
-                              <text value="&lt;html&gt;&#10;  &lt;head&gt;&#10;    &#10;  &lt;/head&gt;&#10;  &lt;body&gt;&#10;  &lt;/body&gt;&#10;&lt;/html&gt;&#10;"/>
-                            </properties>
-                          </component>
-                        </children>
-                      </scrollpane>
-                    </children>
-                  </splitpane>
                 </children>
               </splitpane>
             </children>

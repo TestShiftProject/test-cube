@@ -124,6 +124,7 @@ public class StartTestCubeAction extends AnAction {
                         "--test-cases", testMethod,
                         "--output-directory", Util.getDSpotOutputPath(currentProject),
                         "--amplifiers", Config.AMPLIFIERS_ALL,
+                        "--max-test-amplified", "25",
                         //"--generate-new-test-class",
                         //"--keep-original-test-methods",
                         "--verbose",
