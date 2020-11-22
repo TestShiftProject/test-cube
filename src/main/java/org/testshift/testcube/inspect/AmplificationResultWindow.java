@@ -42,10 +42,8 @@ public class AmplificationResultWindow extends Component {
 
     private JPanel amplificationResultPanel;
 
-    private JTextPane header;
-
-    private TestCaseEditorField originalTestCase;
-    private JTextPane originalInformation;
+//    private TestCaseEditorField originalTestCase;
+//    private JTextPane originalInformation;
 
     private JTextPane amplifiedInformation;
     private TestCaseEditorField amplifiedTestCase;
@@ -59,7 +57,6 @@ public class AmplificationResultWindow extends Component {
     private CoverageHighlightingEditorField amplifiedCoverageEditor;
     private JSplitPane amplifiedCoverageSplit;
     private JSplitPane headerContentSplit;
-    private JSplitPane amplifiedEditorInformationSplit;
 
     public AmplificationResult amplificationResult;
     private int currentAmplificationTestCaseIndex;
@@ -91,11 +88,10 @@ public class AmplificationResultWindow extends Component {
         this.currentAmplificationTestCase = amplificationResult.amplifiedTestCases
                 .get(currentAmplificationTestCaseIndex);
 
-        displayOverallAmplificationReport();
+//        displayOverallAmplificationReport();
 //        showTestCaseInEditor(amplificationResult.originalTestCase, originalTestCase);
 //        setOriginalInformation();
         showTestCaseInEditor(currentAmplificationTestCase, amplifiedTestCase);
-        setAmplifiedInformation();
 
         close.addActionListener(l -> close());
         add.addActionListener(l -> addTestCaseToTestSuite());
@@ -133,7 +129,7 @@ public class AmplificationResultWindow extends Component {
             if (e.getDescription().equals("class")) {
                 showClassInAmplifiedCoverageEditor(visibleLinkText, coverageImprovementForLineHighlighting
                         .getInstructionImprovement().getCoverageForClass(visibleLinkText),
-                        null, null, 0);
+                        null, null, 0, null);
 
             } else if (e.getDescription().startsWith("method")) {
                 // {"method", <class name>, <method descriptor>}
@@ -142,7 +138,7 @@ public class AmplificationResultWindow extends Component {
                 String methodDescriptor = lineData[2];
                 showClassInAmplifiedCoverageEditor(classNameFQ, coverageImprovementForLineHighlighting
                         .getInstructionImprovement()
-                        .getCoverageForClass(classNameFQ), visibleLinkText, methodDescriptor, 0);
+                        .getCoverageForClass(classNameFQ), visibleLinkText, methodDescriptor, 0, null);
 
             } else if (e.getDescription().startsWith("line")) {
                 // {"line", <class name>, <method name>, <method descriptor>}
@@ -150,11 +146,12 @@ public class AmplificationResultWindow extends Component {
                 String classNameFQ = lineData[1];
                 String methodName = lineData[2];
                 String methodDescriptor = lineData[3];
+                String lineType = lineData[4];
                 int line = Integer.parseInt(visibleLinkText);
 
                 showClassInAmplifiedCoverageEditor(classNameFQ, coverageImprovementForLineHighlighting
                         .getInstructionImprovement()
-                        .getCoverageForClass(classNameFQ), methodName, methodDescriptor, line);
+                        .getCoverageForClass(classNameFQ), methodName, methodDescriptor, line, lineType);
             }
         }
     }
@@ -162,13 +159,14 @@ public class AmplificationResultWindow extends Component {
     private void showClassInAmplifiedCoverageEditor(String classNameFQ, ClassCoverageMap coverageImprovement,
                                                     @Nullable String methodNameToScrollTo,
                                                     @Nullable String methodDescriptorToScrollTo,
-                                                    int methodLineToScrollTo) {
+                                                    int methodLineToScrollTo,
+                                                    @Nullable String lineType) {
         PsiClass psiClass = JavaPsiFacade.getInstance(amplificationResult.project)
                 .findClass(classNameFQ, GlobalSearchScope.allScope(amplificationResult.project));
         if (psiClass != null) {
+            amplifiedCoverageEditor.setVisible(true);
             amplifiedCoverageEditor.setNewDocumentAndFileType(JavaFileType.INSTANCE, PsiDocumentManager
                     .getInstance(amplificationResult.project).getDocument(psiClass.getContainingFile()));
-            amplifiedCoverageEditor.setVisible(true);
             amplifiedCoverageSplit.setDividerLocation(0.5);
             //amplifiedCoverageEditor.setPreferredWidth(200);
 
@@ -201,7 +199,14 @@ public class AmplificationResultWindow extends Component {
                     try {
                         int methodLine = amplifiedCoverageEditor.getEditor()
                                 .offsetToLogicalPosition(method.get().getTextOffset()).line;
-                        int scrollLine = methodLine + methodLineToScrollTo - 1;
+                        int scrollLine;
+                        if (lineType == null) {
+                            scrollLine = methodLine - 1;
+                        } else if (lineType.equals("methodLine")) {
+                            scrollLine = methodLine + methodLineToScrollTo - 1;
+                        } else {
+                            scrollLine = methodLineToScrollTo - 2;
+                        }
                         amplifiedCoverageEditor.getEditor().getScrollingModel()
                                 .scrollVertically(amplifiedCoverageEditor.getEditor()
                                         .logicalPositionToXY(new LogicalPosition(scrollLine, 0)).y);
@@ -227,26 +232,28 @@ public class AmplificationResultWindow extends Component {
     /**
      * Writes the content of DSpot's report file into the header text of the window for this amplification result
      */
-    private void displayOverallAmplificationReport() {
-        header.setText(htmlStart() + "Amplification of the test method " + amplificationResult.originalTestCase.name +
-                       " was successful!<br>" +
-//                       "On the left you see the original test case. Below we show the overall coverage improvement " +
-//                       "the amplification achieved.<br>" +
-                       "Here you can see the amplified test cases.<br>" +
-                       "Underneath the code you can see<br>" +
-                       "- how many input modifications were applied<br>" +
-                       "- how many assertions were added<br>" +
-                       "- where this test achieves more coverage than the original test case<br><br>" +
-                       "Use <b>'Next'</b> and <b>'Previous'</b> on the bottom to explore the test cases!<br>" +
-                       "If you find one that you would like to include in your existing test suite: <b>'Add To Test Suite'</b> " +
-                       "automatically copies it over for you :)<br>" +
-                       "Fell free to <b>edit</b> the test cases before/after adding them!" + htmlEnd());
-    }
+//    private void displayOverallAmplificationReport() {
+//        header.setText(htmlStart() + "Amplification of " + amplificationResult.originalTestCase.name +
+//                       " was successful!<br>" +
+////                       "On the left you see the original test case. Below we show the overall coverage improvement " +
+////                       "the amplification achieved.<br>" +
+////                       "Here you can see the amplified test cases.<br>" +
+////                       "Underneath the code you can see<br>" +
+////                       "- how many input modifications were applied<br>" +
+////                       "- how many assertions were added<br>" +
+////                       "- where this test achieves more coverage than the original test case<br><br>" +
+////                       "Use <b>'Next'</b> and <b>'Previous'</b> on the bottom to explore the test cases!<br>" +
+////                       "If you find one that you would like to include in your existing test suite: <b>'Add To Test Suite'</b> " +
+////                       "automatically copies it over for you :)<br>" +
+////                       "Fell free to <b>edit</b> the test cases before/after adding them!" +
+//                       htmlEnd());
+//    }
 
     private void showTestCaseInEditor(TestCase testCase, TestCaseEditorField editor) {
         editor.setNewDocumentAndFileType(JavaFileType.INSTANCE, PsiDocumentManager
                 .getInstance(amplificationResult.project).getDocument(testCase.psiFile));
         moveCaretToTestCase(testCase, editor);
+        setAmplifiedInformation();
     }
 
     private void moveCaretToTestCase(TestCase testCase, TestCaseEditorField editor) {

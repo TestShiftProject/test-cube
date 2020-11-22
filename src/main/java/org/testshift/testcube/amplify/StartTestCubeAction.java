@@ -99,7 +99,7 @@ public class StartTestCubeAction extends AnAction {
         String pluginPath = PathManager.getPluginsPath();
         String dSpotPath =  pluginPath + File.separator + "test-cube" + File.separator + "lib" + File.separator + "dspot-3.1.1-SNAPSHOT-jar-with-dependencies.jar";
 
-        Task.Backgroundable dspotTask = new Task.Backgroundable(currentProject, "Running DSpot", true) {
+        Task.Backgroundable dspotTask = new Task.Backgroundable(currentProject, "Amplifying test", true) {
 
             public void run(@NotNull ProgressIndicator indicator) {
                 // clean output directory
@@ -130,7 +130,7 @@ public class StartTestCubeAction extends AnAction {
                         "--verbose",
                         "--dev-friendly",
                         "--clean",
-                        "--with-comment=Amplifier"));
+                        "--with-comment=None"));
 
 //                if (!AppSettingsState.getInstance().generateAssertions) {
 //                    dSpotStarter.add("--only-input-amplification");
@@ -194,7 +194,7 @@ public class StartTestCubeAction extends AnAction {
                 TestClassJSON result = Util.getResultJSON(currentProject, testClass);
                 if (result == null || result.getTestCases() == null) {
                     notifier.notify(currentProject,
-                            "An error occurred during amplification, no new test cases found.", true,
+                            "No new test cases found. Please try amplifying another test case!", true,
                             new InspectDSpotTerminalOutputAction());
                 } else {
                     int amplifiedTestCasesCount = result.getTestCases().size();

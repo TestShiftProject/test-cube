@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="org.testshift.testcube.inspect.AmplificationResultWindow">
-  <grid id="27dc6" binding="amplificationResultPanel" layout-manager="GridLayoutManager" row-count="2" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+  <grid id="27dc6" binding="amplificationResultPanel" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
     <margin top="0" left="0" bottom="0" right="0"/>
     <constraints>
       <xy x="20" y="20" width="1065" height="1483"/>
@@ -8,61 +8,6 @@
     <properties/>
     <border type="none"/>
     <children>
-      <grid id="932ea" binding="buttons" layout-manager="GridLayoutManager" row-count="1" column-count="6" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
-        <margin top="0" left="0" bottom="0" right="0"/>
-        <constraints>
-          <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="true"/>
-        </constraints>
-        <properties/>
-        <border type="empty"/>
-        <children>
-          <hspacer id="6dbab">
-            <constraints>
-              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="1" hsize-policy="7" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-            </constraints>
-          </hspacer>
-          <component id="4fc8b" class="javax.swing.JButton" binding="add">
-            <constraints>
-              <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-            </constraints>
-            <properties>
-              <text value="Add To Test Suite"/>
-            </properties>
-          </component>
-          <component id="98614" class="javax.swing.JButton" binding="next">
-            <constraints>
-              <grid row="0" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-            </constraints>
-            <properties>
-              <text value="Next"/>
-            </properties>
-          </component>
-          <component id="53cfb" class="javax.swing.JButton" binding="previous">
-            <constraints>
-              <grid row="0" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-            </constraints>
-            <properties>
-              <text value="Previous"/>
-            </properties>
-          </component>
-          <component id="d05fc" class="javax.swing.JButton" binding="ignore">
-            <constraints>
-              <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-            </constraints>
-            <properties>
-              <text value="Ignore"/>
-            </properties>
-          </component>
-          <component id="927fb" class="javax.swing.JButton" binding="close">
-            <constraints>
-              <grid row="0" column="5" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-            </constraints>
-            <properties>
-              <text value="Close"/>
-            </properties>
-          </component>
-        </children>
-      </grid>
       <splitpane id="e16ca" binding="headerContentSplit">
         <constraints>
           <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false">
@@ -70,32 +15,13 @@
           </grid>
         </constraints>
         <properties>
-          <continuousLayout value="true"/>
-          <dividerLocation value="200"/>
+          <continuousLayout value="false"/>
+          <dividerLocation value="250"/>
           <dividerSize value="5"/>
           <orientation value="0"/>
         </properties>
         <border type="empty"/>
         <children>
-          <scrollpane id="a8bd0">
-            <constraints>
-              <splitpane position="left"/>
-            </constraints>
-            <properties/>
-            <border type="etched"/>
-            <children>
-              <component id="6ede" class="javax.swing.JTextPane" binding="header">
-                <constraints/>
-                <properties>
-                  <contentType value="text/html"/>
-                  <editable value="false"/>
-                  <font swing-font="Label.font"/>
-                  <margin top="4" left="4" bottom="4" right="4"/>
-                  <text value="&lt;html&gt;&#10;  &lt;head&gt;&#10;    &#10;  &lt;/head&gt;&#10;  &lt;body&gt;&#10;  &lt;/body&gt;&#10;&lt;/html&gt;&#10;"/>
-                </properties>
-              </component>
-            </children>
-          </scrollpane>
           <splitpane id="da1b0" binding="amplifiedCoverageSplit">
             <constraints>
               <splitpane position="right"/>
@@ -115,50 +41,101 @@
                 </constraints>
                 <properties/>
               </component>
-              <splitpane id="3e12" binding="amplifiedEditorInformationSplit">
+              <grid id="4e98d" layout-manager="GridLayoutManager" row-count="2" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+                <margin top="0" left="0" bottom="0" right="0"/>
                 <constraints>
                   <splitpane position="left"/>
                 </constraints>
-                <properties>
-                  <continuousLayout value="true"/>
-                  <dividerLocation value="271"/>
-                  <dividerSize value="5"/>
-                  <orientation value="0"/>
-                </properties>
-                <border type="empty"/>
+                <properties/>
+                <border type="none"/>
                 <children>
                   <component id="9b4b5" class="org.testshift.testcube.inspect.TestCaseEditorField" binding="amplifiedTestCase">
                     <constraints>
-                      <splitpane position="left"/>
+                      <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
                     </constraints>
                     <properties>
                       <foreground color="-15653439"/>
                     </properties>
                   </component>
-                  <scrollpane id="b05a8">
+                  <grid id="932ea" binding="buttons" layout-manager="GridLayoutManager" row-count="1" column-count="6" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+                    <margin top="0" left="0" bottom="0" right="0"/>
                     <constraints>
-                      <splitpane position="right"/>
+                      <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="true"/>
                     </constraints>
                     <properties/>
-                    <border type="etched"/>
+                    <border type="empty"/>
                     <children>
-                      <component id="97a2" class="javax.swing.JTextPane" binding="amplifiedInformation">
-                        <constraints/>
+                      <hspacer id="6dbab">
+                        <constraints>
+                          <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="1" hsize-policy="7" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                        </constraints>
+                      </hspacer>
+                      <component id="4fc8b" class="javax.swing.JButton" binding="add">
+                        <constraints>
+                          <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                        </constraints>
                         <properties>
-                          <autoscrolls value="true"/>
-                          <contentType value="text/html"/>
-                          <editable value="false"/>
-                          <font swing-font="Label.font"/>
-                          <margin top="4" left="4" bottom="4" right="4"/>
-                          <text value="&lt;html&gt;&#10;  &lt;head&gt;&#10;    &#10;  &lt;/head&gt;&#10;  &lt;body&gt;&#10;  &lt;/body&gt;&#10;&lt;/html&gt;&#10;"/>
+                          <text value="Add Test To Test Suite"/>
+                        </properties>
+                      </component>
+                      <component id="53cfb" class="javax.swing.JButton" binding="previous">
+                        <constraints>
+                          <grid row="0" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                        </constraints>
+                        <properties>
+                          <text value="Previous Test Case"/>
+                        </properties>
+                      </component>
+                      <component id="d05fc" class="javax.swing.JButton" binding="ignore">
+                        <constraints>
+                          <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                        </constraints>
+                        <properties>
+                          <text value="Ignore Test Case"/>
+                        </properties>
+                      </component>
+                      <component id="927fb" class="javax.swing.JButton" binding="close">
+                        <constraints>
+                          <grid row="0" column="5" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                        </constraints>
+                        <properties>
+                          <text value="Close Amplification  Results"/>
+                        </properties>
+                      </component>
+                      <component id="98614" class="javax.swing.JButton" binding="next">
+                        <constraints>
+                          <grid row="0" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                        </constraints>
+                        <properties>
+                          <text value="Next Test Case"/>
                         </properties>
                       </component>
                     </children>
-                  </scrollpane>
+                  </grid>
                 </children>
-              </splitpane>
+              </grid>
             </children>
           </splitpane>
+          <scrollpane id="a8bd0">
+            <constraints>
+              <splitpane position="left"/>
+            </constraints>
+            <properties/>
+            <border type="etched"/>
+            <children>
+              <component id="97a2" class="javax.swing.JTextPane" binding="amplifiedInformation">
+                <constraints/>
+                <properties>
+                  <autoscrolls value="true"/>
+                  <contentType value="text/html"/>
+                  <editable value="false"/>
+                  <font swing-font="Label.font"/>
+                  <margin top="4" left="4" bottom="4" right="4"/>
+                  <text value="&lt;html&gt;&#10;  &lt;head&gt;&#10;    &#10;  &lt;/head&gt;&#10;  &lt;body&gt;&#10;  &lt;/body&gt;&#10;&lt;/html&gt;&#10;"/>
+                </properties>
+              </component>
+            </children>
+          </scrollpane>
         </children>
       </splitpane>
     </children>

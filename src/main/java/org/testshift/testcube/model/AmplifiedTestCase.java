@@ -18,9 +18,9 @@ public class AmplifiedTestCase extends TestCase {
     }
 
     public String getDescription() {
-       return "Above you see the <b>amplified test case</b> '" + name + "'<br><br>" +
+       return "<b>Amplified test case</b> '" + name + "'<br><br>" +
                "Input modifications: " + inputAdded + "<br>" +
                "Assert statements added: " + assertionsAdded + "<br><br>"
-               + coverageImprovement.toHtmlString();
+               + coverageImprovement.toHtmlString(result);
     }
 }
