@@ -4,7 +4,7 @@ plugins {
 }
 
 group 'org.testshift'
-version '1.0.1-SNAPSHOT'
+version '1.0.2-SNAPSHOT'
 
 repositories {
     mavenCentral()
@@ -17,7 +17,7 @@ dependencies {
 
 // See https://github.com/JetBrains/gradle-intellij-plugin/
 intellij {
-    version '2020.2'
+    version '2020.3'
     plugins 'java'
 }
 
@@ -26,6 +26,7 @@ patchPluginXml {
      Support for multi-level module projects<br>
      Ignoring test case removes it from amplified class<br>
      Properly remove generate assertions option<br>
+     Support IntelliJ 2020.3<br>
      """
 }
 
