@@ -33,3 +33,7 @@ patchPluginXml {
 publishPlugin {
     token = System.getenv("ORG_GRADLE_PROJECT_intellijPublishToken")
 }
+
+runIde {
+    autoReloadPlugins = true
+}

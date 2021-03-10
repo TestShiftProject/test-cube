@@ -26,7 +26,7 @@
 
     <actions>
         <!-- Add your actions here -->
-        <action id="org.testshift.testcube.amplify.StartTestCubeAction" class="org.testshift.testcube.amplify.StartTestCubeAction" text="Start Test Cube" description="SDK action example">
+        <action id="org.testshift.testcube.explore.ExploreTestCaseAction" class="org.testshift.testcube.explore.ExploreTestCaseAction" text="Expore Test Cases" description="Explore!!!">
             <add-to-group group-id="ToolsMenu" anchor="first"/>
         </action>
 <!--        <action id="org.testshift.testcube.InspectTestCubeResultsAction" class="org.testshift.testcube.InspectTestCubeResultsAction" text="Inspect Test Cube Results" description="SDK action example">-->
