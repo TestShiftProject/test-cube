@@ -1,6 +1,11 @@
 package org.testshift.testcube.inspect;
 
+import com.intellij.ide.DataManager;
 import com.intellij.ide.highlighter.JavaFileType;
+import com.intellij.openapi.actionSystem.ActionManager;
+import com.intellij.openapi.actionSystem.ActionPlaces;
+import com.intellij.openapi.actionSystem.AnActionEvent;
+import com.intellij.openapi.actionSystem.Presentation;
 import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.LogicalPosition;
@@ -20,6 +25,7 @@ import eu.stamp_project.dspot.selector.extendedcoverageselector.ClassCoverageMap
 import eu.stamp_project.dspot.selector.extendedcoverageselector.CoverageImprovement;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Nullable;
+import org.testshift.testcube.explore.ui.ExploreTestCaseAction;
 import org.testshift.testcube.misc.TestCubeNotifier;
 import org.testshift.testcube.misc.Util;
 import org.testshift.testcube.model.AmplificationResult;
@@ -57,6 +63,7 @@ public class AmplificationResultWindow extends Component {
     private CoverageHighlightingEditorField amplifiedCoverageEditor;
     private JSplitPane amplifiedCoverageSplit;
     private JSplitPane headerContentSplit;
+    private JButton exploreTestCaseButton;
 
     public AmplificationResult amplificationResult;
     private int currentAmplificationTestCaseIndex;
@@ -98,6 +105,7 @@ public class AmplificationResultWindow extends Component {
         ignore.addActionListener(l -> ignoreTestCase());
         next.addActionListener(l -> nextTestCase());
         previous.addActionListener(l -> previousTestCase());
+        exploreTestCaseButton.addActionListener(l -> exploreTestCase());
 
         hideCoverageEditor();
     }
@@ -369,6 +377,13 @@ public class AmplificationResultWindow extends Component {
 //                        "'<br><br><hr><br>Below you see the <b>overall coverage</b> that would be gained if you <b>add all</b> " +
 //                         "proposed test cases:<br>" + amplificationResult.amplifiedCoverageHTML.toHtmlString() + htmlEnd());
 //    }
+
+    public void exploreTestCase() {
+        new ExploreTestCaseAction(currentAmplificationTestCase, amplificationResult.project).actionPerformed(
+                new AnActionEvent(null, DataManager.getInstance().getDataContext(this),
+                        ActionPlaces.UNKNOWN,
+                        new Presentation(), ActionManager.getInstance(),0));
+    }
 
     public void close() {
         ToolWindow toolWindow = ToolWindowManager.getInstance(amplificationResult.project).getToolWindow("Test Cube");

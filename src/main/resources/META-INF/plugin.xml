@@ -15,7 +15,7 @@
     <extensions defaultExtensionNs="com.intellij">
         <!-- Add your extensions here -->
         <toolWindow id="Test Cube" anchor="right" factoryClass="org.testshift.testcube.inspect.TestCubeToolWindowFactory" icon="/icons/amplifyTestsToolWindow.svg"/>
-        <toolWindow id="Test Cube Explorer" anchor="right" factoryClass="org.testshift.testcube.explore.TestCubeExplorerToolWindowFactory" icon="/icons/amplifyTestsToolWindow.svg"/>
+        <toolWindow id="Test Cube Explorer" anchor="right" factoryClass="org.testshift.testcube.explore.ui.TestCubeExplorerToolWindowFactory" icon="/icons/amplifyTestsToolWindow.svg"/>
 
         <runLineMarkerContributor language="JAVA" order="after applicationRunLineMarkerProvider" implementationClass="org.testshift.testcube.amplify.AmplifyTestMarkerContributor"/>
         <applicationService serviceImplementation="org.testshift.testcube.settings.AppSettingsState"/>
@@ -26,7 +26,7 @@
 
     <actions>
         <!-- Add your actions here -->
-        <action id="org.testshift.testcube.explore.ExploreTestCaseAction" class="org.testshift.testcube.explore.ExploreTestCaseAction" text="Expore Test Cases" description="Explore!!!">
+        <action id="org.testshift.testcube.explore.ui.ExploreTestCaseAction" class="org.testshift.testcube.explore.ui.ExploreTestCaseAction" text="Expore Test Cases" description="Explore!!!">
             <add-to-group group-id="ToolsMenu" anchor="first"/>
         </action>
 <!--        <action id="org.testshift.testcube.InspectTestCubeResultsAction" class="org.testshift.testcube.InspectTestCubeResultsAction" text="Inspect Test Cube Results" description="SDK action example">-->
