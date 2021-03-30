@@ -1,7 +1,6 @@
 package org.testshift.testcube.explore;
 
 import org.eclipse.jdt.internal.core.util.Util;
-import org.testshift.testcube.explore.model.TestCase;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,6 +43,10 @@ public class ExplorationVisJSON {
         public Node setId(String id) {
             this.id = id;
             return this;
+        }
+
+        public String getId() {
+            return id;
         }
 
         public void addLine(Line line) {
