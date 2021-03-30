@@ -28,4 +28,3 @@ Or search for "Test Cube" in IntelliJ "Preferences" > "Plugins" > "Marketplace".
 ![The amplification runs in the background an pops up a notification when it finishes](img/instructions-2.png)
 ![Click on the link in the notification to inspect the newly generated test cases](img/instructions-3.png)
 
-                                                                                                                                                                                                                                                                                                                                        
