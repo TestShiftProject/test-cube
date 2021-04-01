@@ -24,7 +24,7 @@ public class HtmlCoverageImprovement extends CoverageImprovement {
         StringBuilder explanation = new StringBuilder("This test case improves the coverage in these " +
                                                       "classes/methods/lines: <br>(Click on the green links to see " +
                                                       "these lines within the class)<br>");
-        this.instructionImprovement.classCoverageMaps.forEach((className, classCoverageMap) -> {
+        this.instructionImprovement.classCoverageMap.forEach((className, classCoverageMap) -> {
             explanation.append("<a href=class>").append(className).append("</a>:<br>");
             classCoverageMap.methodCoverageMap.forEach((methodName, methodCoverage) -> {
                 explanation.append("<a href=method|")

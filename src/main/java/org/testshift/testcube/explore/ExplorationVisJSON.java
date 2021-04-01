@@ -68,6 +68,7 @@ public class ExplorationVisJSON {
         private String code;
         private boolean callsMethod;
         private String calledMethod;
+        private boolean covered;
         private boolean addCovered;
 
         public Line() {
@@ -87,6 +88,10 @@ public class ExplorationVisJSON {
         public Line setCalledMethod(String calledMethod) {
             this.calledMethod = calledMethod;
             return this;
+        }
+
+        public void setCovered(boolean covered) {
+            covered = covered;
         }
 
         public Line setAddCovered(boolean addCovered) {
