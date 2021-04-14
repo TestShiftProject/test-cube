@@ -38,7 +38,8 @@ public class InspectTestCubeResultsAction extends NotificationAction {
         AmplificationResult amplificationResult = AmplificationResult.buildAmplificationResult(project, testClass,
                 testMethod, 3);
 
-        AmplificationResultWindow amplificationResultWindow = new AmplificationResultWindow(amplificationResult);
+        AmplificationResultWindow amplificationResultWindow = new AmplificationResultWindow(amplificationResult,
+                event.getDataContext());
 
         ToolWindow toolWindow = ToolWindowManager.getInstance(amplificationResult.project).getToolWindow("Test Cube");
         if (toolWindow != null) {

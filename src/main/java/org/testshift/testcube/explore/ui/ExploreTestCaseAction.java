@@ -54,6 +54,7 @@ public class ExploreTestCaseAction extends AnAction {
     public void actionPerformed(@NotNull AnActionEvent e) {
 
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        GraphConstructor.project = e.getProject();
         String json = gson.toJson(GraphConstructor.constructGraph(testCaseToExplore));
         try (Writer writer = new BufferedWriter(new OutputStreamWriter(
                 new FileOutputStream("/Users/caro/Dev/test-cube/target/explorerJson.json"), "utf-8"))) {

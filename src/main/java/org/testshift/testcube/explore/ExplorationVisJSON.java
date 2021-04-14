@@ -27,7 +27,7 @@ public class ExplorationVisJSON {
         //private boolean shownInitially;
         private String signature;
         private String id;
-        private List<Line> lines;
+        public List<Line> lines;
         private boolean addCovered;
         private int nodeLevel;
 
@@ -49,10 +49,6 @@ public class ExplorationVisJSON {
             return id;
         }
 
-        public void addLine(Line line) {
-            lines.add(line);
-        }
-
         public Node setAddCovered(boolean addCovered) {
             this.addCovered = addCovered;
             return this;
@@ -67,7 +63,6 @@ public class ExplorationVisJSON {
     public class Line {
         private String code;
         private boolean callsMethod;
-        private String calledMethod;
         private boolean covered;
         private boolean addCovered;
 
@@ -85,13 +80,9 @@ public class ExplorationVisJSON {
             return this;
         }
 
-        public Line setCalledMethod(String calledMethod) {
-            this.calledMethod = calledMethod;
+        public Line setCovered(boolean covered) {
+            this.covered = covered;
             return this;
-        }
-
-        public void setCovered(boolean covered) {
-            covered = covered;
         }
 
         public Line setAddCovered(boolean addCovered) {

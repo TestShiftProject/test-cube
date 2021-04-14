@@ -2,10 +2,7 @@ package org.testshift.testcube.inspect;
 
 import com.intellij.ide.DataManager;
 import com.intellij.ide.highlighter.JavaFileType;
-import com.intellij.openapi.actionSystem.ActionManager;
-import com.intellij.openapi.actionSystem.ActionPlaces;
-import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.actionSystem.Presentation;
+import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.LogicalPosition;
@@ -24,6 +21,8 @@ import com.intellij.ui.JBColor;
 import eu.stamp_project.dspot.selector.extendedcoverageselector.ClassCoverageMap;
 import eu.stamp_project.dspot.selector.extendedcoverageselector.CoverageImprovement;
 import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NonNls;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.testshift.testcube.explore.ui.ExploreTestCaseAction;
 import org.testshift.testcube.misc.TestCubeNotifier;
@@ -68,6 +67,7 @@ public class AmplificationResultWindow extends Component {
     public AmplificationResult amplificationResult;
     private int currentAmplificationTestCaseIndex;
     private AmplifiedTestCase currentAmplificationTestCase;
+    private DataContext dataContext;
 
     public AmplificationResultWindow() {
 //        originalInformation.setEditorKit(JEditorPane.createEditorKitForContentType("text/html"));
@@ -86,10 +86,11 @@ public class AmplificationResultWindow extends Component {
         });
     }
 
-    public AmplificationResultWindow(AmplificationResult amplificationResult) {
+    public AmplificationResultWindow(AmplificationResult amplificationResult, DataContext dataContext) {
         this();
         this.amplificationResult = amplificationResult;
         this.currentAmplificationTestCaseIndex = 0;
+        this.dataContext = dataContext;
 
         assert !amplificationResult.amplifiedTestCases.isEmpty();
         this.currentAmplificationTestCase = amplificationResult.amplifiedTestCases
@@ -380,8 +381,7 @@ public class AmplificationResultWindow extends Component {
 
     public void exploreTestCase() {
         new ExploreTestCaseAction(currentAmplificationTestCase, amplificationResult.project).actionPerformed(
-                new AnActionEvent(null, DataManager.getInstance().getDataContext(this),
-                        ActionPlaces.UNKNOWN,
+                new AnActionEvent(null, dataContext, ActionPlaces.UNKNOWN,
                         new Presentation(), ActionManager.getInstance(),0));
     }
 
@@ -423,6 +423,5 @@ public class AmplificationResultWindow extends Component {
     private String htmlEnd() {
         return "</body></html>";
     }
-
 
 }
