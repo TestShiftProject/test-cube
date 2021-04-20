@@ -13,7 +13,7 @@ The first time you're using Test Cube you will be asked for these two 🙂.
 
 Find out more about our research project and how we want to help developers improve their test suites on the [TestShift project website](https://testshiftproject.github.io/visualizing-amplification).
 
-If you want to contribute to Test Cube or build it locally, checkout our [development setup instructions](contributing)
+If you want to contribute to Test Cube or build it locally, checkout our [development setup instructions](contributing.md)
 
 ## Install Test Cube
 
