@@ -1,11 +1,13 @@
 package org.testshift.testcube.explore;
 
+import com.intellij.ide.actions.searcheverywhere.statistics.SearchEverywhereUsageTriggerCollector;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.*;
 import com.intellij.psi.util.PsiTreeUtil;
+import com.jetbrains.rd.util.string.StingUtilKt;
 import eu.stamp_project.dspot.selector.extendedcoverageselector.ClassCoverageMap;
 import eu.stamp_project.dspot.selector.extendedcoverageselector.MethodCoverage;
 import eu.stamp_project.dspot.selector.extendedcoverageselector.ProjectCoverageMap;
@@ -71,6 +73,15 @@ public class GraphConstructor {
         return methodsCalledThisLevel;
     }
 
+    /**
+     *
+     * @param json
+     * @param methodToProcess
+     * @param level depth of the current method in the call tree, 0 = test method
+     * @param codeDiscovered
+     * @param addedCoverage
+     * @return
+     */
     private static List<UnprocessedMethod> processCalledMethod(ExplorationVisJSON json,
                                                                UnprocessedMethod methodToProcess, int level,
                                                                ProjectCoverageMap codeDiscovered,
@@ -83,12 +94,16 @@ public class GraphConstructor {
         }
 
         ExplorationVisJSON.Node method = json.new Node().setId(getSigForId(methodToProcess))
-                                                        .setSignature(getSig(methodToProcess.psiMethod))
-                                                        .setNodeLevel(level);
+                                                        .setNodeLevel(level)
+                                                        .setAddCovered(false);
+        if (level == 0) {
+            method.setAddCovered(true);
+        }
         json.addNode(method);
 
         MethodCoverage methodCoverage = new MethodCoverage(Collections.emptyList(), "");
         MethodCoverage addedMethodCoverage = new MethodCoverage(Collections.emptyList(), "");
+
         if (level > 0) {
             String className = methodToProcess.psiMethod.getContainingClass().getQualifiedName();
             ClassCoverageMap classDiscovered = codeDiscovered.getCoverageForClass(className);
@@ -120,14 +135,21 @@ public class GraphConstructor {
             logger.debug("Body of Method " + methodToProcess.psiMethod.getName() + " is null.");
             return calledUnprocessedMethods;
         }
-        int methodEndLine = document.getLineNumber(methodBody.getRBrace().getTextOffset());
-        String text = document.getText(new TextRange(document.getLineStartOffset(methodStartLine + 1),
+        int methodEndLine = document.getLineNumber(methodBody.getRBrace().getTextOffset()) - 1; // exclude brace
+        String text = document.getText(new TextRange(document.getLineStartOffset(methodStartLine),
                 document.getLineEndOffset(methodEndLine)));
         String[] lines = text.split("\n");
-        for (int i = 0; i < lines.length; i++) {
-            ExplorationVisJSON.Line line = json.new Line().setCode(lines[i]);
-            method.lines.add(line);
 
+        // assumption: first line is method signature
+        if (lines[0] == null) {
+            method.setSignature(methodToProcess.psiMethod.getName());
+        } else {
+            method.setSignature(lines[0]);
+        }
+
+        for (int i = 0; i < lines.length - 1; i++) {
+            ExplorationVisJSON.Line line = json.new Line().setCode(lines[i + 1]);
+            method.lines.add(line);
 
             if (level > 0) {
                 if (methodCoverage != null && methodCoverage.lineCoverage.size() > i && methodCoverage.lineCoverage.get(i) > 0) {
@@ -135,6 +157,8 @@ public class GraphConstructor {
                 }
                 if (addedMethodCoverage != null && addedMethodCoverage.lineCoverage.size() > i && addedMethodCoverage.lineCoverage.get(i) > 0) {
                     line.setAddCovered(true);
+                    method.setAddCovered(true);
+                    // TODO we also need to set this on all the methods on the path "to" this method
                 }
             }
         }
@@ -157,7 +181,7 @@ public class GraphConstructor {
                 if (method.lines.size() <= callLine) {
                     logger.debug("callLine: " + callLine + " while method has " + method.lines.size() + " lines!");
                 } else {
-                    ExplorationVisJSON.Line line = method.lines.get(document.getLineNumber(call.getTextOffset()) - methodStartLine);
+                    ExplorationVisJSON.Line line = method.lines.get(callLine);
 
                     line.setCallsMethod(true);
 
