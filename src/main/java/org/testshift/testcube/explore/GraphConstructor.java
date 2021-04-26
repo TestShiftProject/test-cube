@@ -19,6 +19,9 @@ public class GraphConstructor {
 
     private static final Logger logger = Logger.getInstance(GraphConstructor.class);
     private static final Random random = new Random();
+
+    private static final int maxTreeDepth = 5;
+
     public static Project project;
 
     public static ExplorationVisJSON constructGraph(AmplifiedTestCase amplifiedTestCase) {
@@ -30,61 +33,51 @@ public class GraphConstructor {
         if (testMethod.psiMethod == null) {
             return json;
         }
-        ProjectCoverageMap codeDiscovered = amplifiedTestCase.fullCoverage.getInstructionsProjectCoverageMap()
+        ProjectCoverageMap covered = amplifiedTestCase.fullCoverage.getInstructionsProjectCoverageMap()
                                                                           .deepClone();
         ProjectCoverageMap addedCoverage = amplifiedTestCase.coverageImprovement.getInstructionImprovement();
 
-        List<UnprocessedMethod> calledUnprocessedMethods = processCalledMethod(json, testMethod, 0, codeDiscovered,
+        List<UnprocessedMethod> calledUnprocessedMethods = processCalledMethod(json, testMethod, 0, covered,
                 addedCoverage);
 
-        for (int level = 1; level <= 3; level++) {
-            calledUnprocessedMethods = processFrontier(json, calledUnprocessedMethods, level, codeDiscovered,
+        for (int level = 1; level <= maxTreeDepth; level++) {
+            calledUnprocessedMethods = processFrontier(json, calledUnprocessedMethods, level, covered,
                     addedCoverage);
         }
 
-        // TODO compare with coverage information & stop if all in coverage are found
-
-        // get each method:
-        // check that it is in coverage data (print error if not)
-        // get all code lines (already get method information too?)
-        // check if any code line *is* add. covered
-        // add code lines / method  to 'frontier'
-
-        // go through frontier until level 3
-        // check after end of every level if all covered methods are found
-
-        // construct connections
+        removeEdgesToRemainingMethods(json,calledUnprocessedMethods);
 
         return json;
     }
 
     private static List<UnprocessedMethod> processFrontier(ExplorationVisJSON json,
                                                            List<UnprocessedMethod> calledUnprocessedMethods,
-                                                           int level, ProjectCoverageMap codeDiscovered,
+                                                           int level, ProjectCoverageMap covered,
                                                            ProjectCoverageMap addedCoverage) {
 
         List<UnprocessedMethod> methodsCalledThisLevel = new ArrayList<>();
 
         for (UnprocessedMethod unprocessedMethod : calledUnprocessedMethods) {
             methodsCalledThisLevel
-                    .addAll(processCalledMethod(json, unprocessedMethod, level, codeDiscovered, addedCoverage));
+                    .addAll(processCalledMethod(json, unprocessedMethod, level, covered, addedCoverage));
         }
 
         return methodsCalledThisLevel;
     }
 
     /**
-     *
-     * @param json
-     * @param methodToProcess
+     * Handle one called method: adding it's lines to the json, handle coverage, detect method calls and add
+     * corresponding edges
+     * @param json the {@link ExplorationVisJSON} to edit
+     * @param methodToProcess the {@link UnprocessedMethod} to handle
      * @param level depth of the current method in the call tree, 0 = test method
-     * @param codeDiscovered
-     * @param addedCoverage
-     * @return
+     * @param covered what the test suite covers
+     * @param addedCoverage what the new test case covers in addition to the original test suite coverage
+     * @return the frontier of methods called by this method
      */
     private static List<UnprocessedMethod> processCalledMethod(ExplorationVisJSON json,
                                                                UnprocessedMethod methodToProcess, int level,
-                                                               ProjectCoverageMap codeDiscovered,
+                                                               ProjectCoverageMap covered,
                                                                ProjectCoverageMap addedCoverage) {
 
         List<UnprocessedMethod> calledUnprocessedMethods = new ArrayList<>();
@@ -95,18 +88,21 @@ public class GraphConstructor {
 
         ExplorationVisJSON.Node method = json.new Node().setId(getSigForId(methodToProcess))
                                                         .setNodeLevel(level)
+                                                        .setClassName(methodToProcess.psiMethod.getContainingClass().getQualifiedName())
                                                         .setAddCovered(false);
         if (level == 0) {
             method.setAddCovered(true);
+            method.setId("root");
         }
         json.addNode(method);
 
+        // check coverage
         MethodCoverage methodCoverage = new MethodCoverage(Collections.emptyList(), "");
         MethodCoverage addedMethodCoverage = new MethodCoverage(Collections.emptyList(), "");
 
         if (level > 0) {
             String className = methodToProcess.psiMethod.getContainingClass().getQualifiedName();
-            ClassCoverageMap classDiscovered = codeDiscovered.getCoverageForClass(className);
+            ClassCoverageMap classDiscovered = covered.getCoverageForClass(className);
             if (classDiscovered == null) {
                 methodCoverage = null;
             } else {
@@ -126,6 +122,7 @@ public class GraphConstructor {
                                               .getDocument(methodToProcess.psiMethod.getContainingFile());
         if (document == null) {
             logger.debug("No document for method " + methodToProcess.psiMethod.getName() + " found.");
+            method.setSignature(methodToProcess.psiMethod.getName());
             return calledUnprocessedMethods;
         }
         int methodStartLine = document.getLineNumber(methodToProcess.psiMethod.getTextOffset());
@@ -133,6 +130,7 @@ public class GraphConstructor {
         PsiCodeBlock methodBody = methodToProcess.psiMethod.getBody();
         if (methodBody == null) {
             logger.debug("Body of Method " + methodToProcess.psiMethod.getName() + " is null.");
+            method.setSignature(methodToProcess.psiMethod.getName());
             return calledUnprocessedMethods;
         }
         int methodEndLine = document.getLineNumber(methodBody.getRBrace().getTextOffset()) - 1; // exclude brace
@@ -141,14 +139,17 @@ public class GraphConstructor {
         String[] lines = text.split("\n");
 
         // assumption: first line is method signature
-        if (lines[0] == null) {
+        int indentSpaces = 0;
+        if (lines.length == 0 || lines[0] == null) {
             method.setSignature(methodToProcess.psiMethod.getName());
         } else {
-            method.setSignature(lines[0]);
+            String ltrim = lines[0].replaceAll("^\\s+","");
+            indentSpaces = lines[0].length() - ltrim.length();
+            method.setSignature(lines[0].substring(indentSpaces));
         }
 
         for (int i = 0; i < lines.length - 1; i++) {
-            ExplorationVisJSON.Line line = json.new Line().setCode(lines[i + 1]);
+            ExplorationVisJSON.Line line = json.new Line().setCode(lines[i + 1].substring(indentSpaces));
             method.lines.add(line);
 
             if (level > 0) {
@@ -190,50 +191,22 @@ public class GraphConstructor {
                     calledUnprocessedMethods.add(methodToBeProcessed);
 
                     // add edge to called method
-                    ExplorationVisJSON.Edge edge = json.new Edge().setSource(method.getId()).setTarget(getSigForId(methodToBeProcessed))
+                    ExplorationVisJSON.Edge edge = json.new Edge().setSource(method.getId())
+                                                                  .setTarget(getSigForId(methodToBeProcessed))
                                                                   .setSourceAnchor(method.lines.indexOf(line) + 1);
                     json.addEdge(edge);
                 }
             }
         }
 
-
-//        PsiCodeBlock body = methodToProcess.psiMethod.getBody();
-//
-//        if (body == null) {
-//            logger.debug("Method " + methodToProcess.psiMethod.getName() + " with null body!");
-//        } else {
-//            PsiStatement[] statements = methodToProcess.psiMethod.getBody().getStatements();
-//
-//            // TODO let's compare statement length again method coverage line count!
-//            logger.debug("statements.length from PSI " + statements.length);
-//            if (level > 0 && methodCoverage != null) {
-//                logger.debug("methodCoverage lines " + methodCoverage.lineCoverage.size());
-//            }
-//
-//            for (int i = 0; i < statements.length; i++) {
-//                PsiStatement statement = statements[i];
-//
-//                ExplorationVisJSON.Line line = json.new Line().setCode(statement.getText().replaceAll("\n", " "));
-//
-//                // find and add the called methods (if any)
-//                Collection<PsiCall> callingChildrenStatements = PsiTreeUtil
-//                        .findChildrenOfType(statement, PsiCall.class);
-//                if (callingChildrenStatements.size() > 0) {
-//                    PsiCall call = (PsiCall) callingChildrenStatements.toArray()[0];
-//
-//                }
-//                method.addLine(line);
-//            }
-//        }
-
-
-        // TODO remember that we already discovered this method
-        // TODO what if a  method is called multiple times??
-//        codeDiscovered.getCoverageForClass(methodToProcess.getContainingClass().getQualifiedName())
-//                .methodCoverageMap.remove(methodToProcess.getName());
-
         return calledUnprocessedMethods;
+    }
+
+    private static void removeEdgesToRemainingMethods(ExplorationVisJSON json,
+                                                      List<UnprocessedMethod> unprocessedMethods) {
+        unprocessedMethods.forEach(unprocessedMethod -> {
+            json.removeEdgeWithTarget(getSigForId(unprocessedMethod));
+        });
     }
 
     private static String getSig(PsiMethod method) {

@@ -23,9 +23,15 @@ public class ExplorationVisJSON {
         edges.add(edge);
     }
 
+    public void removeEdgeWithTarget(String id) {
+        edges.removeIf(edge -> {
+           return edge.target.equals(id);
+        });
+    }
+
     public class Node {
-        //private boolean shownInitially;
         private String signature;
+        private String className;
         private String id;
         public List<Line> lines;
         private boolean addCovered;
@@ -56,6 +62,11 @@ public class ExplorationVisJSON {
 
         public Node setNodeLevel(int nodeLevel) {
             this.nodeLevel = nodeLevel;
+            return this;
+        }
+
+        public Node setClassName(String className) {
+            this.className = className;
             return this;
         }
     }
