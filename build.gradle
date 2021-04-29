@@ -17,16 +17,13 @@ dependencies {
 
 // See https://github.com/JetBrains/gradle-intellij-plugin/
 intellij {
-    version '2020.3'
+    version '2021.1'
     plugins 'java'
 }
 
 patchPluginXml {
     changeNotes """
-     Support for multi-level module projects<br>
-     Ignoring test case removes it from amplified class<br>
-     Properly remove generate assertions option<br>
-     Support IntelliJ 2020.3<br>
+     Support IntelliJ 2021.1<br>
      """
 }
 

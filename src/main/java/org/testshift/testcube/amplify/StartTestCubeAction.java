@@ -117,6 +117,8 @@ public class StartTestCubeAction extends AnAction {
 
                 List<String> dSpotStarter = new ArrayList<>(Arrays.asList(javaBin, "-jar", dSpotPath,
                         "--absolute-path-to-project-root", currentProject.getBasePath(),
+                        "--relative-path-to-classes", "target" + File.separator + "classes" + File.separator,
+                        "--relative-path-to-test-classes", "target" + File.separator + "test-classes" + File.separator,
                         "--test-criterion", "ExtendedCoverageSelector",
                         "--input-ampl-distributor", "RandomInputAmplDistributor",
                         "--test", testClass,

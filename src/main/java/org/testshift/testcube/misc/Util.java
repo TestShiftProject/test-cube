@@ -9,6 +9,7 @@ import eu.stamp_project.dspot.common.report.output.selector.extendedcoverage.jso
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.util.regex.Matcher;
 
 public class Util {
 
@@ -22,9 +23,9 @@ public class Util {
 
     private static String getTestClassPath(Project currentProject, String testClass, boolean original) {
         return currentProject.getBasePath() +
-                Config.OUTPUT_PATH_DSPOT +
-                (original ? File.separator + "original" : "") +
-                File.separator + testClass.replaceAll("\\.", File.separator) + ".java";
+               Config.OUTPUT_PATH_DSPOT +
+               (original ? File.separator + "original" : "") +
+               File.separator + testClass.replaceAll("\\.", Matcher.quoteReplacement(File.separator)) + ".java";
     }
 
     public static String getDSpotOutputPath(Project project) {
