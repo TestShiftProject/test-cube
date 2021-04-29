@@ -145,11 +145,11 @@ public class GraphConstructor {
         } else {
             String ltrim = lines[0].replaceAll("^\\s+","");
             indentSpaces = lines[0].length() - ltrim.length();
-            method.setSignature(lines[0].substring(indentSpaces));
+            method.setSignature(lines[0]);//.substring(indentSpaces));
         }
 
         for (int i = 0; i < lines.length - 1; i++) {
-            ExplorationVisJSON.Line line = json.new Line().setCode(lines[i + 1].substring(indentSpaces));
+            ExplorationVisJSON.Line line = json.new Line().setCode(lines[i + 1]);//.substring(indentSpaces));
             method.lines.add(line);
 
             if (level > 0) {
