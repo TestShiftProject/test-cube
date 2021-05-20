@@ -7,7 +7,6 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.*;
 import com.intellij.psi.util.PsiTreeUtil;
-import com.jetbrains.rd.util.string.StingUtilKt;
 import eu.stamp_project.dspot.selector.extendedcoverageselector.ClassCoverageMap;
 import eu.stamp_project.dspot.selector.extendedcoverageselector.MethodCoverage;
 import eu.stamp_project.dspot.selector.extendedcoverageselector.ProjectCoverageMap;
