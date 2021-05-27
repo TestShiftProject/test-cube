@@ -1,7 +1,7 @@
 # Welcome to the TestImpactGraph extension of Test Cube!
 You can follow these instructions to create more `.json` files for the [TestImpactGraph](https://github.com/TestShiftProject/test-impact-graph).
 
-First, follow the development setup instructions in the [contributing guide](contributing).
+First, follow the development setup instructions in the [contributing guide](contributing.md).
 It is sufficient to just setup TestCube, without the dependencies.
 Unfortunately, TestCube runs only on projects that support Java 8 and Maven.
 Two example projects you could use are [jsoup](https://github.com/jhy/jsoup) or [javapoet](https://github.com/square/javapoet).
