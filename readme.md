@@ -28,3 +28,5 @@ Or search for "Test Cube" in IntelliJ "Preferences" > "Plugins" > "Marketplace".
 ![The amplification runs in the background an pops up a notification when it finishes](img/instructions-2.png)
 ![Click on the link in the notification to inspect the newly generated test cases](img/instructions-3.png)
 
+## Generating Data for the TestImpactGraph
+If you want to amplify test cases and the data to feed the [TestImpactGraph](https://github.com/TestShiftProject/test-impact-graph) check these instructions: [test-impact-graph.md](test-impact-graph) 😃

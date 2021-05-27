@@ -7,13 +7,13 @@ If you will work on the test amplification itself, you need to setup `test-runne
 
 1. Install IntelliJ together with the `gradle-intellij-plugin` plugin. (https://jetbrains.org/intellij/sdk/docs/tutorials/build_system.html)
 2. Clone this repository
-3. Open the root in IntelliJ! 😄
-After opening the project in IntelliJ, you can execute Test Cube with the gradle task `runIde`.
+3. Open the root in IntelliJ!
+4. Select the `runIde` task of Gradle & hit run! 😄
 
 To test and run Test Cube / DSpot you need:
 - an installation of Java 8 (including the path to your Java Home)
 - an installation of Maven (including the path to your Maven Home)
-- an example project based on Java 8 and Maven
+- an example project based on Java 8 and Maven, for example [jsoup](https://github.com/jhy/jsoup) or [javapoet](https://github.com/square/javapoet)
 
 ## Example Project
 
