@@ -1,9 +1,9 @@
 MIT License
 
-Copyright 2020 Software Engineering Research Group, TU Delft
+Copyright 2020-2021 Software Engineering Research Group, TU Delft
 https://se.ewi.tudelft.nl/
 
-Copyright 2020 Carolin Brandt
+Copyright 2020-2021 Carolin Brandt
 https://testshiftproject.github.io/
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
