@@ -7,6 +7,8 @@ import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.extensions.PluginId;
+import com.intellij.openapi.externalSystem.model.ProjectSystemId;
+import com.intellij.openapi.externalSystem.util.ExternalSystemApiUtil;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.progress.ProgressIndicator;
@@ -14,6 +16,8 @@ import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.progress.impl.BackgroundableProcessIndicator;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.projectRoots.Sdk;
+import com.intellij.openapi.roots.ProjectRootManager;
 import eu.stamp_project.dspot.common.report.output.selector.extendedcoverage.json.TestClassJSON;
 import org.apache.commons.io.FileUtils;
 import org.jetbrains.annotations.Nls;
@@ -79,6 +83,12 @@ public class StartTestCubeAction extends AnAction {
         }
 
 
+        Sdk projectSdk = ProjectRootManager.getInstance(currentProject).getProjectSdk();
+
+        if (projectSdk != null) {
+            AppSettingsState.getInstance().java8Path = projectSdk.getHomePath();
+        }
+
         if (AppSettingsState.getInstance().java8Path.isEmpty()) {
             AskJavaPathDialogWrapper dialog = new AskJavaPathDialogWrapper();
             dialog.showAndGet();
@@ -86,7 +96,31 @@ public class StartTestCubeAction extends AnAction {
             // todo handle non valid
         }
 
-        if (AppSettingsState.getInstance().mavenHome.isEmpty()) {
+        // check if Gradle or Maven
+        boolean isGradle =
+                ExternalSystemApiUtil.isExternalSystemAwareModule(new ProjectSystemId("GRADLE"),
+                        ModuleManager.getInstance(currentProject).getModules()[0]);
+        boolean isMaven =
+                ExternalSystemApiUtil.isExternalSystemAwareModule(new ProjectSystemId("Maven"),
+                        ModuleManager.getInstance(currentProject).getModules()[0]);
+
+        String relativePathToClasses = "";
+        String relativePathToTestClasses = "";
+        String automaticBuilder = "";
+        if (isMaven) {
+            relativePathToClasses = "target" + File.separator + "classes" + File.separator;
+            relativePathToTestClasses = "target" + File.separator + "test-classes" + File.separator;
+            automaticBuilder = "Maven";
+        } else {
+            relativePathToClasses = "bin" + File.separator + "main" + File.separator;
+            relativePathToTestClasses = "bin" + File.separator + "test" + File.separator;
+            automaticBuilder = "Gradle";
+            if (!isGradle) {
+                logger.info("Neither Gradle nor Maven");
+            }
+        }
+
+        if (isMaven && AppSettingsState.getInstance().mavenHome.isEmpty()) {
             AskMavenHomeDialogWrapper dialog = new AskMavenHomeDialogWrapper();
             dialog.showAndGet();
             boolean mavenHomeValid = dialog.setMavenHomeIfValid();
@@ -99,6 +133,9 @@ public class StartTestCubeAction extends AnAction {
         String pluginPath = PathManager.getPluginsPath();
         String dSpotPath =  pluginPath + File.separator + "test-cube" + File.separator + "lib" + File.separator + "dspot-3.1.1-SNAPSHOT-jar-with-dependencies.jar";
 
+        String finalRelativePathToClasses = relativePathToClasses;
+        String finalRelativePathToTestClasses = relativePathToTestClasses;
+        String finalAutomaticBuilder = automaticBuilder;
         Task.Backgroundable dspotTask = new Task.Backgroundable(currentProject, "Amplifying test", true) {
 
             public void run(@NotNull ProgressIndicator indicator) {
@@ -113,12 +150,15 @@ public class StartTestCubeAction extends AnAction {
                     e.printStackTrace();
                 }
 
-                String targetModule = moduleRootPath.replace(currentProject.getBasePath() + "/","");
+                String targetModule = "";
+                if (isMaven) {
+                    targetModule = moduleRootPath.replace(currentProject.getBasePath() + "/", "");
+                }
 
                 List<String> dSpotStarter = new ArrayList<>(Arrays.asList(javaBin, "-jar", dSpotPath,
                         "--absolute-path-to-project-root", currentProject.getBasePath(),
-                        "--relative-path-to-classes", "target" + File.separator + "classes" + File.separator,
-                        "--relative-path-to-test-classes", "target" + File.separator + "test-classes" + File.separator,
+                        "--relative-path-to-classes", finalRelativePathToClasses,
+                        "--relative-path-to-test-classes", finalRelativePathToTestClasses,
                         "--test-criterion", "ExtendedCoverageSelector",
                         "--input-ampl-distributor", "RandomInputAmplDistributor",
                         "--test", testClass,
@@ -127,6 +167,7 @@ public class StartTestCubeAction extends AnAction {
                         "--output-directory", Util.getDSpotOutputPath(currentProject),
                         "--amplifiers", Config.AMPLIFIERS_ALL,
                         "--max-test-amplified", "25",
+                        "--automatic-builder", finalAutomaticBuilder,
                         //"--generate-new-test-class",
                         //"--keep-original-test-methods",
                         "--verbose",
