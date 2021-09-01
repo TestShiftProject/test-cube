@@ -172,7 +172,7 @@ public class AmplificationResultWindow extends Component {
 
 
             TextAttributes coveredLine = new TextAttributes();
-            coveredLine.setBackgroundColor(JBColor.green.darker());
+            coveredLine.setBackgroundColor(JBColor.green.brighter());
             MarkupModel markupModel = amplifiedCoverageEditor.getEditor().getMarkupModel();
             coverageImprovement.methodCoverageMap.forEach((methodName, methodCoverage) -> {
                 Optional<PsiMethod> method = Arrays.stream(psiClass.getMethods()).filter(psiMethod -> Util
@@ -269,7 +269,7 @@ public class AmplificationResultWindow extends Component {
             try {
                 // Highlight name of test case
                 TextAttributes currentTestCase = new TextAttributes();
-                currentTestCase.setBackgroundColor(JBColor.blue.darker());
+                currentTestCase.setBackgroundColor(JBColor.cyan.brighter());
                 MarkupModel markupModel = editor.getEditor().getMarkupModel();
 
                 markupModel.removeAllHighlighters();
@@ -395,10 +395,10 @@ public class AmplificationResultWindow extends Component {
 
     private String htmlStart() {
         Color foreground = JBColor.foreground();
-        Color link = JBColor.get("ValidationTooltip.successForeground", JBColor.green);
+        Color link = JBColor.get("ValidationTooltip.successForeground", JBColor.green.darker());
         return "<html>" +
                "<head><style>a {color:" + colorToRGBHtmlString(link) + ";}</style></head>" +
-               "<body style=\"font-family:Sans-Serif;color:" + colorToRGBHtmlString(foreground) + ";\">";
+               "<body style=\"font-family:Sans-Serif;font-size:20px;color:" + colorToRGBHtmlString(foreground) + ";\">";
     }
 
     private String colorToRGBHtmlString(Color color) {
