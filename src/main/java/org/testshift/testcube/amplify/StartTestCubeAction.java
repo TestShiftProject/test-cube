@@ -75,6 +75,14 @@ public class StartTestCubeAction extends AnAction {
         }
     }
 
+    public void actionPerformed(@NotNull Project project) {
+        try {
+            runDSpot(project);
+        } catch (IOException | InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
     private void runDSpot(Project currentProject) throws IOException, InterruptedException {
 
         IdeaPluginDescriptor testCubePlugin = PluginManagerCore.getPlugin(PluginId.getId("org.testshift.testcube"));
