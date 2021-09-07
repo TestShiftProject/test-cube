@@ -4,7 +4,7 @@ plugins {
 }
 
 group 'org.testshift'
-version '1.0.4'
+version '1.0.5'
 
 repositories {
     mavenCentral()
@@ -17,14 +17,13 @@ dependencies {
 
 // See https://github.com/JetBrains/gradle-intellij-plugin/
 intellij {
-    version '2021.1'
+    version '2021.2.1'
     plugins = ['java'] //, 'org.jetbrains.plugins.gradle', 'org.jetbrains.idea.maven']
 }
 
 patchPluginXml {
     changeNotes """
-     Automatically detects JDK Home<br>
-     Support for Gradle & Java 11<br>
+     Compatible with IntelliJ 2021.2<br>
      Gradle support is very bare bones now and might not work for you!<br>
      If you have a gradle project and want to try out TestCube, please open an issue on GitHub so I can fix it for your projects setup :)
      """
