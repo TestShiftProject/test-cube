@@ -25,34 +25,13 @@ One project that Test Cube works well on is jsoup: [https://github.com/jhy/jsoup
 
 Fell free to try it on any other projects you’re interested in! you can find a few more that DSpot should run on here → [https://github.com/STAMP-project/dspot-experiments/blob/master/dataset/dataset.json](https://github.com/STAMP-project/dspot-experiments/blob/master/dataset/dataset.json)
 
-## test-runner
-Our version of DSpot relies on a custom version of the test-runner. To build DSpot you’ll need to setup test-runner as follows:
-
-Clone from: [https://github.com/STAMP-project/test-runner](https://github.com/STAMP-project/test-runner)
-
-Build with
-
-```
-mvn package
-```
-
-Install with
-
-```
-mvn install:install-file -Dfile=target/test-runner-<version>-jar-with-dependencies.jar -DpomFile=pom.xml -Dclassifier=jar-with-dependencies
-```
-
-```
-mvn install:install-file -Dfile=target/test-runner-2.3.0-SNAPSHOT-jar-with-dependencies.jar -DpomFile=pom.xml -Dclassifier=jar-with-dependencies
-```
-
 ## DSpot
+If you will work on the amplification process itself, you will likely do this by modifying DSpot, the test amplification tool TestCube relies on.
+TestCube contains a packaged jar of DSpot, so if you do changes to DSpot: repackage it and copy it over to the test-cube repository :)
 
 Clone from: [https://github.com/TestShiftProject/dspot](https://github.com/TestShiftProject/dspot/tree/test-cube)
 
-Checkout the branch `test-cube`
-
-Check in pom.xml that the test-runner is set to the same version you installed above
+Checkout the branch `master`
 
 Build with
 
@@ -66,6 +45,4 @@ If you get this error:
 
 solve it with an `mvn clean` and another `mvn package`
 
-----
-
-To include a new version within Test Cube, locate the built jar with dependencies in the `target` folder  and replace the jar in `test-cube/src/main/resources/dspot`.
+To include a new version of DSpot within Test Cube, locate the built jar with dependencies in the `target` folder  and replace the jar in `test-cube/src/main/resources/dspot`.

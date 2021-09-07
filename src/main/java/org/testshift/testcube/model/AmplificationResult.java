@@ -80,7 +80,8 @@ public class AmplificationResult {
 
                     if (testCaseJSON.isPresent()) {
                         result.amplifiedTestCases.add(new AmplifiedTestCase(amplifiedTestClassPath, method
-                                .getName(), psiFile, result, testCaseJSON.get().getCoverage(), testCaseJSON.get()
+                                .getName(), psiFile, result, testCaseJSON.get().getCoverageImprovement(),
+                                testCaseJSON.get()
                                 .getNbAssertionAdded(), testCaseJSON.get().getNbInputAdded()));
                     } else {
                         logger.warn("Found no matching json result for test case " + method.getName());
