@@ -18,8 +18,10 @@ import com.intellij.openapi.progress.impl.BackgroundableProcessIndicator;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.roots.ProjectRootManager;
+import com.intellij.psi.PsiElement;
 import eu.stamp_project.dspot.common.report.output.selector.extendedcoverage.json.TestClassJSON;
 import org.apache.commons.io.FileUtils;
+import org.apache.log4j.Level;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -75,8 +77,10 @@ public class StartTestCubeAction extends AnAction {
         }
     }
 
-    public void actionPerformed(@NotNull Project project) {
+    public void actionPerformed(@NotNull Project project, PsiElement element) {
         try {
+            logger.setLevel(Level.ALL);
+            logger.info("DSpot started for " + element);
             runDSpot(project);
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();

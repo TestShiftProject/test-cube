@@ -28,21 +28,21 @@ public class TestThisMethodLineMarkerProvider extends LineMarkerProviderDescript
             if (elt == null) {
                 return;
             }
-            new StartTestCubeAction().actionPerformed(elt.getProject());
+            new StartTestCubeAction().actionPerformed(elt.getProject(), elt);
         }
     }
 
     @Override
     public LineMarkerInfo<?> getLineMarkerInfo(@NotNull PsiElement element) {
         Function<PsiElement, String> tooltipProvider = element1 -> {
-            return "Generate Test";
+            return "Generate Test for This Method";
         };
 
         PsiElement parent;
         if (element instanceof PsiIdentifier && (parent = element.getParent()) instanceof PsiMethod &&
-           ((PsiMethod)parent).getNameIdentifier() == element) {
-            return new LineMarkerInfo<>(element, element
-                    .getTextRange(), TestCubeIcons.AMPLIFY_TEST, tooltipProvider, null,
+           ((PsiMethod)parent).getNameIdentifier() == element && methodToStillTest((PsiMethod)parent) ){
+            return new LineMarkerInfo<>(element, element.getTextRange(),
+                    TestCubeIcons.AMPLIFY_TEST, tooltipProvider, new TestThisMethodGutterHandler(),
                     GutterIconRenderer.Alignment.CENTER, () -> "Icon: Test Cube Logo");
         }
         else {
@@ -50,9 +50,8 @@ public class TestThisMethodLineMarkerProvider extends LineMarkerProviderDescript
         }
     }
 
-    @Override
-    public void collectSlowLineMarkers(@NotNull List<? extends PsiElement> elements, @NotNull Collection<?
-            super LineMarkerInfo<?>> result) {
-        super.collectSlowLineMarkers(elements, result);
+    public static boolean methodToStillTest(@NotNull PsiMethod method) {
+        return !AmplifyTestMarkerContributor.isTestMethod(method.getContainingClass(), method);
+        // TODO use coverage analysis to exclude fully covered methods?
     }
 }

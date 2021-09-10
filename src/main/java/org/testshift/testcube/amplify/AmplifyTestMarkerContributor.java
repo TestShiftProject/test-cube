@@ -68,7 +68,7 @@ public class AmplifyTestMarkerContributor extends RunLineMarkerContributor {
     /**
      * From {@link com.intellij.testIntegration.TestRunLineMarkerProvider#getInfo(PsiElement)}
      */
-    private static boolean isTestMethod(PsiClass containingClass, PsiMethod method) {
+    public static boolean isTestMethod(PsiClass containingClass, PsiMethod method) {
         if (containingClass == null) return false;
         TestFramework framework = TestFrameworks.detectFramework(containingClass);
         return framework != null && framework.isTestMethod(method, false);
