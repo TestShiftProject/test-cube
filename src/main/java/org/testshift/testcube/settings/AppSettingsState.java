@@ -1,9 +1,7 @@
 package org.testshift.testcube.settings;
 
-import com.intellij.openapi.components.PersistentStateComponent;
-import com.intellij.openapi.components.ServiceManager;
-import com.intellij.openapi.components.State;
-import com.intellij.openapi.components.Storage;
+import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.components.*;
 import com.intellij.util.xmlb.XmlSerializerUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -34,7 +32,7 @@ public class AppSettingsState implements PersistentStateComponent<AppSettingsSta
 
 
     public static AppSettingsState getInstance() {
-        return ServiceManager.getService(AppSettingsState.class);
+        return ApplicationManager.getApplication().getService(AppSettingsState.class);
     }
 
     @Nullable

@@ -2,6 +2,7 @@ package org.testshift.testcube.misc;
 
 import com.google.gson.Gson;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.project.ProjectUtil;
 import com.intellij.psi.PsiMethod;
 import com.intellij.psi.util.ClassUtil;
 import eu.stamp_project.dspot.common.report.output.selector.extendedcoverage.json.TestClassJSON;
@@ -9,6 +10,7 @@ import eu.stamp_project.dspot.common.report.output.selector.extendedcoverage.jso
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.util.Objects;
 import java.util.regex.Matcher;
 
 public class Util {
@@ -57,6 +59,6 @@ public class Util {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        project.getBaseDir().refresh(false,true);
+        Objects.requireNonNull(ProjectUtil.guessProjectDir(project)).refresh(false, true);
     }
 }
