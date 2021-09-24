@@ -237,16 +237,16 @@ public class StartTestCubeAction extends AnAction {
                 TestClassJSON result = Util.getResultJSON(currentProject, testClass);
                 if (result == null || result.getTestCases() == null) {
                     notifier.notify(currentProject,
-                            "No new test cases found. Please try amplifying another test case!", true,
+                            "No new test cases found. Please try amplifying another test case!",
                             new InspectDSpotTerminalOutputAction());
                 } else {
                     int amplifiedTestCasesCount = result.getTestCases().size();
 
                     if (amplifiedTestCasesCount == 0) {
-                        notifier.notify(currentProject, "Could find no new test cases through amplification.", true);
+                        notifier.notify(currentProject, "Could find no new test cases through amplification.");
                     } else {
                         notifier.notify(currentProject,
-                                "Test Cube found " + amplifiedTestCasesCount + " amplified test cases.", true,
+                                "Test Cube found " + amplifiedTestCasesCount + " amplified test cases.",
                                 new InspectTestCubeResultsAction(currentProject, testClass, testMethod), new InspectDSpotTerminalOutputAction());
                     }
                 }

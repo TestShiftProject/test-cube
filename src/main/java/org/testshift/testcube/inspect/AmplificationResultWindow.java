@@ -292,7 +292,7 @@ public class AmplificationResultWindow extends Component {
             if (amplificationResult.amplifiedTestCases.isEmpty()) {
                 TestCubeNotifier notifier = new TestCubeNotifier();
                 notifier.notify(amplificationResult.project, "All amplified test cases were added or ignored. Thank " +
-                        "you for using Test Cube!", false);
+                        "you for using Test Cube!");
                 close();
                 return;
             }

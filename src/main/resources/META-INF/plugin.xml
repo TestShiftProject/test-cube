@@ -21,6 +21,8 @@
         <applicationConfigurable parentId="tools" instance="org.testshift.testcube.settings.AppSettingsConfigurable"
                                  id="org.testshift.testcube.settings.AppSettingsConfigurable"
                                  displayName="Test Cube Settings"/>
+        <notificationGroup displayType="STICKY_BALLOON" id="Test Cube"/>
+
     </extensions>
 
     <actions>
