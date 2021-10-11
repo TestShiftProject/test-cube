@@ -39,6 +39,7 @@ public class AppSettingsConfigurable implements Configurable {
         AppSettingsState settings = AppSettingsState.getInstance();
         boolean modified = !mySettingsComponent.getJava8Path().equals(settings.java8Path);
         modified |= !mySettingsComponent.getMavenHome().equals(settings.mavenHome);
+        modified |= !mySettingsComponent.getColor().equals(settings.color);
 //        modified |= mySettingsComponent.getGenerateAssertions() != settings.generateAssertions;
 //        modified |= !mySettingsComponent.getSelectorCriterion().equals(settings.selectorCriterion);
 //        modified |= !mySettingsComponent.getInputAmplificationDistributor().equals(settings.inputAmplificationDistributor);
@@ -50,6 +51,8 @@ public class AppSettingsConfigurable implements Configurable {
         AppSettingsState settings = AppSettingsState.getInstance();
         settings.java8Path = mySettingsComponent.getJava8Path();
         settings.mavenHome = mySettingsComponent.getMavenHome();
+        settings.color = mySettingsComponent.getColor();
+
 //        settings.generateAssertions = mySettingsComponent.getGenerateAssertions();
 //        settings.selectorCriterion = mySettingsComponent.getSelectorCriterion();
 //        settings.inputAmplificationDistributor = mySettingsComponent.getInputAmplificationDistributor();
@@ -60,6 +63,7 @@ public class AppSettingsConfigurable implements Configurable {
         AppSettingsState settings = AppSettingsState.getInstance();
         mySettingsComponent.setJava8Path(settings.java8Path);
         mySettingsComponent.setMavenHome(settings.mavenHome);
+        mySettingsComponent.setColor(settings.color);
 //        mySettingsComponent.setGenerateAssertions(settings.generateAssertions);
 //        mySettingsComponent.setSelectorCriterion(settings.selectorCriterion);
 //        mySettingsComponent.setInputAmplificationDistributor(settings.inputAmplificationDistributor);

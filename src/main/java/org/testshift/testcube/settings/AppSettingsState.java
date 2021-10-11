@@ -3,8 +3,11 @@ package org.testshift.testcube.settings;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.*;
 import com.intellij.util.xmlb.XmlSerializerUtil;
+
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+
 
 /**
  * Supports storing the application settings in a persistent way.
@@ -19,6 +22,7 @@ public class AppSettingsState implements PersistentStateComponent<AppSettingsSta
 
     public String java8Path = "";
     public String mavenHome = "";
+    public String color = "";
     //public boolean ideaStatus = false;
 
     // DSpot Config

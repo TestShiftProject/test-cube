@@ -25,6 +25,8 @@ import org.testshift.testcube.misc.Util;
 import org.testshift.testcube.model.AmplificationResult;
 import org.testshift.testcube.model.AmplifiedTestCase;
 import org.testshift.testcube.model.TestCase;
+import org.testshift.testcube.settings.AppSettingsComponent;
+import org.testshift.testcube.settings.AppSettingsState;
 
 import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
@@ -33,6 +35,7 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.Element;
 import java.awt.*;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
@@ -128,7 +131,7 @@ public class AmplificationResultWindow extends Component {
             }
             if (e.getDescription().equals("class")) {
                 showClassInAmplifiedCoverageEditor(visibleLinkText, coverageImprovementForLineHighlighting
-                        .getInstructionImprovement().getCoverageForClass(visibleLinkText),
+                                .getInstructionImprovement().getCoverageForClass(visibleLinkText),
                         null, null, 0, null);
 
             } else if (e.getDescription().startsWith("method")) {
@@ -172,11 +175,17 @@ public class AmplificationResultWindow extends Component {
 
 
             TextAttributes coveredLine = new TextAttributes();
-            coveredLine.setBackgroundColor(JBColor.green.darker());
+
+            if(AppSettingsState.getInstance().color.equals("Darker")){
+                coveredLine.setBackgroundColor(JBColor.green.darker());
+            }else{
+                coveredLine.setBackgroundColor(JBColor.green.brighter());
+            }
+
             MarkupModel markupModel = amplifiedCoverageEditor.getEditor().getMarkupModel();
             coverageImprovement.methodCoverageMap.forEach((methodName, methodCoverage) -> {
                 Optional<PsiMethod> method = Arrays.stream(psiClass.getMethods()).filter(psiMethod -> Util
-                        .matchMethodNameAndDescriptor(psiMethod, methodName, methodCoverage.methodDescriptor))
+                                .matchMethodNameAndDescriptor(psiMethod, methodName, methodCoverage.methodDescriptor))
                         .findAny();
                 if (method.isPresent()) {
                     int methodLine = amplifiedCoverageEditor.getEditor()
@@ -193,7 +202,7 @@ public class AmplificationResultWindow extends Component {
 
             if (methodNameToScrollTo != null) {
                 Optional<PsiMethod> method = Arrays.stream(psiClass.getMethods()).filter(psiMethod -> Util
-                        .matchMethodNameAndDescriptor(psiMethod, methodNameToScrollTo, methodDescriptorToScrollTo))
+                                .matchMethodNameAndDescriptor(psiMethod, methodNameToScrollTo, methodDescriptorToScrollTo))
                         .findAny();
                 if (method.isPresent()) {
                     try {
@@ -269,7 +278,12 @@ public class AmplificationResultWindow extends Component {
             try {
                 // Highlight name of test case
                 TextAttributes currentTestCase = new TextAttributes();
-                currentTestCase.setBackgroundColor(JBColor.blue.darker());
+                if(AppSettingsState.getInstance().color.equals("Darker")){
+                    currentTestCase.setBackgroundColor(JBColor.blue.darker());
+                }else{
+                    currentTestCase.setBackgroundColor(JBColor.blue.brighter());
+                }
+
                 MarkupModel markupModel = editor.getEditor().getMarkupModel();
 
                 markupModel.removeAllHighlighters();
@@ -395,10 +409,16 @@ public class AmplificationResultWindow extends Component {
 
     private String htmlStart() {
         Color foreground = JBColor.foreground();
-        Color link = JBColor.get("ValidationTooltip.successForeground", JBColor.green);
+        Color link;
+        if(AppSettingsState.getInstance().color.equals("Darker")){
+            link = JBColor.get("ValidationTooltip.successForeground", JBColor.green.darker());
+        }else{
+            link = JBColor.get("ValidationTooltip.successForeground", JBColor.green.brighter());
+        }
+
         return "<html>" +
-               "<head><style>a {color:" + colorToRGBHtmlString(link) + ";}</style></head>" +
-               "<body style=\"font-family:Sans-Serif;color:" + colorToRGBHtmlString(foreground) + ";\">";
+                "<head><style>a {color:" + colorToRGBHtmlString(link) + ";}</style></head>" +
+                "<body style=\"font-family:Sans-Serif;color:" + colorToRGBHtmlString(foreground) + ";\">";
     }
 
     private String colorToRGBHtmlString(Color color) {
