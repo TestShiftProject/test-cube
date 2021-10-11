@@ -151,9 +151,7 @@ public class StartTestCubeAction extends AnAction {
                 }
 
                 String targetModule = "";
-                if (isMaven) {
-                    targetModule = moduleRootPath.replace(currentProject.getBasePath() + "/", "");
-                }
+                targetModule = moduleRootPath.replace(currentProject.getBasePath() + "/", "");
 
                 List<String> dSpotStarter = new ArrayList<>(Arrays.asList(javaBin, "-jar", dSpotPath,
                         "--absolute-path-to-project-root", currentProject.getBasePath(),
