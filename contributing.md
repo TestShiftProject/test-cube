@@ -11,15 +11,15 @@ If you will work on the test amplification itself, you need to setup `test-runne
 After opening the project in IntelliJ, you can execute Test Cube with the gradle task `runIde`.
 
 To test and run Test Cube / DSpot you need:
-- an installation of Java 8 (including the path to your Java Home)
+- an installation of Java 11 (including the path to your Java Home)
 - an installation of Maven (including the path to your Maven Home)
-- an example project based on Java 8 and Maven
+- an example project based on Java 11 and Maven
 
 ## Example Project
 
 You’ll need an example project to try out DSpot/Test Cube on 🙂
 
-Currently, DSpot supports projects that use Maven and Java 8, potentially Java 11 (They say, I didn’t check)
+Currently, DSpot supports projects that use Maven and Java 8 and Java 11 (with caveats also Java 16)
 
 One project that Test Cube works well on is jsoup: [https://github.com/jhy/jsoup](https://github.com/jhy/jsoup)
 
