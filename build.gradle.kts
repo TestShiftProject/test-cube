@@ -53,6 +53,7 @@ qodana {
     reportPath.set(projectDir.resolve("build/reports/inspections").canonicalPath)
     saveReport.set(true)
     showReport.set(System.getenv("QODANA_SHOW_REPORT").toBoolean())
+    //failThreshold.set(10)
 }
 
 tasks {
