@@ -10,10 +10,7 @@ import com.intellij.openapi.editor.markup.MarkupModel;
 import com.intellij.openapi.editor.markup.TextAttributes;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowManager;
-import com.intellij.psi.JavaPsiFacade;
-import com.intellij.psi.PsiClass;
-import com.intellij.psi.PsiDocumentManager;
-import com.intellij.psi.PsiMethod;
+import com.intellij.psi.*;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.ui.JBColor;
 import eu.stamp_project.dspot.selector.extendedcoverageselector.ClassCoverageMap;
@@ -107,7 +104,7 @@ public class AmplificationResultWindow extends Component {
 
     public void addHighlights() {
 //        showTestCaseInEditor(amplificationResult.originalTestCase, originalTestCase);
-        moveCaretToTestCase(currentAmplificationTestCase,amplifiedTestCase);
+       // moveCaretToTestCase(currentAmplificationTestCase,amplifiedTestCase);
     }
 
     /**
@@ -259,10 +256,12 @@ public class AmplificationResultWindow extends Component {
 //    }
 
     private void showTestCaseInEditor(TestCase testCase, TestCaseEditorField editor) {
-        editor.setNewDocumentAndFileType(JavaFileType.INSTANCE, PsiDocumentManager
-                .getInstance(amplificationResult.project).getDocument(testCase.psiFile));
-        moveCaretToTestCase(testCase, editor);
+       // editor.setNewDocumentAndFileType(JavaFileType.INSTANCE, PsiDocumentManager
+         //       .getInstance(amplificationResult.project).getDocument(testCase.psiFile));
+        //moveCaretToTestCase(testCase, editor);
         setAmplifiedInformation();
+        PsiMethod pmethod= currentAmplificationTestCase.getTestMethod();
+        editor.setText(pmethod.getText());
     }
 
     private void moveCaretToTestCase(TestCase testCase, TestCaseEditorField editor) {
@@ -325,26 +324,24 @@ public class AmplificationResultWindow extends Component {
             }
         }
         currentAmplificationTestCase = amplificationResult.amplifiedTestCases.get(currentAmplificationTestCaseIndex);
-        moveCaretToTestCase(currentAmplificationTestCase, amplifiedTestCase);
+        //moveCaretToTestCase(currentAmplificationTestCase, amplifiedTestCase);
+        showTestCaseInEditor(currentAmplificationTestCase, amplifiedTestCase);
         setAmplifiedInformation();
         hideCoverageEditor();
     }
 
     public void addTestCaseToTestSuite() {
         AmplifiedTestCase testToAdd = currentAmplificationTestCase;
-
         PsiMethod method = testToAdd.getTestMethod();
         WriteCommandAction.runWriteCommandAction(amplificationResult.project, () -> {
             if (method != null) {
                 PsiMethod methodSave = (PsiMethod) method.copy();
                 method.delete();
-
                 PsiMethod originalMethod = amplificationResult.originalTestCase.getTestMethod();
                 if (originalMethod != null) {
                     originalMethod.getContainingClass().addAfter(methodSave, originalMethod);
                 }
                 PsiDocumentManager.getInstance(amplificationResult.project).commitAllDocuments();
-
                 navigateTestCases(true, true);
             }
         });
