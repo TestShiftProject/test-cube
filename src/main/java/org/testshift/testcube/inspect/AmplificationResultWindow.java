@@ -42,9 +42,6 @@ public class AmplificationResultWindow extends Component {
 
     private JPanel amplificationResultPanel;
 
-//    private TestCaseEditorField originalTestCase;
-//    private JTextPane originalInformation;
-
     private JTextPane amplifiedInformation;
     private TestCaseEditorField amplifiedTestCase;
 
@@ -63,13 +60,6 @@ public class AmplificationResultWindow extends Component {
     private AmplifiedTestCase currentAmplificationTestCase;
 
     public AmplificationResultWindow() {
-//        originalInformation.setEditorKit(JEditorPane.createEditorKitForContentType("text/html"));
-//        originalInformation.addHyperlinkListener(new HyperlinkListener() {
-//            @Override
-//            public void hyperlinkUpdate(HyperlinkEvent e) {
-//                displayAndScrollToLinkedCoverage(e, amplificationResult.amplifiedCoverage);
-//            }
-//        });
         amplifiedInformation.setEditorKit(JEditorPane.createEditorKitForContentType("text/html"));
         amplifiedInformation.addHyperlinkListener(new HyperlinkListener() {
             @Override
@@ -85,12 +75,9 @@ public class AmplificationResultWindow extends Component {
         this.currentAmplificationTestCaseIndex = 0;
 
         assert !amplificationResult.amplifiedTestCases.isEmpty();
-        this.currentAmplificationTestCase = amplificationResult.amplifiedTestCases
-                .get(currentAmplificationTestCaseIndex);
+        this.currentAmplificationTestCase = amplificationResult.amplifiedTestCases.get(
+                currentAmplificationTestCaseIndex);
 
-//        displayOverallAmplificationReport();
-//        showTestCaseInEditor(amplificationResult.originalTestCase, originalTestCase);
-//        setOriginalInformation();
         showTestCaseInEditor(currentAmplificationTestCase, amplifiedTestCase);
 
         close.addActionListener(l -> close());
@@ -103,8 +90,7 @@ public class AmplificationResultWindow extends Component {
     }
 
     public void addHighlights() {
-//        showTestCaseInEditor(amplificationResult.originalTestCase, originalTestCase);
-        moveCaretToTestCase(currentAmplificationTestCase,amplifiedTestCase);
+        moveCaretToTestCase(currentAmplificationTestCase, amplifiedTestCase);
     }
 
     /**
@@ -122,23 +108,28 @@ public class AmplificationResultWindow extends Component {
             String visibleLinkText = "";
             try {
                 visibleLinkText = source.getDocument()
-                        .getText(source.getStartOffset(), source.getEndOffset() - source.getStartOffset());
+                                        .getText(source.getStartOffset(),
+                                                 source.getEndOffset() - source.getStartOffset());
             } catch (BadLocationException badLocationException) {
                 badLocationException.printStackTrace();
             }
             if (e.getDescription().equals("class")) {
-                showClassInAmplifiedCoverageEditor(visibleLinkText, coverageImprovementForLineHighlighting
-                        .getInstructionImprovement().getCoverageForClass(visibleLinkText),
-                        null, null, 0, null);
+                showClassInAmplifiedCoverageEditor(visibleLinkText,
+                                                   coverageImprovementForLineHighlighting.getInstructionImprovement()
+                                                                                         .getCoverageForClass(
+                                                                                                 visibleLinkText), null,
+                                                   null, 0, null);
 
             } else if (e.getDescription().startsWith("method")) {
                 // {"method", <class name>, <method descriptor>}
                 String[] lineData = e.getDescription().split("\\|");
                 String classNameFQ = lineData[1];
                 String methodDescriptor = lineData[2];
-                showClassInAmplifiedCoverageEditor(classNameFQ, coverageImprovementForLineHighlighting
-                        .getInstructionImprovement()
-                        .getCoverageForClass(classNameFQ), visibleLinkText, methodDescriptor, 0, null);
+                showClassInAmplifiedCoverageEditor(classNameFQ,
+                                                   coverageImprovementForLineHighlighting.getInstructionImprovement()
+                                                                                         .getCoverageForClass(
+                                                                                                 classNameFQ),
+                                                   visibleLinkText, methodDescriptor, 0, null);
 
             } else if (e.getDescription().startsWith("line")) {
                 // {"line", <class name>, <method name>, <method descriptor>}
@@ -149,9 +140,11 @@ public class AmplificationResultWindow extends Component {
                 String lineType = lineData[4];
                 int line = Integer.parseInt(visibleLinkText);
 
-                showClassInAmplifiedCoverageEditor(classNameFQ, coverageImprovementForLineHighlighting
-                        .getInstructionImprovement()
-                        .getCoverageForClass(classNameFQ), methodName, methodDescriptor, line, lineType);
+                showClassInAmplifiedCoverageEditor(classNameFQ,
+                                                   coverageImprovementForLineHighlighting.getInstructionImprovement()
+                                                                                         .getCoverageForClass(
+                                                                                                 classNameFQ),
+                                                   methodName, methodDescriptor, line, lineType);
             }
         }
     }
@@ -159,14 +152,14 @@ public class AmplificationResultWindow extends Component {
     private void showClassInAmplifiedCoverageEditor(String classNameFQ, ClassCoverageMap coverageImprovement,
                                                     @Nullable String methodNameToScrollTo,
                                                     @Nullable String methodDescriptorToScrollTo,
-                                                    int methodLineToScrollTo,
-                                                    @Nullable String lineType) {
+                                                    int methodLineToScrollTo, @Nullable String lineType) {
         PsiClass psiClass = JavaPsiFacade.getInstance(amplificationResult.project)
-                .findClass(classNameFQ, GlobalSearchScope.allScope(amplificationResult.project));
+                                         .findClass(classNameFQ,
+                                                    GlobalSearchScope.allScope(amplificationResult.project));
         if (psiClass != null) {
             amplifiedCoverageEditor.setVisible(true);
-            amplifiedCoverageEditor.setNewDocumentAndFileType(JavaFileType.INSTANCE, PsiDocumentManager
-                    .getInstance(amplificationResult.project).getDocument(psiClass.getContainingFile()));
+            amplifiedCoverageEditor.setNewDocumentAndFileType(JavaFileType.INSTANCE, PsiDocumentManager.getInstance(
+                    amplificationResult.project).getDocument(psiClass.getContainingFile()));
             amplifiedCoverageSplit.setDividerLocation(0.5);
             //amplifiedCoverageEditor.setPreferredWidth(200);
 
@@ -175,30 +168,35 @@ public class AmplificationResultWindow extends Component {
             coveredLine.setBackgroundColor(JBColor.green.darker());
             MarkupModel markupModel = amplifiedCoverageEditor.getEditor().getMarkupModel();
             coverageImprovement.methodCoverageMap.forEach((methodName, methodCoverage) -> {
-                Optional<PsiMethod> method = Arrays.stream(psiClass.getMethods()).filter(psiMethod -> Util
-                        .matchMethodNameAndDescriptor(psiMethod, methodName, methodCoverage.methodDescriptor))
-                        .findAny();
+                Optional<PsiMethod> method = Arrays.stream(psiClass.getMethods())
+                                                   .filter(psiMethod -> Util.matchMethodNameAndDescriptor(psiMethod,
+                                                                                                          methodName,
+                                                                                                          methodCoverage.methodDescriptor))
+                                                   .findAny();
                 if (method.isPresent()) {
                     int methodLine = amplifiedCoverageEditor.getEditor()
-                            .offsetToLogicalPosition(method.get().getTextOffset()).line;
+                                                            .offsetToLogicalPosition(method.get().getTextOffset()).line;
                     Map<Integer, Integer> coveredInstructions = coverageImprovement.getCoverageForMethod(methodName)
-                            .coveragePerLine();
+                                                                                   .coveragePerLine();
                     for (Integer coverageLine : coveredInstructions.keySet()) {
                         markupModel.addLineHighlighter(methodLine + coverageLine + 1, HighlighterLayer.ERROR,
-                                coveredLine);
+                                                       coveredLine);
 
                     }
                 }
             });
 
             if (methodNameToScrollTo != null) {
-                Optional<PsiMethod> method = Arrays.stream(psiClass.getMethods()).filter(psiMethod -> Util
-                        .matchMethodNameAndDescriptor(psiMethod, methodNameToScrollTo, methodDescriptorToScrollTo))
-                        .findAny();
+                Optional<PsiMethod> method = Arrays.stream(psiClass.getMethods())
+                                                   .filter(psiMethod -> Util.matchMethodNameAndDescriptor(psiMethod,
+                                                                                                          methodNameToScrollTo,
+                                                                                                          methodDescriptorToScrollTo))
+                                                   .findAny();
                 if (method.isPresent()) {
                     try {
                         int methodLine = amplifiedCoverageEditor.getEditor()
-                                .offsetToLogicalPosition(method.get().getTextOffset()).line;
+                                                                .offsetToLogicalPosition(
+                                                                        method.get().getTextOffset()).line;
                         int scrollLine;
                         if (lineType == null) {
                             scrollLine = methodLine - 1;
@@ -207,18 +205,25 @@ public class AmplificationResultWindow extends Component {
                         } else {
                             scrollLine = methodLineToScrollTo - 2;
                         }
-                        amplifiedCoverageEditor.getEditor().getScrollingModel()
-                                .scrollVertically(amplifiedCoverageEditor.getEditor()
-                                        .logicalPositionToXY(new LogicalPosition(scrollLine, 0)).y);
+                        amplifiedCoverageEditor.getEditor()
+                                               .getScrollingModel()
+                                               .scrollVertically(amplifiedCoverageEditor.getEditor()
+                                                                                        .logicalPositionToXY(
+                                                                                                new LogicalPosition(
+                                                                                                        scrollLine,
+                                                                                                        0)).y);
                     } catch (NullPointerException ignored) {
                     }
                 }
             } else {
                 // scroll to top of editor
                 try {
-                    amplifiedCoverageEditor.getEditor().getScrollingModel()
-                            .scrollVertically(amplifiedCoverageEditor.getEditor()
-                                    .logicalPositionToXY(new LogicalPosition(0, 0)).y);
+                    amplifiedCoverageEditor.getEditor()
+                                           .getScrollingModel()
+                                           .scrollVertically(amplifiedCoverageEditor.getEditor()
+                                                                                    .logicalPositionToXY(
+                                                                                            new LogicalPosition(0,
+                                                                                                                0)).y);
                 } catch (NullPointerException ignored) {
                 }
             }
@@ -229,29 +234,10 @@ public class AmplificationResultWindow extends Component {
         amplifiedCoverageEditor.setVisible(false);
     }
 
-    /**
-     * Writes the content of DSpot's report file into the header text of the window for this amplification result
-     */
-//    private void displayOverallAmplificationReport() {
-//        header.setText(htmlStart() + "Amplification of " + amplificationResult.originalTestCase.name +
-//                       " was successful!<br>" +
-////                       "On the left you see the original test case. Below we show the overall coverage improvement " +
-////                       "the amplification achieved.<br>" +
-////                       "Here you can see the amplified test cases.<br>" +
-////                       "Underneath the code you can see<br>" +
-////                       "- how many input modifications were applied<br>" +
-////                       "- how many assertions were added<br>" +
-////                       "- where this test achieves more coverage than the original test case<br><br>" +
-////                       "Use <b>'Next'</b> and <b>'Previous'</b> on the bottom to explore the test cases!<br>" +
-////                       "If you find one that you would like to include in your existing test suite: <b>'Add To Test Suite'</b> " +
-////                       "automatically copies it over for you :)<br>" +
-////                       "Fell free to <b>edit</b> the test cases before/after adding them!" +
-//                       htmlEnd());
-//    }
-
     private void showTestCaseInEditor(TestCase testCase, TestCaseEditorField editor) {
-        editor.setNewDocumentAndFileType(JavaFileType.INSTANCE, PsiDocumentManager
-                .getInstance(amplificationResult.project).getDocument(testCase.psiFile));
+        editor.setNewDocumentAndFileType(JavaFileType.INSTANCE,
+                                         PsiDocumentManager.getInstance(amplificationResult.project)
+                                                           .getDocument(testCase.psiFile));
         moveCaretToTestCase(testCase, editor);
         setAmplifiedInformation();
     }
@@ -261,8 +247,11 @@ public class AmplificationResultWindow extends Component {
         if (method != null) {
             editor.setCaretPosition(method.getTextOffset());
             try {
-                editor.getEditor().getScrollingModel().scrollVertically((int) editor.getEditor()
-                        .offsetToPoint2D(editor.getEditor().getCaretModel().getOffset()).getY());
+                editor.getEditor()
+                      .getScrollingModel()
+                      .scrollVertically((int) editor.getEditor()
+                                                    .offsetToPoint2D(editor.getEditor().getCaretModel().getOffset())
+                                                    .getY());
             } catch (NullPointerException ignored) {
                 // first time we used the editor text field the editor is null
             }
@@ -274,8 +263,9 @@ public class AmplificationResultWindow extends Component {
 
                 markupModel.removeAllHighlighters();
                 markupModel.addRangeHighlighter(method.getTextOffset(),
-                        method.getTextOffset() + method.getName().length(), HighlighterLayer.ERROR,
-                        currentTestCase, HighlighterTargetArea.EXACT_RANGE);
+                                                method.getTextOffset() + method.getName().length(),
+                                                HighlighterLayer.ERROR, currentTestCase,
+                                                HighlighterTargetArea.EXACT_RANGE);
             } catch (NullPointerException ignored) {
                 // first time we used the editor text field the editor is null
             }
@@ -291,8 +281,8 @@ public class AmplificationResultWindow extends Component {
             currentAmplificationTestCaseIndex--;
             if (amplificationResult.amplifiedTestCases.isEmpty()) {
                 TestCubeNotifier notifier = new TestCubeNotifier();
-                notifier.notify(amplificationResult.project, "All amplified test cases were added or ignored. Thank " +
-                        "you for using Test Cube!");
+                notifier.notify(amplificationResult.project,
+                                "All amplified test cases were added or ignored. Thank you for using Test Cube!");
                 close();
                 return;
             }
@@ -363,18 +353,11 @@ public class AmplificationResultWindow extends Component {
         amplifiedInformation.setText(htmlStart() + currentAmplificationTestCase.getDescription() + htmlEnd());
     }
 
-//    private void setOriginalInformation() {
-//        originalInformation
-//                .setText(htmlStart() + "Above you see the <b>original test case</b> '" + amplificationResult.originalTestCase.name +
-//                        "'<br><br><hr><br>Below you see the <b>overall coverage</b> that would be gained if you <b>add all</b> " +
-//                         "proposed test cases:<br>" + amplificationResult.amplifiedCoverageHTML.toHtmlString() + htmlEnd());
-//    }
-
     public void close() {
         ToolWindow toolWindow = ToolWindowManager.getInstance(amplificationResult.project).getToolWindow("Test Cube");
         if (toolWindow != null) {
             toolWindow.getContentManager()
-                    .removeContent(toolWindow.getContentManager().findContent(getDisplayName()), true);
+                      .removeContent(toolWindow.getContentManager().findContent(getDisplayName()), true);
             if (toolWindow.getContentManager().getContentCount() == 0) {
                 toolWindow.hide();
             }
@@ -396,13 +379,12 @@ public class AmplificationResultWindow extends Component {
     private String htmlStart() {
         Color foreground = JBColor.foreground();
         Color link = JBColor.get("ValidationTooltip.successForeground", JBColor.green);
-        return "<html>" +
-               "<head><style>a {color:" + colorToRGBHtmlString(link) + ";}</style></head>" +
+        return "<html><head><style>a {color:" + colorToRGBHtmlString(link) + ";}</style></head>" +
                "<body style=\"font-family:Sans-Serif;color:" + colorToRGBHtmlString(foreground) + ";\">";
     }
 
     private String colorToRGBHtmlString(Color color) {
-        return "rgb(" + color.getRed()+ "," + color.getGreen() + "," + color.getBlue() + ")";
+        return "rgb(" + color.getRed() + "," + color.getGreen() + "," + color.getBlue() + ")";
     }
 
     private String htmlEnd() {

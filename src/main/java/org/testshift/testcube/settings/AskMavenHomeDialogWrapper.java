@@ -23,12 +23,10 @@ public class AskMavenHomeDialogWrapper extends DialogWrapper {
     protected JComponent createCenterPanel() {
         JPanel dialogPanel = //new JPanel(new BorderLayout());
                 FormBuilder.createFormBuilder()
-                .addLabeledComponent(new JBLabel("DSpot needs Maven to amplify your test cases. Please enter the path to your Maven Home:"), pathField, 1, true)
-                .getPanel();
-
-        //JLabel label = new JLabel("DSpot needs Java 8 to amplify your test cases. Please enter the path to your JDK 8 installation root here:");
-        //label.setPreferredSize(new Dimension(100, 100));
-        //dialogPanel.add(label, BorderLayout.CENTER);
+                           .addLabeledComponent(new JBLabel(
+                                   "DSpot needs Maven to amplify your test cases. Please enter " +
+                                   "the path to your Maven Home:"), pathField, 1, true)
+                           .getPanel();
 
         return dialogPanel;
     }

@@ -8,9 +8,10 @@ import org.testshift.testcube.icons.TestCubeIcons;
 public class TestCubeNotifier {
 
     public void notify(Project project, String content, AnAction... actions) {
-        final Notification notification =
-                NotificationGroupManager.getInstance().getNotificationGroup("Test Cube").createNotification(content,
-                NotificationType.INFORMATION);
+        final Notification notification = NotificationGroupManager.getInstance()
+                                                                  .getNotificationGroup("Test Cube")
+                                                                  .createNotification(content,
+                                                                                      NotificationType.INFORMATION);
         for (AnAction action : actions) {
             notification.addAction(action);
         }

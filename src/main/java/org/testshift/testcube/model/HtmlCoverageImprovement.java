@@ -28,19 +28,25 @@ public class HtmlCoverageImprovement extends CoverageImprovement {
             explanation.append("<a href=class>").append(className).append("</a>:<br>");
             classCoverageMap.methodCoverageMap.forEach((methodName, methodCoverage) -> {
                 explanation.append("<a href=method|")
-                        .append(className).append("|")
-                        .append(methodCoverage.methodDescriptor).append(">")
-                        .append(methodName).append("</a><br>");
+                           .append(className)
+                           .append("|")
+                           .append(methodCoverage.methodDescriptor)
+                           .append(">")
+                           .append(methodName)
+                           .append("</a><br>");
 
                 boolean wrotelines = false;
 
                 PsiClass psiClass = JavaPsiFacade.getInstance(amplificationResult.project)
-                                                 .findClass(className, GlobalSearchScope.allScope(amplificationResult.project));
+                                                 .findClass(className,
+                                                            GlobalSearchScope.allScope(amplificationResult.project));
                 if (psiClass != null) {
-                    Document document = PsiDocumentManager
-                            .getInstance(amplificationResult.project).getDocument(psiClass.getContainingFile());
-                    Optional<PsiMethod> method = Arrays.stream(psiClass.getMethods()).filter(psiMethod -> Util
-                            .matchMethodNameAndDescriptor(psiMethod, methodName, methodCoverage.methodDescriptor))
+                    Document document = PsiDocumentManager.getInstance(amplificationResult.project)
+                                                          .getDocument(psiClass.getContainingFile());
+                    Optional<PsiMethod> method = Arrays.stream(psiClass.getMethods())
+                                                       .filter(psiMethod -> Util.matchMethodNameAndDescriptor(psiMethod,
+                                                                                                              methodName,
+                                                                                                              methodCoverage.methodDescriptor))
                                                        .findAny();
                     if (method.isPresent() && document != null) {
                         int methodLine = document.getLineNumber(method.get().getTextOffset());
@@ -51,12 +57,19 @@ public class HtmlCoverageImprovement extends CoverageImprovement {
                                 continue;
                             }
                             explanation.append("L. <a href=line|")
-                                       .append(className).append("|")
-                                       .append(methodName).append("|")
-                                       .append(methodCoverage.methodDescriptor).append("|")
-                                       .append("fileLine").append(">")
-                                       .append(methodLine + index + 2).append("</a> +")
-                                       .append(instructionImprovement).append(" instr.").append("<br>");
+                                       .append(className)
+                                       .append("|")
+                                       .append(methodName)
+                                       .append("|")
+                                       .append(methodCoverage.methodDescriptor)
+                                       .append("|")
+                                       .append("fileLine")
+                                       .append(">")
+                                       .append(methodLine + index + 2)
+                                       .append("</a> +")
+                                       .append(instructionImprovement)
+                                       .append(" instr.")
+                                       .append("<br>");
                         }
                         wrotelines = true;
                     }
@@ -70,12 +83,19 @@ public class HtmlCoverageImprovement extends CoverageImprovement {
                             continue;
                         }
                         explanation.append("L. <a href=line|")
-                                   .append(className).append("|")
-                                   .append(methodName).append("|")
-                                   .append(methodCoverage.methodDescriptor).append("|")
-                                   .append("methodLine").append(">")
-                                   .append(index + 1).append("</a> +")
-                                   .append(instructionImprovement).append(" instr.").append("<br>");
+                                   .append(className)
+                                   .append("|")
+                                   .append(methodName)
+                                   .append("|")
+                                   .append(methodCoverage.methodDescriptor)
+                                   .append("|")
+                                   .append("methodLine")
+                                   .append(">")
+                                   .append(index + 1)
+                                   .append("</a> +")
+                                   .append(instructionImprovement)
+                                   .append(" instr.")
+                                   .append("<br>");
                     }
                 }
             });

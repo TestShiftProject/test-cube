@@ -14,21 +14,23 @@ public class AppSettingsComponent {
     private final JPanel myMainPanel;
     private final JBTextField java8Path = new JBTextField();
     private final JBTextField mavenHome = new JBTextField();
-    //private final JBCheckBox myIdeaUserStatus = new JBCheckBox("Do You Use IntelliJ IDEA? ");
 //    private final JBCheckBox generateAssertions = new JBCheckBox("Generate assertions during amplification");
 //    private final JBList<String> selectorCriterion = new JBList<>(AppSettingsState.SELECTOR_CRITERION_OPTIONS);
-//    private final JBList<String> inputAmplificationDistributor = new JBList<>(AppSettingsState.INPUT_AMPLIFICATION_DISTRIBUTOR_OPTIONS);
+//    private final JBList<String> inputAmplificationDistributor = new JBList<>(AppSettingsState
+//    .INPUT_AMPLIFICATION_DISTRIBUTOR_OPTIONS);
 
     public AppSettingsComponent() {
         myMainPanel = FormBuilder.createFormBuilder()
-                .addLabeledComponent(new JBLabel("Absolute path to your java 1.8 installation"), java8Path, 1, false)
-                .addLabeledComponent(new JBLabel("Absolute path to your maven home (MAVEN_HOME)"), mavenHome)
-                //.addComponent(myIdeaUserStatus, 1)
+                                 .addLabeledComponent(new JBLabel("Absolute path to your java 1.8 installation"),
+                                                      java8Path, 1, false)
+                                 .addLabeledComponent(new JBLabel("Absolute path to your maven home (MAVEN_HOME)"),
+                                                      mavenHome)
 //                .addComponent(generateAssertions)
 //                .addLabeledComponent(new JBLabel("Criterion for selecting amplified tests"),selectorCriterion)
-//                .addLabeledComponent(new JBLabel("Value distribution for input amplification"),inputAmplificationDistributor)
-                .addComponentFillVertically(new JPanel(), 0)
-                .getPanel();
+//                .addLabeledComponent(new JBLabel("Value distribution for input amplification"),
+//                inputAmplificationDistributor)
+                                 .addComponentFillVertically(new JPanel(), 0)
+                                 .getPanel();
     }
 
     public JPanel getPanel() {
