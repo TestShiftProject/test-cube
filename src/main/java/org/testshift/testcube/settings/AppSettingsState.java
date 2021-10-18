@@ -14,16 +14,11 @@ import org.testshift.testcube.misc.Colors;
  * The State and Storage annotations define the name of the data and the file name where
  * these persistent application settings are stored.
  */
-@State(
-        name = "org.testshift.testcube.AppSettingsState",
-        storages = {@Storage("TestCubePluginSettings.xml")}
-)
+@State(name = "org.testshift.testcube.AppSettingsState", storages = {@Storage("TestCubePluginSettings.xml")})
 public class AppSettingsState implements PersistentStateComponent<AppSettingsState> {
 
     public String java8Path = "";
     public String mavenHome = "";
-    public Colors highlightColor = Colors.BRIGHTER;
-    //public boolean ideaStatus = false;
 
     // DSpot Config
 //    public boolean generateAssertions = true;
@@ -31,8 +26,8 @@ public class AppSettingsState implements PersistentStateComponent<AppSettingsSta
 //    public static final String[] SELECTOR_CRITERION_OPTIONS = {"PitMutantScoreSelector", "JacocoCoverageSelector",
 //            "TakeAllSelector", "ExtendedCoverageSelector"};
 //    public String inputAmplificationDistributor = "RandomInputAmplDistributor";
-//    public static final String[] INPUT_AMPLIFICATION_DISTRIBUTOR_OPTIONS = {"RandomInputAmplDistributor", "TextualDistanceInputAmplDistributor", "SimpleInputAmplDistributor"};
-
+//    public static final String[] INPUT_AMPLIFICATION_DISTRIBUTOR_OPTIONS = {"RandomInputAmplDistributor",
+//    "TextualDistanceInputAmplDistributor", "SimpleInputAmplDistributor"};
 
 
     public static AppSettingsState getInstance() {

@@ -42,7 +42,8 @@ public class AppSettingsConfigurable implements Configurable {
         modified |= !mySettingsComponent.getColor().equals(settings.highlightColor);
 //        modified |= mySettingsComponent.getGenerateAssertions() != settings.generateAssertions;
 //        modified |= !mySettingsComponent.getSelectorCriterion().equals(settings.selectorCriterion);
-//        modified |= !mySettingsComponent.getInputAmplificationDistributor().equals(settings.inputAmplificationDistributor);
+//        modified |= !mySettingsComponent.getInputAmplificationDistributor().equals(settings
+//        .inputAmplificationDistributor);
         return modified;
     }
 

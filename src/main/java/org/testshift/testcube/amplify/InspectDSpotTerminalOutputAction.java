@@ -11,7 +11,7 @@ import org.testshift.testcube.misc.Util;
 
 import java.io.File;
 
-public class InspectDSpotTerminalOutputAction extends NotificationAction  {
+public class InspectDSpotTerminalOutputAction extends NotificationAction {
 
     public InspectDSpotTerminalOutputAction() {
         super("Inspect DSpot terminal output");
@@ -19,7 +19,9 @@ public class InspectDSpotTerminalOutputAction extends NotificationAction  {
 
     @Override
     public void actionPerformed(@NotNull AnActionEvent e, @NotNull Notification notification) {
-        VirtualFile file = LocalFileSystem.getInstance().findFileByPath(Util.getTestCubeOutputPath(e.getProject()) + File.separator + "terminal_output_dspot.txt");
+        VirtualFile file = LocalFileSystem.getInstance()
+                                          .findFileByPath(Util.getTestCubeOutputPath(e.getProject()) + File.separator +
+                                                          "terminal_output_dspot.txt");
         if (file != null) {
             FileEditorManager.getInstance(e.getProject()).openFile(file, true);
             //notification.expire();

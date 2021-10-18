@@ -36,14 +36,15 @@ public class InspectTestCubeResultsAction extends NotificationAction {
     public void actionPerformed(@NotNull AnActionEvent event, @NotNull Notification notification) {
 
         AmplificationResult amplificationResult = AmplificationResult.buildAmplificationResult(project, testClass,
-                testMethod, 3);
+                                                                                               testMethod, 3);
 
         AmplificationResultWindow amplificationResultWindow = new AmplificationResultWindow(amplificationResult);
 
         ToolWindow toolWindow = ToolWindowManager.getInstance(amplificationResult.project).getToolWindow("Test Cube");
         if (toolWindow != null) {
             ContentFactory contentFactory = ContentFactory.SERVICE.getInstance();
-            Content content = contentFactory.createContent(amplificationResultWindow.getContent(), amplificationResultWindow.getDisplayName(), false);
+            Content content = contentFactory.createContent(amplificationResultWindow.getContent(),
+                                                           amplificationResultWindow.getDisplayName(), false);
             content.setCloseable(true);
             content.setIcon(TestCubeIcons.AMPLIFY_TEST);
             toolWindow.getContentManager().addContent(content);

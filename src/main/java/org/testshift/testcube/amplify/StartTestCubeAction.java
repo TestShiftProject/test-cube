@@ -97,12 +97,12 @@ public class StartTestCubeAction extends AnAction {
         }
 
         // check if Gradle or Maven
-        boolean isGradle =
-                ExternalSystemApiUtil.isExternalSystemAwareModule(new ProjectSystemId("GRADLE"),
-                        ModuleManager.getInstance(currentProject).getModules()[0]);
-        boolean isMaven =
-                ExternalSystemApiUtil.isExternalSystemAwareModule(new ProjectSystemId("Maven"),
-                        ModuleManager.getInstance(currentProject).getModules()[0]);
+        boolean isGradle = ExternalSystemApiUtil.isExternalSystemAwareModule(new ProjectSystemId("GRADLE"),
+                                                                             ModuleManager.getInstance(currentProject)
+                                                                                          .getModules()[0]);
+        boolean isMaven = ExternalSystemApiUtil.isExternalSystemAwareModule(new ProjectSystemId("Maven"),
+                                                                            ModuleManager.getInstance(currentProject)
+                                                                                         .getModules()[0]);
 
         String relativePathToClasses = "";
         String relativePathToTestClasses = "";
@@ -131,7 +131,8 @@ public class StartTestCubeAction extends AnAction {
         String javaBin = javaHome + File.separator + "bin" + File.separator + "java";
 
         String pluginPath = PathManager.getPluginsPath();
-        String dSpotPath =  pluginPath + File.separator + "test-cube" + File.separator + "lib" + File.separator + "dspot-3.1.1-SNAPSHOT-jar-with-dependencies.jar";
+        String dSpotPath = pluginPath + File.separator + "test-cube" + File.separator + "lib" + File.separator +
+                           "dspot-3.1.1-SNAPSHOT-jar-with-dependencies.jar";
 
         String finalRelativePathToClasses = relativePathToClasses;
         String finalRelativePathToTestClasses = relativePathToTestClasses;
@@ -155,6 +156,7 @@ public class StartTestCubeAction extends AnAction {
                     targetModule = moduleRootPath.replace(currentProject.getBasePath() + "/", "");
                 }
 
+                // @formatter:off
                 List<String> dSpotStarter = new ArrayList<>(Arrays.asList(javaBin, "-jar", dSpotPath,
                         "--absolute-path-to-project-root", currentProject.getBasePath(),
                         "--relative-path-to-classes", finalRelativePathToClasses,
@@ -174,6 +176,7 @@ public class StartTestCubeAction extends AnAction {
                         "--dev-friendly",
                         "--clean",
                         "--with-comment=None"));
+                // @formatter:on
 
 //                if (!AppSettingsState.getInstance().generateAssertions) {
 //                    dSpotStarter.add("--only-input-amplification");
@@ -213,7 +216,8 @@ public class StartTestCubeAction extends AnAction {
                         }
                     }
 
-                    File dSpotTerminalOutput = new File(Util.getTestCubeOutputPath(currentProject) + File.separator + "terminal_output_dspot.txt");
+                    File dSpotTerminalOutput = new File(
+                            Util.getTestCubeOutputPath(currentProject) + File.separator + "terminal_output_dspot.txt");
 
                     try (BufferedWriter writer = new BufferedWriter(new FileWriter(dSpotTerminalOutput))) {
                         InputStream is = p.getInputStream();
@@ -236,9 +240,8 @@ public class StartTestCubeAction extends AnAction {
                 TestCubeNotifier notifier = new TestCubeNotifier();
                 TestClassJSON result = Util.getResultJSON(currentProject, testClass);
                 if (result == null || result.getTestCases() == null) {
-                    notifier.notify(currentProject,
-                            "No new test cases found. Please try amplifying another test case!",
-                            new InspectDSpotTerminalOutputAction());
+                    notifier.notify(currentProject, "No new test cases found. Please try amplifying another test case!",
+                                    new InspectDSpotTerminalOutputAction());
                 } else {
                     int amplifiedTestCasesCount = result.getTestCases().size();
 
@@ -246,8 +249,9 @@ public class StartTestCubeAction extends AnAction {
                         notifier.notify(currentProject, "Could find no new test cases through amplification.");
                     } else {
                         notifier.notify(currentProject,
-                                "Test Cube found " + amplifiedTestCasesCount + " amplified test cases.",
-                                new InspectTestCubeResultsAction(currentProject, testClass, testMethod), new InspectDSpotTerminalOutputAction());
+                                        "Test Cube found " + amplifiedTestCasesCount + " amplified test cases.",
+                                        new InspectTestCubeResultsAction(currentProject, testClass, testMethod),
+                                        new InspectDSpotTerminalOutputAction());
                     }
                 }
             }

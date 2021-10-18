@@ -55,7 +55,8 @@ public class AmplificationResult {
         }
 
         result.initialCoverage = jsonResult.getInitialCoverage();
-        result.amplifiedCoverage = new CoverageImprovement(jsonResult.getAmplifiedCoverage().getInstructionImprovement());
+        result.amplifiedCoverage = new CoverageImprovement(
+                jsonResult.getAmplifiedCoverage().getInstructionImprovement());
         result.amplifiedCoverageHTML = new HtmlCoverageImprovement(jsonResult.getAmplifiedCoverage());
 
         String amplifiedTestClassPath = Util.getAmplifiedTestClassPath(project, testClass);
@@ -65,24 +66,30 @@ public class AmplificationResult {
             if (psiFile != null) {
 
                 PsiClass psiClass = Arrays.stream(psiFile.getClasses())
-                        .filter((PsiClass c) -> c.getQualifiedName().equals(testClass)).findFirst().get();
+                                          .filter((PsiClass c) -> c.getQualifiedName().equals(testClass))
+                                          .findFirst()
+                                          .get();
                 PsiMethod[] methods = psiClass.getMethods();
 
                 if (methods.length != jsonResult.getTestCases().size()) {
                     logger.warn("Count of methods found in amplified class: " + methods.length + " does not match " +
-                            "with match with count of amplified methods reported: " + jsonResult
-                            .getTestCases().size());
+                                "with match with count of amplified methods reported: " +
+                                jsonResult.getTestCases().size());
                 }
 
                 for (PsiMethod method : methods) {
-                    Optional<TestCaseJSON> testCaseJSON = jsonResult.getTestCases().stream()
-                            .filter(tcj -> tcj.getName().equals(method.getName())).findAny();
+                    Optional<TestCaseJSON> testCaseJSON = jsonResult.getTestCases()
+                                                                    .stream()
+                                                                    .filter(tcj -> tcj.getName()
+                                                                                      .equals(method.getName()))
+                                                                    .findAny();
 
                     if (testCaseJSON.isPresent()) {
-                        result.amplifiedTestCases.add(new AmplifiedTestCase(amplifiedTestClassPath, method
-                                .getName(), psiFile, result, testCaseJSON.get().getCoverageImprovement(),
-                                testCaseJSON.get()
-                                .getNbAssertionAdded(), testCaseJSON.get().getNbInputAdded()));
+                        result.amplifiedTestCases.add(
+                                new AmplifiedTestCase(amplifiedTestClassPath, method.getName(), psiFile, result,
+                                                      testCaseJSON.get().getCoverageImprovement(),
+                                                      testCaseJSON.get().getNbAssertionAdded(),
+                                                      testCaseJSON.get().getNbInputAdded()));
                     } else {
                         logger.warn("Found no matching json result for test case " + method.getName());
 //                        if (terminationCounter > 0) {

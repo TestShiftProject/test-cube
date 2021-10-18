@@ -30,7 +30,8 @@ public class AmplifyTestMarkerContributor extends RunLineMarkerContributor {
 //                TestFramework framework = TestFrameworks.detectFramework((PsiClass)parent);
 //                if (framework != null && framework.isTestClass(parent)) {
 //                    // test class
-//                    return new Info(AllIcons.Actions.Colors, tooltipProvider, new StartTestCubeAction("Amplify test case"));
+//                    return new Info(AllIcons.Actions.Colors, tooltipProvider, new StartTestCubeAction("Amplify test
+//                    case"));
 //                }
 //            }
             if (parent instanceof PsiMethod) {
@@ -38,12 +39,13 @@ public class AmplifyTestMarkerContributor extends RunLineMarkerContributor {
                  * From {@link com.intellij.testIntegration.TestRunLineMarkerProvider#getInfo(PsiElement)}
                  */
                 PsiClass containingClass = PsiTreeUtil.getParentOfType(parent, PsiClass.class);
-                if (!isTestMethod(containingClass, (PsiMethod)parent)) {
+                if (!isTestMethod(containingClass, (PsiMethod) parent)) {
                     return null;
                 }
                 // test method
                 String testMethodName = ((PsiMethod) parent).getName();
-                String testClassName = Objects.requireNonNull(((PsiMethod) parent).getContainingClass()).getQualifiedName();
+                String testClassName = Objects.requireNonNull(((PsiMethod) parent).getContainingClass())
+                                              .getQualifiedName();
 //                if (testClassName == null) {
 //                    return null;
 //                }
@@ -57,8 +59,9 @@ public class AmplifyTestMarkerContributor extends RunLineMarkerContributor {
                     } else {
                         moduleRootPath = moduleRoot.getPath();
                     }
-                    return new Info(TestCubeIcons.AMPLIFY_TEST, tooltipProvider, new StartTestCubeAction(
-                            "Amplify '" + element.getText() + "()'", testClassName, testMethodName, moduleRootPath));
+                    return new Info(TestCubeIcons.AMPLIFY_TEST, tooltipProvider,
+                                    new StartTestCubeAction("Amplify '" + element.getText() + "()'", testClassName,
+                                                            testMethodName, moduleRootPath));
                 }
             }
         }

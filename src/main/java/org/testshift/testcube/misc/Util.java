@@ -24,9 +24,7 @@ public class Util {
     }
 
     private static String getTestClassPath(Project currentProject, String testClass, boolean original) {
-        return currentProject.getBasePath() +
-               Config.OUTPUT_PATH_DSPOT +
-               (original ? File.separator + "original" : "") +
+        return currentProject.getBasePath() + Config.OUTPUT_PATH_DSPOT + (original ? File.separator + "original" : "") +
                File.separator + testClass.replaceAll("\\.", Matcher.quoteReplacement(File.separator)) + ".java";
     }
 
@@ -42,7 +40,9 @@ public class Util {
     public static TestClassJSON getResultJSON(Project project, String testClass) {
         Gson gson = new Gson();
         try {
-            return gson.fromJson(new FileReader(project.getBasePath() + Config.OUTPUT_PATH_DSPOT + File.separator + testClass + "_report.json"), TestClassJSON.class);
+            return gson.fromJson(new FileReader(
+                                         project.getBasePath() + Config.OUTPUT_PATH_DSPOT + File.separator + testClass + "_report.json"),
+                                 TestClassJSON.class);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
