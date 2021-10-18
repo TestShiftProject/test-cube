@@ -5,6 +5,7 @@ import com.intellij.ui.components.JBLabel;
 import com.intellij.ui.components.JBTextField;
 import com.intellij.util.ui.FormBuilder;
 import org.jetbrains.annotations.NotNull;
+import org.testshift.testcube.misc.Colors;
 
 import javax.swing.*;
 import java.awt.*;
@@ -17,7 +18,7 @@ public class AppSettingsComponent {
     private final JPanel myMainPanel;
     private final JBTextField java8Path = new JBTextField();
     private final JBTextField mavenHome = new JBTextField();
-    private final JComboBox color = new ComboBox(new String[]{"Darker", "Brighter"});
+    private final JComboBox highlightMode = new ComboBox(new Colors[]{Colors.DARKER, Colors.BRIGHTER});
     //private final JBCheckBox myIdeaUserStatus = new JBCheckBox("Do You Use IntelliJ IDEA? ");
 //    private final JBCheckBox generateAssertions = new JBCheckBox("Generate assertions during amplification");
 //    private final JBList<String> selectorCriterion = new JBList<>(AppSettingsState.SELECTOR_CRITERION_OPTIONS);
@@ -27,7 +28,7 @@ public class AppSettingsComponent {
         myMainPanel = FormBuilder.createFormBuilder()
                 .addLabeledComponent(new JBLabel("Absolute path to your java 1.8 installation"), java8Path, 1, false)
                 .addLabeledComponent(new JBLabel("Absolute path to your maven home (MAVEN_HOME)"), mavenHome)
-                .addLabeledComponent(new JBLabel("Color Mode"), color)
+                .addLabeledComponent(new JBLabel("Highlight Mode"), highlightMode)
                 //.addComponent(myIdeaUserStatus, 1)
 //                .addComponent(generateAssertions)
 //                .addLabeledComponent(new JBLabel("Criterion for selecting amplified tests"),selectorCriterion)
@@ -62,9 +63,9 @@ public class AppSettingsComponent {
         mavenHome.setText(newText);
     }
 
-    public String getColor(){return color.getSelectedItem().toString();}
+    public Colors getColor(){return ((Colors) highlightMode.getSelectedItem());}
 
-    public void setColor(String newColor){color.setSelectedItem(newColor);}
+    public void setColor(Colors newColor){highlightMode.setSelectedItem(newColor);}
 
 //    public boolean getGenerateAssertions() {
 //        return generateAssertions.isSelected();

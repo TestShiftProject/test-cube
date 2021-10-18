@@ -17,6 +17,7 @@ import eu.stamp_project.dspot.selector.extendedcoverageselector.ClassCoverageMap
 import eu.stamp_project.dspot.selector.extendedcoverageselector.CoverageImprovement;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Nullable;
+import org.testshift.testcube.misc.Colors;
 import org.testshift.testcube.misc.TestCubeNotifier;
 import org.testshift.testcube.misc.Util;
 import org.testshift.testcube.model.AmplificationResult;
@@ -173,7 +174,7 @@ public class AmplificationResultWindow extends Component {
 
             TextAttributes coveredLine = new TextAttributes();
 
-            if(AppSettingsState.getInstance().color.equals("Darker")){
+            if(AppSettingsState.getInstance().highlightColor.equals(Colors.DARKER)){
                 coveredLine.setBackgroundColor(JBColor.green.darker());
             }else{
                 coveredLine.setBackgroundColor(JBColor.green.brighter());
@@ -277,7 +278,7 @@ public class AmplificationResultWindow extends Component {
             try {
                 // Highlight name of test case
                 TextAttributes currentTestCase = new TextAttributes();
-                if(AppSettingsState.getInstance().color.equals("Darker")){
+                if(AppSettingsState.getInstance().highlightColor.equals(Colors.DARKER)){
                     currentTestCase.setBackgroundColor(JBColor.blue.darker());
                 }else{
                     currentTestCase.setBackgroundColor(JBColor.blue.brighter());
@@ -407,7 +408,7 @@ public class AmplificationResultWindow extends Component {
     private String htmlStart() {
         Color foreground = JBColor.foreground();
         Color link;
-        if(AppSettingsState.getInstance().color.equals("Darker")){
+        if(AppSettingsState.getInstance().highlightColor.equals(Colors.DARKER)){
             link = JBColor.get("ValidationTooltip.successForeground", JBColor.green.darker());
         }else{
             link = JBColor.get("ValidationTooltip.successForeground", JBColor.green.brighter());

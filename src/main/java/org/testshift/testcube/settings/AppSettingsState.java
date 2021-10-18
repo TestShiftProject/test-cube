@@ -6,7 +6,7 @@ import com.intellij.util.xmlb.XmlSerializerUtil;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
+import org.testshift.testcube.misc.Colors;
 
 
 /**
@@ -22,7 +22,7 @@ public class AppSettingsState implements PersistentStateComponent<AppSettingsSta
 
     public String java8Path = "";
     public String mavenHome = "";
-    public String color = "";
+    public Colors highlightColor = Colors.BRIGHTER;
     //public boolean ideaStatus = false;
 
     // DSpot Config
