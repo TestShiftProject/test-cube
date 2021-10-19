@@ -92,7 +92,8 @@ public class AmplificationResultWindow extends Component {
     }
 
     public void addHighlights() {
-        moveCaretToTestCase(currentAmplificationTestCase, amplifiedTestCase);
+        //moveCaretToTestCase(currentAmplificationTestCase, amplifiedTestCase);
+        showTestCaseInEditor(currentAmplificationTestCase, amplifiedTestCase);
     }
 
     /**
@@ -241,10 +242,11 @@ public class AmplificationResultWindow extends Component {
     }
 
     private void showTestCaseInEditor(TestCase testCase, TestCaseEditorField editor) {
-        editor.setNewDocumentAndFileType(JavaFileType.INSTANCE,
-                                         PsiDocumentManager.getInstance(amplificationResult.project)
-                                                           .getDocument(testCase.psiFile));
-        moveCaretToTestCase(testCase, editor);
+        //editor.setNewDocumentAndFileType(JavaFileType.INSTANCE,
+        //                               PsiDocumentManager.getInstance(amplificationResult.project)
+        //                                               .getDocument(testCase.psiFile));
+        //moveCaretToTestCase(testCase, editor);
+        editor.setText(currentAmplificationTestCase.getTestMethod().getText());
         setAmplifiedInformation();
     }
 
@@ -312,7 +314,8 @@ public class AmplificationResultWindow extends Component {
             }
         }
         currentAmplificationTestCase = amplificationResult.amplifiedTestCases.get(currentAmplificationTestCaseIndex);
-        moveCaretToTestCase(currentAmplificationTestCase, amplifiedTestCase);
+        //moveCaretToTestCase(currentAmplificationTestCase, amplifiedTestCase);
+        showTestCaseInEditor(currentAmplificationTestCase, amplifiedTestCase);
         setAmplifiedInformation();
         hideCoverageEditor();
     }
