@@ -1,12 +1,13 @@
 package org.testshift.testcube.amplify;
 
 import com.intellij.codeInsight.TestFrameworks;
-import com.intellij.execution.TestStateStorage;
 import com.intellij.execution.lineMarker.RunLineMarkerContributor;
 import com.intellij.openapi.roots.ProjectFileIndex;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.psi.*;
-import com.intellij.psi.util.ClassUtil;
+import com.intellij.psi.PsiClass;
+import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiIdentifier;
+import com.intellij.psi.PsiMethod;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.testIntegration.TestFramework;
 import com.intellij.util.Function;

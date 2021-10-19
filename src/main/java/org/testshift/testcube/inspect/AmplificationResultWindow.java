@@ -10,7 +10,10 @@ import com.intellij.openapi.editor.markup.MarkupModel;
 import com.intellij.openapi.editor.markup.TextAttributes;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowManager;
-import com.intellij.psi.*;
+import com.intellij.psi.JavaPsiFacade;
+import com.intellij.psi.PsiClass;
+import com.intellij.psi.PsiDocumentManager;
+import com.intellij.psi.PsiMethod;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.ui.JBColor;
 import eu.stamp_project.dspot.selector.extendedcoverageselector.ClassCoverageMap;
@@ -23,7 +26,6 @@ import org.testshift.testcube.misc.Util;
 import org.testshift.testcube.model.AmplificationResult;
 import org.testshift.testcube.model.AmplifiedTestCase;
 import org.testshift.testcube.model.TestCase;
-import org.testshift.testcube.settings.AppSettingsComponent;
 import org.testshift.testcube.settings.AppSettingsState;
 
 import javax.swing.*;
@@ -33,7 +35,6 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.Element;
 import java.awt.*;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
@@ -91,7 +92,7 @@ public class AmplificationResultWindow extends Component {
     }
 
     public void addHighlights() {
-
+        moveCaretToTestCase(currentAmplificationTestCase, amplifiedTestCase);
     }
 
     /**
@@ -115,7 +116,11 @@ public class AmplificationResultWindow extends Component {
                 badLocationException.printStackTrace();
             }
             if (e.getDescription().equals("class")) {
-
+                showClassInAmplifiedCoverageEditor(visibleLinkText,
+                                                   coverageImprovementForLineHighlighting.getInstructionImprovement()
+                                                                                         .getCoverageForClass(
+                                                                                                 visibleLinkText), null,
+                                                   null, 0, null);
 
             } else if (e.getDescription().startsWith("method")) {
                 // {"method", <class name>, <method descriptor>}
@@ -162,16 +167,18 @@ public class AmplificationResultWindow extends Component {
 
 
             TextAttributes coveredLine = new TextAttributes();
-
-            if(AppSettingsState.getInstance().highlightColor.equals(Colors.DARKER)){
+            if (AppSettingsState.getInstance().highlightColor.equals(Colors.DARKER)) {
                 coveredLine.setBackgroundColor(JBColor.green.darker());
-            }else{
+            } else {
                 coveredLine.setBackgroundColor(JBColor.green.brighter());
             }
-
             MarkupModel markupModel = amplifiedCoverageEditor.getEditor().getMarkupModel();
             coverageImprovement.methodCoverageMap.forEach((methodName, methodCoverage) -> {
-
+                Optional<PsiMethod> method = Arrays.stream(psiClass.getMethods())
+                                                   .filter(psiMethod -> Util.matchMethodNameAndDescriptor(psiMethod,
+                                                                                                          methodName,
+                                                                                                          methodCoverage.methodDescriptor))
+                                                   .findAny();
                 if (method.isPresent()) {
                     int methodLine = amplifiedCoverageEditor.getEditor()
                                                             .offsetToLogicalPosition(method.get().getTextOffset()).line;
@@ -186,7 +193,11 @@ public class AmplificationResultWindow extends Component {
             });
 
             if (methodNameToScrollTo != null) {
-
+                Optional<PsiMethod> method = Arrays.stream(psiClass.getMethods())
+                                                   .filter(psiMethod -> Util.matchMethodNameAndDescriptor(psiMethod,
+                                                                                                          methodNameToScrollTo,
+                                                                                                          methodDescriptorToScrollTo))
+                                                   .findAny();
                 if (method.isPresent()) {
                     try {
                         int methodLine = amplifiedCoverageEditor.getEditor()
@@ -230,10 +241,11 @@ public class AmplificationResultWindow extends Component {
     }
 
     private void showTestCaseInEditor(TestCase testCase, TestCaseEditorField editor) {
-
+        editor.setNewDocumentAndFileType(JavaFileType.INSTANCE,
+                                         PsiDocumentManager.getInstance(amplificationResult.project)
+                                                           .getDocument(testCase.psiFile));
+        moveCaretToTestCase(testCase, editor);
         setAmplifiedInformation();
-        PsiMethod pmethod= currentAmplificationTestCase.getTestMethod();
-        editor.setText(pmethod.getText());
     }
 
     private void moveCaretToTestCase(TestCase testCase, TestCaseEditorField editor) {
@@ -252,10 +264,10 @@ public class AmplificationResultWindow extends Component {
             try {
                 // Highlight name of test case
                 TextAttributes currentTestCase = new TextAttributes();
-                if(AppSettingsState.getInstance().highlightColor.equals(Colors.DARKER)){
-                    currentTestCase.setBackgroundColor(JBColor.blue.darker());
-                }else{
-                    currentTestCase.setBackgroundColor(JBColor.blue.brighter());
+                if (AppSettingsState.getInstance().highlightColor.equals(Colors.DARKER)) {
+                    currentTestCase.setBackgroundColor(JBColor.cyan.darker());
+                } else {
+                    currentTestCase.setBackgroundColor(JBColor.cyan.brighter());
                 }
 
                 MarkupModel markupModel = editor.getEditor().getMarkupModel();
@@ -300,24 +312,26 @@ public class AmplificationResultWindow extends Component {
             }
         }
         currentAmplificationTestCase = amplificationResult.amplifiedTestCases.get(currentAmplificationTestCaseIndex);
-        //moveCaretToTestCase(currentAmplificationTestCase, amplifiedTestCase);
-        showTestCaseInEditor(currentAmplificationTestCase, amplifiedTestCase);
+        moveCaretToTestCase(currentAmplificationTestCase, amplifiedTestCase);
         setAmplifiedInformation();
         hideCoverageEditor();
     }
 
     public void addTestCaseToTestSuite() {
         AmplifiedTestCase testToAdd = currentAmplificationTestCase;
+
         PsiMethod method = testToAdd.getTestMethod();
         WriteCommandAction.runWriteCommandAction(amplificationResult.project, () -> {
             if (method != null) {
                 PsiMethod methodSave = (PsiMethod) method.copy();
                 method.delete();
+
                 PsiMethod originalMethod = amplificationResult.originalTestCase.getTestMethod();
                 if (originalMethod != null) {
                     originalMethod.getContainingClass().addAfter(methodSave, originalMethod);
                 }
                 PsiDocumentManager.getInstance(amplificationResult.project).commitAllDocuments();
+
                 navigateTestCases(true, true);
             }
         });
@@ -375,7 +389,14 @@ public class AmplificationResultWindow extends Component {
 
     private String htmlStart() {
         Color foreground = JBColor.foreground();
-
+        Color link;
+        if (AppSettingsState.getInstance().highlightColor.equals(Colors.DARKER)) {
+            link = JBColor.green.darker();
+        } else {
+            link = JBColor.green.brighter();
+        }
+        return "<html><head><style>a {color:" + colorToRGBHtmlString(link) + ";}</style></head>" +
+               "<body style=\"font-family:Sans-Serif;color:" + colorToRGBHtmlString(foreground) + ";\">";
     }
 
     private String colorToRGBHtmlString(Color color) {

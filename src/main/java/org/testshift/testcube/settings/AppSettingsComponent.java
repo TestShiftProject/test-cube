@@ -8,8 +8,6 @@ import org.jetbrains.annotations.NotNull;
 import org.testshift.testcube.misc.Colors;
 
 import javax.swing.*;
-import java.awt.*;
-import java.util.HashMap;
 
 /**
  * Supports creating and managing a JPanel for the Settings Dialog.
@@ -18,7 +16,7 @@ public class AppSettingsComponent {
     private final JPanel myMainPanel;
     private final JBTextField java8Path = new JBTextField();
     private final JBTextField mavenHome = new JBTextField();
-
+    private final ComboBox highlightMode = new ComboBox(new Colors[]{Colors.BRIGHTER, Colors.DARKER});
 //    private final JBCheckBox generateAssertions = new JBCheckBox("Generate assertions during amplification");
 //    private final JBList<String> selectorCriterion = new JBList<>(AppSettingsState.SELECTOR_CRITERION_OPTIONS);
 //    private final JBList<String> inputAmplificationDistributor = new JBList<>(AppSettingsState
@@ -26,7 +24,11 @@ public class AppSettingsComponent {
 
     public AppSettingsComponent() {
         myMainPanel = FormBuilder.createFormBuilder()
-
+                                 .addLabeledComponent(new JBLabel("Absolute path to your java 1.8 installation"),
+                                                      java8Path, 1, false)
+                                 .addLabeledComponent(new JBLabel("Absolute path to your maven home (MAVEN_HOME)"),
+                                                      mavenHome)
+                                 .addLabeledComponent(new JBLabel("Highlight Mode"), highlightMode)
 //                .addComponent(generateAssertions)
 //                .addLabeledComponent(new JBLabel("Criterion for selecting amplified tests"),selectorCriterion)
 //                .addLabeledComponent(new JBLabel("Value distribution for input amplification"),
@@ -61,10 +63,13 @@ public class AppSettingsComponent {
         mavenHome.setText(newText);
     }
 
-    public Colors getColor(){return ((Colors) highlightMode.getSelectedItem());}
+    public Colors getHighlightColor() {
+        return (Colors) highlightMode.getSelectedItem();
+    }
 
-    public void setColor(Colors newColor){highlightMode.setSelectedItem(newColor);}
-
+    public void setHighlightColor(Colors newColor) {
+        highlightMode.setItem(newColor);
+    }
 //    public boolean getGenerateAssertions() {
 //        return generateAssertions.isSelected();
 //    }
@@ -90,4 +95,3 @@ public class AppSettingsComponent {
 //    }
 
 }
-
