@@ -1,6 +1,8 @@
 package org.testshift.testcube.misc;
 
-import com.intellij.notification.*;
+import com.intellij.notification.Notification;
+import com.intellij.notification.NotificationGroupManager;
+import com.intellij.notification.NotificationType;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.project.Project;
 import org.testshift.testcube.icons.TestCubeIcons;

@@ -1,10 +1,14 @@
 package org.testshift.testcube.settings;
 
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.components.*;
+import com.intellij.openapi.components.PersistentStateComponent;
+import com.intellij.openapi.components.State;
+import com.intellij.openapi.components.Storage;
 import com.intellij.util.xmlb.XmlSerializerUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.testshift.testcube.misc.Colors;
+
 
 /**
  * Supports storing the application settings in a persistent way.
@@ -16,6 +20,7 @@ public class AppSettingsState implements PersistentStateComponent<AppSettingsSta
 
     public String java8Path = "";
     public String mavenHome = "";
+    public Colors highlightColor = Colors.BRIGHTER;
 
     // DSpot Config
 //    public boolean generateAssertions = true;

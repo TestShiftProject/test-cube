@@ -14,9 +14,12 @@
 
     <extensions defaultExtensionNs="com.intellij">
         <!-- Add your extensions here -->
-        <toolWindow id="Test Cube" anchor="right" factoryClass="org.testshift.testcube.inspect.TestCubeToolWindowFactory" icon="/icons/amplifyTestsToolWindow.svg"/>
+        <toolWindow id="Test Cube" anchor="right"
+                    factoryClass="org.testshift.testcube.inspect.TestCubeToolWindowFactory"
+                    icon="/icons/amplifyTestsToolWindow.svg"/>
 
-        <runLineMarkerContributor language="JAVA" order="after applicationRunLineMarkerProvider" implementationClass="org.testshift.testcube.amplify.AmplifyTestMarkerContributor"/>
+        <runLineMarkerContributor language="JAVA" order="after applicationRunLineMarkerProvider"
+                                  implementationClass="org.testshift.testcube.amplify.AmplifyTestMarkerContributor"/>
         <applicationService serviceImplementation="org.testshift.testcube.settings.AppSettingsState"/>
         <applicationConfigurable parentId="tools" instance="org.testshift.testcube.settings.AppSettingsConfigurable"
                                  id="org.testshift.testcube.settings.AppSettingsConfigurable"
@@ -27,11 +30,11 @@
 
     <actions>
         <!-- Add your actions here -->
-<!--        <action id="org.testshift.testcube.amplify.StartTestCubeAction" class="org.testshift.testcube.amplify.StartTestCubeAction" text="Start Test Cube" description="SDK action example">-->
-<!--            <add-to-group group-id="ToolsMenu" anchor="first"/>-->
-<!--        </action>-->
-<!--        <action id="org.testshift.testcube.InspectTestCubeResultsAction" class="org.testshift.testcube.InspectTestCubeResultsAction" text="Inspect Test Cube Results" description="SDK action example">-->
-<!--            <add-to-group group-id="ToolsMenu" anchor="first"/>-->
-<!--        </action>-->
+        <!--        <action id="org.testshift.testcube.amplify.StartTestCubeAction" class="org.testshift.testcube.amplify.StartTestCubeAction" text="Start Test Cube" description="SDK action example">-->
+        <!--            <add-to-group group-id="ToolsMenu" anchor="first"/>-->
+        <!--        </action>-->
+        <!--        <action id="org.testshift.testcube.InspectTestCubeResultsAction" class="org.testshift.testcube.InspectTestCubeResultsAction" text="Inspect Test Cube Results" description="SDK action example">-->
+        <!--            <add-to-group group-id="ToolsMenu" anchor="first"/>-->
+        <!--        </action>-->
     </actions>
 </idea-plugin>

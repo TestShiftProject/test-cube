@@ -20,11 +20,13 @@ import eu.stamp_project.dspot.selector.extendedcoverageselector.ClassCoverageMap
 import eu.stamp_project.dspot.selector.extendedcoverageselector.CoverageImprovement;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Nullable;
+import org.testshift.testcube.misc.Colors;
 import org.testshift.testcube.misc.TestCubeNotifier;
 import org.testshift.testcube.misc.Util;
 import org.testshift.testcube.model.AmplificationResult;
 import org.testshift.testcube.model.AmplifiedTestCase;
 import org.testshift.testcube.model.TestCase;
+import org.testshift.testcube.settings.AppSettingsState;
 
 import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
@@ -165,7 +167,11 @@ public class AmplificationResultWindow extends Component {
 
 
             TextAttributes coveredLine = new TextAttributes();
-            coveredLine.setBackgroundColor(JBColor.green.darker());
+            if (AppSettingsState.getInstance().highlightColor.equals(Colors.DARKER)) {
+                coveredLine.setBackgroundColor(JBColor.green.darker());
+            } else {
+                coveredLine.setBackgroundColor(JBColor.green.brighter());
+            }
             MarkupModel markupModel = amplifiedCoverageEditor.getEditor().getMarkupModel();
             coverageImprovement.methodCoverageMap.forEach((methodName, methodCoverage) -> {
                 Optional<PsiMethod> method = Arrays.stream(psiClass.getMethods())
@@ -258,7 +264,12 @@ public class AmplificationResultWindow extends Component {
             try {
                 // Highlight name of test case
                 TextAttributes currentTestCase = new TextAttributes();
-                currentTestCase.setBackgroundColor(JBColor.blue.darker());
+                if (AppSettingsState.getInstance().highlightColor.equals(Colors.DARKER)) {
+                    currentTestCase.setBackgroundColor(JBColor.cyan.darker());
+                } else {
+                    currentTestCase.setBackgroundColor(JBColor.cyan.brighter());
+                }
+
                 MarkupModel markupModel = editor.getEditor().getMarkupModel();
 
                 markupModel.removeAllHighlighters();
@@ -378,7 +389,12 @@ public class AmplificationResultWindow extends Component {
 
     private String htmlStart() {
         Color foreground = JBColor.foreground();
-        Color link = JBColor.get("ValidationTooltip.successForeground", JBColor.green);
+        Color link;
+        if (AppSettingsState.getInstance().highlightColor.equals(Colors.DARKER)) {
+            link = JBColor.green.darker();
+        } else {
+            link = JBColor.green.brighter();
+        }
         return "<html><head><style>a {color:" + colorToRGBHtmlString(link) + ";}</style></head>" +
                "<body style=\"font-family:Sans-Serif;color:" + colorToRGBHtmlString(foreground) + ";\">";
     }
