@@ -26,6 +26,7 @@ import org.jetbrains.annotations.Nullable;
 import org.testshift.testcube.icons.TestCubeIcons;
 import org.testshift.testcube.inspect.InspectTestCubeResultsAction;
 import org.testshift.testcube.misc.Config;
+import org.testshift.testcube.misc.ProgressUpdater;
 import org.testshift.testcube.misc.TestCubeNotifier;
 import org.testshift.testcube.misc.Util;
 import org.testshift.testcube.settings.AppSettingsState;
@@ -137,7 +138,7 @@ public class StartTestCubeAction extends AnAction {
         String finalRelativePathToClasses = relativePathToClasses;
         String finalRelativePathToTestClasses = relativePathToTestClasses;
         String finalAutomaticBuilder = automaticBuilder;
-        Task.Backgroundable dspotTask = new Task.Backgroundable(currentProject, "Amplifying test", true) {
+        Task.Backgroundable dspotTask = new Task.Backgroundable(currentProject, "Running test-cube...", true) {
 
             public void run(@NotNull ProgressIndicator indicator) {
                 // clean output directory
@@ -218,12 +219,14 @@ public class StartTestCubeAction extends AnAction {
 
                     File dSpotTerminalOutput = new File(
                             Util.getTestCubeOutputPath(currentProject) + File.separator + "terminal_output_dspot.txt");
+                    ProgressUpdater progressUpdater = new ProgressUpdater(indicator);
 
                     try (BufferedWriter writer = new BufferedWriter(new FileWriter(dSpotTerminalOutput))) {
                         InputStream is = p.getInputStream();
                         BufferedReader br = new BufferedReader(new InputStreamReader(is));
                         for (String line = br.readLine(); line != null; line = br.readLine()) {
                             System.out.println(line);
+                            progressUpdater.onNewLine(line);
                             writer.write(line);
                             writer.newLine();
                         }
