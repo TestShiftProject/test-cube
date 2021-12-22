@@ -41,7 +41,14 @@ public class AmplifyTestMarkerContributor extends RunLineMarkerContributor {
                  */
                 PsiClass containingClass = PsiTreeUtil.getParentOfType(parent, PsiClass.class);
                 if (!isTestMethod(containingClass, (PsiMethod) parent)) {
-                    return null;
+//                    return null;
+                    String targetMethodName = ((PsiMethod)parent).getName();
+                    String targetClassName = Objects.requireNonNull(((PsiMethod) parent).getContainingClass())
+                                                    .getQualifiedName();
+
+                    return new Info(TestCubeIcons.AMPLIFY_TEST, tooltipProvider,
+                                    new ShowCFGAction("generate test " +
+                                                      "cases for '" + element.getText() +"()'", targetMethodName, targetClassName));
                 }
                 // test method
                 String testMethodName = ((PsiMethod) parent).getName();

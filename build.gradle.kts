@@ -26,6 +26,7 @@ repositories {
 dependencies {
     testImplementation("junit:junit:4.12")
     implementation(fileTree(mapOf("dir" to "src/main/resources/dspot", "include" to listOf("*.jar"))))
+    implementation(fileTree(mapOf("dir" to "src/main/resources/plantuml", "include" to listOf("*.jar"))))
 }
 
 // Configure Gradle IntelliJ Plugin - read more: https://github.com/JetBrains/gradle-intellij-plugin
