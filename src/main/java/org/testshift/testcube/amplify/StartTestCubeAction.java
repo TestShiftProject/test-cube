@@ -132,7 +132,7 @@ public class StartTestCubeAction extends AnAction {
 
         String pluginPath = PathManager.getPluginsPath();
         String dSpotPath = pluginPath + File.separator + "test-cube" + File.separator + "lib" + File.separator +
-                           "dspot-3.1.1-SNAPSHOT-jar-with-dependencies.jar";
+                           "dspot-3.2.1-SNAPSHOT-jar-with-dependencies.jar";
 
         String finalRelativePathToClasses = relativePathToClasses;
         String finalRelativePathToTestClasses = relativePathToTestClasses;
