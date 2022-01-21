@@ -37,6 +37,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * This action is responsible for running DSpot on a particular test method of the currently active project.
+ * The test class and method are passed in the initialization, i.e. when a new action is created for the gutter icon
+ * next to the test method.
+ */
 public class StartTestCubeAction extends AnAction {
 
     private static final Logger logger = Logger.getInstance(StartTestCubeAction.class);
@@ -82,182 +87,142 @@ public class StartTestCubeAction extends AnAction {
             testCubePlugin.getPluginClassLoader();
         }
 
+        DSpotStartConfiguration configuration = new DSpotStartConfiguration(currentProject, moduleRootPath);
+        PrettifierStartConfiguration prettifierConfiguration = new PrettifierStartConfiguration(currentProject,
+                                                                                                moduleRootPath);
 
-        Sdk projectSdk = ProjectRootManager.getInstance(currentProject).getProjectSdk();
 
-        if (projectSdk != null) {
-            AppSettingsState.getInstance().java8Path = projectSdk.getHomePath();
-        }
-
-        if (AppSettingsState.getInstance().java8Path.isEmpty()) {
-            AskJavaPathDialogWrapper dialog = new AskJavaPathDialogWrapper();
-            dialog.showAndGet();
-            boolean pathValid = dialog.setJavaPathIfValid();
-            // todo handle non valid
-        }
-
-        // check if Gradle or Maven
-        boolean isGradle = ExternalSystemApiUtil.isExternalSystemAwareModule(new ProjectSystemId("GRADLE"),
-                                                                             ModuleManager.getInstance(currentProject)
-                                                                                          .getModules()[0]);
-        boolean isMaven = ExternalSystemApiUtil.isExternalSystemAwareModule(new ProjectSystemId("Maven"),
-                                                                            ModuleManager.getInstance(currentProject)
-                                                                                         .getModules()[0]);
-
-        String relativePathToClasses = "";
-        String relativePathToTestClasses = "";
-        String automaticBuilder = "";
-        if (isMaven) {
-            relativePathToClasses = "target" + File.separator + "classes" + File.separator;
-            relativePathToTestClasses = "target" + File.separator + "test-classes" + File.separator;
-            automaticBuilder = "Maven";
-        } else {
-            relativePathToClasses = "bin" + File.separator + "main" + File.separator;
-            relativePathToTestClasses = "bin" + File.separator + "test" + File.separator;
-            automaticBuilder = "Gradle";
-            if (!isGradle) {
-                logger.info("Neither Gradle nor Maven");
-            }
-        }
-
-        if (isMaven && AppSettingsState.getInstance().mavenHome.isEmpty()) {
-            AskMavenHomeDialogWrapper dialog = new AskMavenHomeDialogWrapper();
-            dialog.showAndGet();
-            boolean mavenHomeValid = dialog.setMavenHomeIfValid();
-            // todo handle non valid
-        }
-
-        String javaHome = AppSettingsState.getInstance().java8Path;
-        String javaBin = javaHome + File.separator + "bin" + File.separator + "java";
-
-        String pluginPath = PathManager.getPluginsPath();
-        String dSpotPath = pluginPath + File.separator + "test-cube" + File.separator + "lib" + File.separator +
-                           "dspot-3.2.1-SNAPSHOT-jar-with-dependencies.jar";
-
-        String finalRelativePathToClasses = relativePathToClasses;
-        String finalRelativePathToTestClasses = relativePathToTestClasses;
-        String finalAutomaticBuilder = automaticBuilder;
         Task.Backgroundable dspotTask = new Task.Backgroundable(currentProject, "Amplifying test", true) {
 
             public void run(@NotNull ProgressIndicator indicator) {
-                // clean output directory
-                // todo close open amplification result windows or split output into different directories
-                try {
-                    File outputDirectory = new File(Util.getDSpotOutputPath(currentProject));
-                    if (outputDirectory.exists()) {
-                        FileUtils.cleanDirectory(outputDirectory);
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
-                String targetModule = "";
-                if (isMaven) {
-                    targetModule = moduleRootPath.replace(currentProject.getBasePath() + "/", "");
-                }
-
-                // @formatter:off
-                List<String> dSpotStarter = new ArrayList<>(Arrays.asList(javaBin, "-jar", dSpotPath,
-                        "--absolute-path-to-project-root", currentProject.getBasePath(),
-                        "--relative-path-to-classes", finalRelativePathToClasses,
-                        "--relative-path-to-test-classes", finalRelativePathToTestClasses,
-                        "--test-criterion", "ExtendedCoverageSelector",
-                        "--input-ampl-distributor", "RandomInputAmplDistributor",
-                        "--test", testClass,
-                        // TODO handlle null on testMethod
-                        "--test-cases", testMethod,
-                        "--output-directory", Util.getDSpotOutputPath(currentProject),
-                        "--amplifiers", Config.AMPLIFIERS_ALL,
-                        "--max-test-amplified", "25",
-                        "--automatic-builder", finalAutomaticBuilder,
-                        //"--generate-new-test-class",
-                        //"--keep-original-test-methods",
-                        "--verbose",
-                        "--dev-friendly",
-                        "--clean",
-                        "--with-comment=None"));
-                // @formatter:on
-
-//                if (!AppSettingsState.getInstance().generateAssertions) {
-//                    dSpotStarter.add("--only-input-amplification");
-//                }
-                @NotNull Module[] modules = ModuleManager.getInstance(currentProject).getModules();
-                if (modules.length > 1) {
-                    dSpotStarter.add("--target-module");
-                    dSpotStarter.add(targetModule);
-                }
-
-                ProcessBuilder pb = new ProcessBuilder(dSpotStarter);
-
-                pb.environment().put("MAVEN_HOME", AppSettingsState.getInstance().mavenHome);
-
-                File workdir = new File(Util.getTestCubeOutputPath(currentProject) + File.separator + "workdir");
-                if (!workdir.exists()) {
-                    if (!workdir.mkdirs()) {
-                        logger.error("Could not create workdir output directory!");
-                    }
-                }
-                File workdirTarget = new File(workdir.getPath() + File.separator + "target" + File.separator + "dspot");
-                if (!workdirTarget.exists()) {
-                    if (!workdirTarget.mkdirs()) {
-                        logger.error("Could not create workdir/target/dspot output directory!");
-                    }
-                }
-                pb.directory(workdir);
-
-                pb.redirectErrorStream(true);
-                try {
-                    Process p = pb.start();
-
-                    File outputDir = new File(Util.getTestCubeOutputPath(currentProject));
-                    if (!outputDir.exists()) {
-                        if (!outputDir.mkdirs()) {
-                            logger.error("Could not create Test Cube output directory!");
-                        }
-                    }
-
-                    File dSpotTerminalOutput = new File(
-                            Util.getTestCubeOutputPath(currentProject) + File.separator + "terminal_output_dspot.txt");
-
-                    try (BufferedWriter writer = new BufferedWriter(new FileWriter(dSpotTerminalOutput))) {
-                        InputStream is = p.getInputStream();
-                        BufferedReader br = new BufferedReader(new InputStreamReader(is));
-                        for (String line = br.readLine(); line != null; line = br.readLine()) {
-                            System.out.println(line);
-                            writer.write(line);
-                            writer.newLine();
-                        }
-                    }
-                    p.waitFor();
-                    System.out.println(p.exitValue());
-
-                } catch (InterruptedException | IOException e) {
-                    e.printStackTrace();
-                }
-
-                Util.sleepAndRefreshProject(currentProject);
-
-                TestCubeNotifier notifier = new TestCubeNotifier();
-                TestClassJSON result = Util.getResultJSON(currentProject, testClass);
-                if (result == null || result.getTestCases() == null) {
-                    notifier.notify(currentProject, "No new test cases found. Please try amplifying another test case!",
-                                    new InspectDSpotTerminalOutputAction());
-                } else {
-                    int amplifiedTestCasesCount = result.getTestCases().size();
-
-                    if (amplifiedTestCasesCount == 0) {
-                        notifier.notify(currentProject, "Could find no new test cases through amplification.");
-                    } else {
-                        notifier.notify(currentProject,
-                                        "Test Cube found " + amplifiedTestCasesCount + " amplified test cases.",
-                                        new InspectTestCubeResultsAction(currentProject, testClass, testMethod),
-                                        new InspectDSpotTerminalOutputAction());
-                    }
-                }
+                // run amplification
+                spawnDSpotProcess(configuration, currentProject);
+                // prettify generated test cases
+                spawnDSpotProcess(prettifierConfiguration, currentProject);
+                // popup about completion
+                notifyDSpotFinished(currentProject);
             }
         };
 
         BackgroundableProcessIndicator processIndicator = new BackgroundableProcessIndicator(dspotTask);
         ProgressManager.getInstance().runProcessWithProgressAsynchronously(dspotTask, processIndicator);
+    }
+
+    /**
+     * Sets up and starts the subprocess that runs DSpot or the prettifier.
+     * @param configuration the {@link DSpotStartConfiguration} to use, pass a
+     * {@link PrettifierStartConfiguration} to run the prettifier.
+     * @param currentProject the currently active project.
+     */
+    private void spawnDSpotProcess(DSpotStartConfiguration configuration, Project currentProject) {
+        List<String> dSpotStarter = configuration.getCommandLineOptions(testClass, testMethod);
+
+        ProcessBuilder processBuilder = prepareEnvironmentForSubprocess(dSpotStarter, currentProject, configuration);
+        try {
+            Process p = processBuilder.start();
+
+            File dSpotTerminalOutput = new File(
+                    Util.getTestCubeOutputPath(currentProject) + File.separator + "terminal_output_dspot.txt");
+
+            // write the output to the console and the file simultaneously, while the project is running
+            try (BufferedWriter writer =
+                         new BufferedWriter(new FileWriter(dSpotTerminalOutput, configuration.appendToLog()))) {
+                InputStream is = p.getInputStream();
+                BufferedReader br = new BufferedReader(new InputStreamReader(is));
+                for (String line = br.readLine(); line != null; line = br.readLine()) {
+                    System.out.println(line);
+                    writer.write(line);
+                    writer.newLine();
+                }
+            }
+            p.waitFor();
+            System.out.println(p.exitValue());
+
+        } catch (InterruptedException | IOException e) {
+            e.printStackTrace();
+        }
+
+        // try to avoid the newly generated files not being found by IntelliJ
+        Util.sleepAndRefreshProject(currentProject);
+    }
+
+    /**
+     * Prepares the environment variables and directories to start the DSpot process.
+     */
+    private ProcessBuilder prepareEnvironmentForSubprocess(List<String> dSpotStarter, Project currentProject,
+                                                           DSpotStartConfiguration configuration) {
+        ProcessBuilder pb = new ProcessBuilder(dSpotStarter);
+
+        // clean output directory
+        // todo close open amplification result windows or split output into different directories
+        try {
+            File outputDirectory = new File(configuration.getOutputDirectoryToClean());
+            if (outputDirectory.exists()) {
+                FileUtils.cleanDirectory(outputDirectory);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        // Create the temporary directories to save the output in
+        File workdir = new File(Util.getTestCubeOutputPath(currentProject) + File.separator + "workdir");
+        if (!workdir.exists()) {
+            if (!workdir.mkdirs()) {
+                logger.error("Could not create workdir output directory!");
+            }
+        }
+//        File workdirTarget = new File(workdir.getPath() + File.separator + "target" + File.separator + "dspot");
+//        if (!workdirTarget.exists()) {
+//            if (!workdirTarget.mkdirs()) {
+//                logger.error("Could not create workdir/target/dspot output directory!");
+//            }
+//        }
+        pb.directory(workdir);
+
+        pb.redirectErrorStream(true);
+        pb.environment().put("MAVEN_HOME", AppSettingsState.getInstance().mavenHome);
+
+        // TODO check: is this subsumed by creating the workdir?
+//        File outputDir = new File(Util.getTestCubeOutputPath(currentProject));
+//        if (!outputDir.exists()) {
+//            if (!outputDir.mkdirs()) {
+//                logger.error("Could not create Test Cube output directory!");
+//            }
+//        }
+
+        return pb;
+    }
+
+    /**
+     * Prettifies the amplified test cases by running the dspot-prettifier over them.
+     */
+    private void prettifyAmplifiedTests(Project currentProject) {
+        PrettifierStartConfiguration configuration = new PrettifierStartConfiguration(currentProject, moduleRootPath);
+
+    }
+
+    /**
+     * Creates a notification balloon reporting that DSpot has completed.
+     * Offers actions to inspect the test cases or inspect the terminal output.
+     * @param currentProject
+     */
+    private void notifyDSpotFinished(Project currentProject) {
+        TestCubeNotifier notifier = new TestCubeNotifier();
+        TestClassJSON result = Util.getResultJSON(currentProject, testClass);
+        if (result == null || result.getTestCases() == null) {
+            notifier.notify(currentProject, "No new test cases found. Please try amplifying another test case!",
+                            new InspectDSpotTerminalOutputAction());
+        } else {
+            int amplifiedTestCasesCount = result.getTestCases().size();
+
+            if (amplifiedTestCasesCount == 0) {
+                notifier.notify(currentProject, "Could find no new test cases through amplification.");
+            } else {
+                notifier.notify(currentProject,
+                                "Test Cube found " + amplifiedTestCasesCount + " amplified test cases.",
+                                new InspectTestCubeResultsAction(currentProject, testClass, testMethod),
+                                new InspectDSpotTerminalOutputAction());
+            }
+        }
     }
 }

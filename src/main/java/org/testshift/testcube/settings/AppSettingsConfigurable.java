@@ -37,7 +37,7 @@ public class AppSettingsConfigurable implements Configurable {
     @Override
     public boolean isModified() {
         AppSettingsState settings = AppSettingsState.getInstance();
-        boolean modified = !mySettingsComponent.getJava8Path().equals(settings.java8Path);
+        boolean modified = !mySettingsComponent.getJava8Path().equals(settings.javaJDKPath);
         modified |= !mySettingsComponent.getMavenHome().equals(settings.mavenHome);
         modified |= !mySettingsComponent.getHighlightColor().equals(settings.highlightColor);
 //        modified |= mySettingsComponent.getGenerateAssertions() != settings.generateAssertions;
@@ -50,7 +50,7 @@ public class AppSettingsConfigurable implements Configurable {
     @Override
     public void apply() throws ConfigurationException {
         AppSettingsState settings = AppSettingsState.getInstance();
-        settings.java8Path = mySettingsComponent.getJava8Path();
+        settings.javaJDKPath = mySettingsComponent.getJava8Path();
         settings.mavenHome = mySettingsComponent.getMavenHome();
         settings.highlightColor = mySettingsComponent.getHighlightColor();
 
@@ -62,7 +62,7 @@ public class AppSettingsConfigurable implements Configurable {
     @Override
     public void reset() {
         AppSettingsState settings = AppSettingsState.getInstance();
-        mySettingsComponent.setJava8Path(settings.java8Path);
+        mySettingsComponent.setJava8Path(settings.javaJDKPath);
         mySettingsComponent.setMavenHome(settings.mavenHome);
         mySettingsComponent.setHighlightColor(settings.highlightColor);
 //        mySettingsComponent.setGenerateAssertions(settings.generateAssertions);

@@ -18,7 +18,7 @@ import org.testshift.testcube.misc.Colors;
 @State(name = "org.testshift.testcube.AppSettingsState", storages = {@Storage("TestCubePluginSettings.xml")})
 public class AppSettingsState implements PersistentStateComponent<AppSettingsState> {
 
-    public String java8Path = "";
+    public String javaJDKPath = "";
     public String mavenHome = "";
     public Colors highlightColor = Colors.BRIGHTER;
 

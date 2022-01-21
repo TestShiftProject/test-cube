@@ -1,6 +1,6 @@
-# Test Cube Development Setup
+# TestCube Development Setup
 
-Here we describe the development setup for Test Cube.
+Here we describe the development setup for TestCube.
 
 If you will work on the test amplification itself, you need to setup `test-runner` and `DSpot`, too 🙂
 
@@ -12,7 +12,7 @@ If you will work on the test amplification itself, you need to setup `test-runne
 3. Open the root in IntelliJ! 😄 After opening the project in IntelliJ, you can execute Test Cube with the gradle
    task `runIde`.
 
-To test and run Test Cube / DSpot you need:
+To test and run TestCube / DSpot you need:
 
 - an installation of Java 11 (including the path to your Java Home)
 - an installation of Maven (including the path to your Maven Home)
@@ -20,7 +20,7 @@ To test and run Test Cube / DSpot you need:
 
 ## Example Project
 
-You’ll need an example project to try out DSpot/Test Cube on 🙂
+You’ll need an example project to try out DSpot/TestCube on 🙂
 
 Currently, DSpot supports projects that use Maven and Java 8 and Java 11 (with caveats also Java 16)
 
@@ -28,6 +28,26 @@ One project that Test Cube works well on is jsoup: [https://github.com/jhy/jsoup
 
 Fell free to try it on any other projects you’re interested in! you can find a few more that DSpot should run on here
 → [https://github.com/STAMP-project/dspot-experiments/blob/master/dataset/dataset.json](https://github.com/STAMP-project/dspot-experiments/blob/master/dataset/dataset.json)
+
+## Code Overview
+This section intends to give a brief overview over the structure of this project to help you find the code you're looking for.
+
+### Packages
+```
+src/
+`-- main/
+    |-- java/org/testshift/testcube
+        |-- amplify
+        |-- icons
+        |-- inspect
+        |-- misc
+        |-- model
+        `-- settings
+```
+The package `amplify` takes care of starting the test amplification with IntelliJ. Its central class is the `StartTestCubeAction` which configures and spawns the subprocess running DSpot.
+The package `inspect` contains the tool window which presents the amplification results to the user (`AmplificationResultWindow`) and the custom editor implementations which present the code.
+In `model` you can find data classes that symbolize the `AmplificationResult` and the `TestCase`s and `CoverageImprovement` used to represent the outcome of the amplification process.
+`misc` collects Util and config files, `icons` points to the SVGs used in the plugin and `settings` contains everything related to the preferences section for TestCube.
 
 ## DSpot
 

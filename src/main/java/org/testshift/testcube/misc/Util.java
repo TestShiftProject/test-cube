@@ -24,12 +24,16 @@ public class Util {
     }
 
     private static String getTestClassPath(Project currentProject, String testClass, boolean original) {
-        return currentProject.getBasePath() + Config.OUTPUT_PATH_DSPOT + (original ? File.separator + "original" : "") +
+        return currentProject.getBasePath() + Config.OUTPUT_PATH_PRETTIFIER + (original ? File.separator + "original" : "") +
                File.separator + testClass.replaceAll("\\.", Matcher.quoteReplacement(File.separator)) + ".java";
     }
 
     public static String getDSpotOutputPath(Project project) {
         return project.getBasePath() + Config.OUTPUT_PATH_DSPOT;
+    }
+
+    public static String getPrettifierOutputPath(Project project) {
+        return project.getBasePath() + Config.OUTPUT_PATH_PRETTIFIER;
     }
 
     public static String getTestCubeOutputPath(Project project) {
@@ -53,6 +57,11 @@ public class Util {
         return psiMethod.getName().equals(name) && ClassUtil.getAsmMethodSignature(psiMethod).equals(descriptor);
     }
 
+    /**
+     * Sleeps and then refreshes the project directory, to aim to load all newly created files from disk so that they
+     * can be picked up by the IDE for display.
+     * @param project the project whose root directory should be refreshed
+     */
     public static void sleepAndRefreshProject(Project project) {
         try {
             Thread.sleep(1000);

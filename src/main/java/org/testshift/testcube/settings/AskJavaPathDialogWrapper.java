@@ -33,7 +33,7 @@ public class AskJavaPathDialogWrapper extends DialogWrapper {
 
     public boolean setJavaPathIfValid() {
         if (!pathField.getText().isEmpty()) {
-            AppSettingsState.getInstance().java8Path = pathField.getText();
+            AppSettingsState.getInstance().javaJDKPath = pathField.getText();
             return true;
         } else {
             return false;
