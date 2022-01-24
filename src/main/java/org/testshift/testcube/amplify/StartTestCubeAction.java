@@ -33,6 +33,8 @@ import org.testshift.testcube.settings.AskJavaPathDialogWrapper;
 import org.testshift.testcube.settings.AskMavenHomeDialogWrapper;
 
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -95,10 +97,30 @@ public class StartTestCubeAction extends AnAction {
         Task.Backgroundable dspotTask = new Task.Backgroundable(currentProject, "Amplifying test", true) {
 
             public void run(@NotNull ProgressIndicator indicator) {
+
+                File outputDir = new File(Util.getOutputSavePath(currentProject));
+                if (!outputDir.exists()) {
+                    if (!outputDir.mkdirs()) {
+                        logger.error("Could not create TestCube output directory!");
+                    }
+                }
+
                 // run amplification
                 spawnDSpotProcess(configuration, currentProject);
-                // prettify generated test cases
-                spawnDSpotProcess(prettifierConfiguration, currentProject);
+
+                // save output
+                try {
+                    FileUtils.deleteDirectory(new File(Util.getOutputSavePath(currentProject)));
+                    Files.move(new File(Util.getDSpotOutputPath(currentProject)).toPath(),
+                               new File(Util.getOutputSavePath(currentProject)).toPath(),
+                               StandardCopyOption.REPLACE_EXISTING);
+
+                    // prettify generated test cases
+                    spawnDSpotProcess(prettifierConfiguration, currentProject);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
                 // popup about completion
                 notifyDSpotFinished(currentProject);
             }
@@ -164,31 +186,28 @@ public class StartTestCubeAction extends AnAction {
             e.printStackTrace();
         }
 
-        // Create the temporary directories to save the output in
-        File workdir = new File(Util.getTestCubeOutputPath(currentProject) + File.separator + "workdir");
+        // Create the temporary directories to save the output in.
+        // These seem arbitrary but are required by the compiler DSpot uses :)
+        File workdir = new File(Util.getTestCubeOutputPath(currentProject) + File.separator + "workdir"
+                                + File.separator + "target" + File.separator + "dspot");
         if (!workdir.exists()) {
             if (!workdir.mkdirs()) {
                 logger.error("Could not create workdir output directory!");
             }
         }
+        pb.directory(workdir);
+
 //        File workdirTarget = new File(workdir.getPath() + File.separator + "target" + File.separator + "dspot");
 //        if (!workdirTarget.exists()) {
 //            if (!workdirTarget.mkdirs()) {
 //                logger.error("Could not create workdir/target/dspot output directory!");
 //            }
 //        }
-        pb.directory(workdir);
 
         pb.redirectErrorStream(true);
         pb.environment().put("MAVEN_HOME", AppSettingsState.getInstance().mavenHome);
 
         // TODO check: is this subsumed by creating the workdir?
-//        File outputDir = new File(Util.getTestCubeOutputPath(currentProject));
-//        if (!outputDir.exists()) {
-//            if (!outputDir.mkdirs()) {
-//                logger.error("Could not create Test Cube output directory!");
-//            }
-//        }
 
         return pb;
     }

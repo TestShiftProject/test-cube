@@ -16,20 +16,33 @@ import java.util.regex.Matcher;
 public class Util {
 
     public static String getAmplifiedTestClassPath(Project currentProject, String testClass) {
-        return getTestClassPath(currentProject, testClass, false);
+        return getTestClassPath(currentProject, testClass, false, getDSpotOutputPath(currentProject));
+    }
+
+    public static String getAmplifiedTestClassPathToPrettify(Project currentProject, String testClass) {
+        return getTestClassPath(currentProject, testClass, false, getOutputSavePath(currentProject));
     }
 
     public static String getOriginalTestClassPath(Project currentProject, String testClass) {
-        return getTestClassPath(currentProject, testClass, true);
+        return getTestClassPath(currentProject, testClass, true, getDSpotOutputPath(currentProject));
     }
 
-    private static String getTestClassPath(Project currentProject, String testClass, boolean original) {
-        return currentProject.getBasePath() + Config.OUTPUT_PATH_PRETTIFIER + (original ? File.separator + "original" : "") +
+    private static String getTestClassPath(Project currentProject, String testClass, boolean original,
+                                           String basePath) {
+        return basePath + (original ? File.separator + "original" : "") +
                File.separator + testClass.replaceAll("\\.", Matcher.quoteReplacement(File.separator)) + ".java";
+    }
+
+    public static String getTargetFolder(Project project) {
+        return project.getBasePath() + File.separator + "target";
     }
 
     public static String getDSpotOutputPath(Project project) {
         return project.getBasePath() + Config.OUTPUT_PATH_DSPOT;
+    }
+
+    public static String getOutputSavePath(Project project) {
+        return getTestCubeOutputPath(project) + Config.OUTPUT_PATH_DSPOT;
     }
 
     public static String getPrettifierOutputPath(Project project) {
@@ -44,8 +57,7 @@ public class Util {
     public static TestClassJSON getResultJSON(Project project, String testClass) {
         Gson gson = new Gson();
         try {
-            return gson.fromJson(new FileReader(
-                                         project.getBasePath() + Config.OUTPUT_PATH_DSPOT + File.separator + testClass + "_report.json"),
+            return gson.fromJson(new FileReader(getOutputSavePath(project) + File.separator + testClass + "_report.json"),
                                  TestClassJSON.class);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
