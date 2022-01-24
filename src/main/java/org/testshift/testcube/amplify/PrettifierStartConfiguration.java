@@ -34,7 +34,7 @@ public class PrettifierStartConfiguration extends DSpotStartConfiguration {
 
     @Override
     public String getOutputDirectoryToClean() {
-        return Util.getPrettifierOutputPath(currentProject);
+        return Util.getDSpotOutputPath(currentProject);
     }
 
     // @formatter:off
