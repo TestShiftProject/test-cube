@@ -46,7 +46,7 @@ src/
 ```
 The package `amplify` takes care of starting the test amplification with IntelliJ. Its central class is the `StartTestCubeAction` which configures and spawns the subprocess running DSpot.
 The package `inspect` contains the tool window which presents the amplification results to the user (`AmplificationResultWindow`) and the custom editor implementations which present the code.
-In `model` you can find data classes that symbolize the `AmplificationResult` and the `TestCase`s and `CoverageImprovement` used to represent the outcome of the amplification process.
+In `model` you can find data classes that symbolize the whole `AmplificationResult` and the `TestCase`s and `CoverageImprovement` used to represent the outcome of the amplification process.
 `misc` collects Util and config files, `icons` points to the SVGs used in the plugin and `settings` contains everything related to the preferences section for TestCube.
 
 ## DSpot

@@ -34,7 +34,7 @@ public class Util {
      * Path to the file containing the original test case that was base for the amplification.
      */
     public static String getOriginalTestClassPath(Project currentProject, String testClass) {
-        return getTestClassPath(currentProject, testClass, true, getDSpotOutputPath(currentProject));
+        return getTestClassPath(currentProject, testClass, true, getOutputSavePath(currentProject));
     }
 
     private static String getTestClassPath(Project currentProject, String testClass, boolean original,
@@ -76,7 +76,8 @@ public class Util {
         Gson gson = new Gson();
         try {
             ReportJSON prettifierReport = gson.fromJson(
-                    new FileReader(getDSpotOutputPath(project) + File.separator + testClass + "prettifier_report.json"),
+                    new FileReader(getDSpotOutputPath(project) + File.separator + testClass + "_prettifier_report" +
+                                   ".json"),
                     ReportJSON.class);
             return prettifierReport.extendedCoverageReport;
         } catch (FileNotFoundException e) {

@@ -19,6 +19,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * This class holds the whole result of the amplification performed by DSpot.
+ */
 public class AmplificationResult {
 
     private static final Logger logger = Logger.getInstance(AmplificationResult.class);
@@ -36,8 +39,14 @@ public class AmplificationResult {
     public OriginalTestCase originalTestCase;
     public List<AmplifiedTestCase> amplifiedTestCases = new ArrayList<>();
 
-    public static AmplificationResult buildAmplificationResult(Project project, String testClass, String testMethod,
-                                                               int terminationCounter) {
+    /**
+     * Builds the amplification result based on
+     * @param project the current project in which the amplification was performed
+     * @param testClass the fully qualified name of the original/amplified test class
+     * @param testMethod the simple name of the original test method
+     * @return the complete result of the amplification
+     */
+    public static AmplificationResult buildAmplificationResult(Project project, String testClass, String testMethod) {
 
         AmplificationResult result = new AmplificationResult(project, testClass);
         TestClassJSON jsonResult = Util.getResultJSON(project, testClass);

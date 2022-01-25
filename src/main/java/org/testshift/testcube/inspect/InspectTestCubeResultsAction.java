@@ -12,6 +12,10 @@ import org.jetbrains.annotations.NotNull;
 import org.testshift.testcube.icons.TestCubeIcons;
 import org.testshift.testcube.model.AmplificationResult;
 
+/**
+ * This action is triggered by the user when they want to inspect the result of the amplification.
+ * It collects the {@link AmplificationResult} data and opens the {@link AmplificationResultWindow} tool window.
+ */
 public class InspectTestCubeResultsAction extends NotificationAction {
 
     private final Project project;
@@ -36,7 +40,7 @@ public class InspectTestCubeResultsAction extends NotificationAction {
     public void actionPerformed(@NotNull AnActionEvent event, @NotNull Notification notification) {
 
         AmplificationResult amplificationResult = AmplificationResult.buildAmplificationResult(project, testClass,
-                                                                                               testMethod, 3);
+                                                                                               testMethod);
 
         AmplificationResultWindow amplificationResultWindow = new AmplificationResultWindow(amplificationResult);
 
