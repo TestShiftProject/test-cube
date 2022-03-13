@@ -2,12 +2,12 @@
 'https://plantuml.com/activity-diagram-beta
 
 start
-:ClickServlet.handleRequest();
-:new page;
+:0 ClickServlet.handleRequest();
+:1 new page;
 if (Page.onSecurityCheck) then (true)
   :Page.onInit(); a; b;
   if (isForward?) then (no)
-    :Process controls;
+    :Process controls; 3 test;
     if (continue processing?) then (no)
       stop
     endif

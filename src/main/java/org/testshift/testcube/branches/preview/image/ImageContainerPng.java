@@ -13,10 +13,12 @@ import org.testshift.testcube.branches.rendering.ImageItem;
 import org.testshift.testcube.branches.rendering.RenderRequest;
 import org.testshift.testcube.branches.rendering.RenderResult;
 import org.testshift.testcube.branches.rendering.Zoom;
+import org.testshift.testcube.misc.Util;
 
 import javax.swing.*;
 import java.awt.*;
 import java.util.List;
+import java.util.Set;
 
 public class ImageContainerPng extends JLabel{
     private RenderResult renderResult;
@@ -88,7 +90,7 @@ public class ImageContainerPng extends JLabel{
 //        }
 //        long start = System.currentTimeMillis();
 //        LinkNavigator navigator = new LinkNavigator(renderRequest, renderResult, project);
-        boolean showUrlLinksBorder = false;
+//        boolean showUrlLinksBorder = false;
         Zoom zoom = renderRequest.getZoom();
 
         image.removeAll();
@@ -97,10 +99,13 @@ public class ImageContainerPng extends JLabel{
 
             Rectangle area = getRectangle(zoom, linkData);
 
-            JLabel button = new MyJLabel(linkData, area, showUrlLinksBorder);
+            MyJLabel button = new MyJLabel(linkData, area/*, showUrlLinksBorder*/);
 
             //When user clicks on item, url is opened in default system browser
-            button.addMouseListener(new MyMouseAdapter(linkData, renderRequest));
+            if(linkData.getText().contains("True") || linkData.getText().contains("False")) {
+                button.setIsbranch(true);
+                button.addMouseListener(new MyMouseAdapter(linkData, renderRequest));
+            }
 
             image.add(button);
         }
@@ -127,11 +132,62 @@ public class ImageContainerPng extends JLabel{
         Component[] components = this.getComponents();
         for (Component component : components) {
             MyJLabel jLabel = (MyJLabel) component;
-            if(jLabel.getLinkData().getText().contains(text)) {
+            if(jLabel.getLinkData().getText().equals(text)) {
                 jLabel.highlight(text);
-                break;
+            }
+            else if(jLabel.isHighlighted()){
+                jLabel.highlight(text);
             }
         }
     }
 
+    public void coverLines(Set<String> lines) {
+        Component[] components = this.getComponents();
+        for (Component component : components) {
+            MyJLabel jLabel = (MyJLabel) component;
+            if(!jLabel.isBranch()) {
+                jLabel.coverLines(lines);
+            }
+        }
+    }
+
+    public void coverBranches(Set<Util.Branch> branches) {
+        Component[] components = this.getComponents();
+        for (Component component : components) {
+            MyJLabel jLabel = (MyJLabel) component;
+            if(jLabel.isBranch()) {
+                jLabel.coverBranches(branches);
+            }
+        }
+    }
+
+    public void coverNewLines(Set<String> lines) {
+        Component[] components = this.getComponents();
+        for (Component component : components) {
+            MyJLabel jLabel = (MyJLabel) component;
+            if(!jLabel.isBranch() && !jLabel.isCovered()) {
+                jLabel.coverNewLines(lines);
+            }
+        }
+    }
+
+    public void coverNewBranches(Set<Util.Branch> branches) {
+        Component[] components = this.getComponents();
+        for (Component component : components) {
+            MyJLabel jLabel = (MyJLabel) component;
+            if(jLabel.isBranch() && !jLabel.isCovered()) {
+                jLabel.coverNewBranches(branches);
+            }
+        }
+    }
+
+    public void removeNewCover() {
+        Component[] components = this.getComponents();
+        for (Component component : components) {
+            MyJLabel jLabel = (MyJLabel) component;
+            if(jLabel.isNewCovered()) {
+                jLabel.unNewCover();
+            }
+        }
+    }
 }

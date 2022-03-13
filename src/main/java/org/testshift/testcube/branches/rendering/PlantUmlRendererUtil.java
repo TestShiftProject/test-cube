@@ -23,7 +23,7 @@ public class PlantUmlRendererUtil {
 
     public static RenderResult render(RenderRequest renderRequest, RenderCacheItem cachedItem) {
         //或许可以不要
-        prepareEnvironment(renderRequest.getSourceFilePath());
+//        prepareEnvironment(renderRequest.getSourceFilePath());
 
         String source = renderRequest.getSource();
 
@@ -37,22 +37,22 @@ public class PlantUmlRendererUtil {
 
 
     // comes from Utils
-    @NotNull
-    public static void prepareEnvironment(String sourceFilePath) {
-//        OptionFlags.getInstance().setVerbose(LOG.isDebugEnabled());
-
-//        long start = System.currentTimeMillis();
-        File baseDir = UIUtils.getParent(new File(sourceFilePath));
-        if (baseDir != null) {
-            setPlantUmlDir(baseDir);
-        } else {
-            resetPlantUmlDir();
-        }
-
-        saveAllDocuments(sourceFilePath);
-    }
+//    @NotNull
+//    public static void prepareEnvironment(String sourceFilePath) {
+////        OptionFlags.getInstance().setVerbose(LOG.isDebugEnabled());
+//
+////        long start = System.currentTimeMillis();
+//        File baseDir = UIUtils.getParent(new File(sourceFilePath));
+//        if (baseDir != null) {
+//            setPlantUmlDir(baseDir);
+//        } else {
+//            resetPlantUmlDir();
+//        }
+//
+//        saveAllDocuments(sourceFilePath);
+//    }
     public static SourceStringReader newSourceStringReader(String source, RenderRequest renderRequest) {
-        File file = renderRequest.getSourceFile();
+//        File file = renderRequest.getSourceFile();
         List<String> configAsList;
         String encoding;
 
@@ -60,11 +60,11 @@ public class PlantUmlRendererUtil {
         configAsList = new ArrayList<>();
 
         Defines defines;
-        if (file != null) {
-            defines = Defines.createWithFileName(file);
-        } else {
+//        if (file != null) {
+//            defines = Defines.createWithFileName(file);
+//        } else {
             defines = Defines.createEmpty();
-        }
+//        }
         SourceStringReader sourceStringReader = new SourceStringReader(defines, source, encoding, configAsList);
         return sourceStringReader;
     }

@@ -49,7 +49,7 @@ public class ImageItem {
     private final Map<CFGPanel, ImageItemComponent> componentMap = new HashMap<>();
     private BufferedImage bufferedImage;
 
-    public ImageItem(@Nullable File baseDir,
+    public ImageItem(//@Nullable File baseDir,
                      @NotNull ImageFormat format,
                      @NotNull String documentSource,
                      @Nullable String pageSource,
@@ -72,7 +72,7 @@ public class ImageItem {
         this.imageBytes = imageBytes;
         this.exception = exception;
 
-        this.links = this.parseLinks(svgBytes, baseDir);
+        this.links = this.parseLinks(svgBytes/*, baseDir*/);
     }
 
     public ImageItem(int page, ImageItem item, @NotNull ImageFormat format) {
@@ -143,7 +143,7 @@ public class ImageItem {
     public String getTitle() {
         return title;
     }
-    private List<LinkData> parseLinks(byte[] svgData, File baseDir) {
+    private List<LinkData> parseLinks(byte[] svgData/*, File baseDir*/) {
         if (svgData == null || svgData.length == 0) {
             return Collections.emptyList();
         }

@@ -43,7 +43,6 @@ public class NoBranchDialog extends JDialog {
     }
 
     private void onOK() {
-        // TODO: runDspot and show the result
         dispose();
     }
 

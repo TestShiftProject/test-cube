@@ -56,7 +56,8 @@ public class PlantUmlNormalRenderer {
             renderResult.addRenderedImage(imageItem);
         } else {
 //            logger.debug("page ", page, "  title only");
-            ImageItem imageItem = new ImageItem(renderRequest.getBaseDir(), renderRequest.getFormat(), documentSource, pageSource, page, RenderResult.TITLE_ONLY, null, null, RenderingType.NORMAL, factory.getTitle(page), factory.getFilename(page), null);
+            ImageItem imageItem = new ImageItem(/*renderRequest.getBaseDir(),*/ renderRequest.getFormat(),
+                    documentSource, pageSource, page, RenderResult.TITLE_ONLY, null, null, RenderingType.NORMAL, factory.getTitle(page), factory.getFilename(page), null);
             renderResult.addUpdatedTitle(imageItem);
         }
     }
