@@ -5,7 +5,7 @@ import org.jetbrains.annotations.NotNull;
 import java.io.File;
 
 public class RenderRequest {
-    private final String sourceFilePath;
+//    private final String sourceFilePath;
     @NotNull
     private final String source;
     @NotNull
@@ -19,7 +19,7 @@ public class RenderRequest {
     protected boolean useSettings = false;
     private boolean disableSvgZoom;
 
-    public RenderRequest(String sourceFilePath,
+    public RenderRequest(//String sourceFilePath,
                          @NotNull String source,
                          @NotNull ImageFormat format,
                          int page,
@@ -28,7 +28,7 @@ public class RenderRequest {
                          Integer version,
                          boolean renderUrlLinks,
                          RenderCommand.Reason reason) {
-        this.sourceFilePath = sourceFilePath;
+//        this.sourceFilePath = sourceFilePath;
         this.source = source;
         this.format = format;
         this.page = page;
@@ -38,13 +38,13 @@ public class RenderRequest {
         this.reason = reason;
     }
 
-    public String getSourceFilePath() {
-        return sourceFilePath;
-    }
+//    public String getSourceFilePath() {
+//        return sourceFilePath;
+//    }
 
-    public File getSourceFile() {
-        return new File(sourceFilePath);
-    }
+//    public File getSourceFile() {
+//        return new File(sourceFilePath);
+//    }
 
     @NotNull
     public String getSource() {
@@ -72,9 +72,9 @@ public class RenderRequest {
         return page;
     }
 
-    public File getBaseDir() {
-        return UIUtils.getParent(new File(sourceFilePath));
-    }
+//    public File getBaseDir() {
+//        return UIUtils.getParent(new File(sourceFilePath));
+//    }
 
     public boolean isRenderUrlLinks() {
         return renderUrlLinks;

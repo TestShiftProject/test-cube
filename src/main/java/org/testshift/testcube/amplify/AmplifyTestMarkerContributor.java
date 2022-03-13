@@ -2,20 +2,24 @@ package org.testshift.testcube.amplify;
 
 import com.intellij.codeInsight.TestFrameworks;
 import com.intellij.execution.lineMarker.RunLineMarkerContributor;
+import com.intellij.openapi.application.ReadAction;
 import com.intellij.openapi.roots.ProjectFileIndex;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiIdentifier;
 import com.intellij.psi.PsiMethod;
+import com.intellij.psi.impl.source.PsiClassImpl;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.testIntegration.TestFramework;
 import com.intellij.util.Function;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.testshift.testcube.icons.TestCubeIcons;
+import com.intellij.testIntegration.TestFinderHelper;
+import com.intellij.testIntegration.LanguageTestCreators;
 
-import java.util.Objects;
+import java.util.*;
 
 public class AmplifyTestMarkerContributor extends RunLineMarkerContributor {
 
@@ -41,14 +45,41 @@ public class AmplifyTestMarkerContributor extends RunLineMarkerContributor {
                  */
                 PsiClass containingClass = PsiTreeUtil.getParentOfType(parent, PsiClass.class);
                 if (!isTestMethod(containingClass, (PsiMethod) parent)) {
-//                    return null;
-                    String targetMethodName = ((PsiMethod)parent).getName();
-                    String targetClassName = Objects.requireNonNull(((PsiMethod) parent).getContainingClass())
-                                                    .getQualifiedName();
+                    PsiClass targetClass = Objects.requireNonNull(((PsiMethod) parent).getContainingClass());
 
-                    return new Info(TestCubeIcons.AMPLIFY_TEST, tooltipProvider,
-                                    new ShowCFGAction("generate test " +
-                                                      "cases for '" + element.getText() +"()'", targetMethodName, targetClassName));
+//                    //the selected class
+//                    PsiElement sourceElement = TestFinderHelper.findSourceElement(element);
+//                    //the test class
+//                    Collection<PsiElement> testClasses = ReadAction.compute(() -> TestFinderHelper.findTestsForClass(sourceElement));
+//                    final List<PsiElement> candidates = Collections.synchronizedList(new ArrayList<>());
+//                    candidates.addAll(testClasses);
+//                    PsiClass testClass = null;
+//                    PsiMethod testMethod = null;
+//                    // test class exist
+//                    if(candidates.size()>0) {
+//                        testClass = (PsiClass) candidates.get(0);
+//                        PsiMethod[] testMethods = testClass.getAllMethods();
+//                        // consider use which method as Start or all
+//                        if(testMethods.length>0) {
+//                            testMethod = testMethods[0];
+//                        }
+//                    }
+
+                    VirtualFile file = parent.getContainingFile().getVirtualFile();
+                    if (file != null) {
+                        VirtualFile moduleRoot = ProjectFileIndex.SERVICE.getInstance(parent.getProject())
+                                                                         .getContentRootForFile(file);
+                        String moduleRootPath;
+                        if (moduleRoot == null) {
+                            moduleRootPath = parent.getProject().getBasePath();
+                        } else {
+                            moduleRootPath = moduleRoot.getPath();
+                        }
+                        return new Info(TestCubeIcons.AMPLIFY_TEST, tooltipProvider,
+                                        new ShowCFGAction("generate test " +
+                                                          "cases for '" + element.getText() +"()'", targetClass,
+                                                          (PsiMethod)parent, moduleRootPath));
+                    }
                 }
                 // test method
                 String testMethodName = ((PsiMethod) parent).getName();
