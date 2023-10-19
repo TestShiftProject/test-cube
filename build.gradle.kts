@@ -8,7 +8,7 @@ plugins {
     // Kotlin support
     id("org.jetbrains.kotlin.jvm") version "1.5.30"
     // Gradle IntelliJ Plugin
-    id("org.jetbrains.intellij") version "1.10.0"
+    id("org.jetbrains.intellij") version "1.12.0"
     // Gradle Changelog Plugin
     id("org.jetbrains.changelog") version "1.3.0"
     // Gradle Qodana Plugin
@@ -71,7 +71,7 @@ tasks {
     }
 
     patchPluginXml {
-        changeNotes.set("Compatible with IntelliJ 2021.2<br>Gradle support is very bare bones now and might not work for you!<br>If you have a gradle project and want to try out TestCube, please open an issue on GitHub so I can fix it for your projects setup :)")
+        changeNotes.set("Support for IntelliJ 2023.1 and 2023.2")
     }
 
 //    patchPluginXml {
