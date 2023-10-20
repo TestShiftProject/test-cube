@@ -42,7 +42,7 @@ public class InspectTestCubeResultsAction extends NotificationAction {
 
         ToolWindow toolWindow = ToolWindowManager.getInstance(amplificationResult.project).getToolWindow("Test Cube");
         if (toolWindow != null) {
-            ContentFactory contentFactory = ContentFactory.SERVICE.getInstance();
+            ContentFactory contentFactory = ContentFactory.getInstance();
             Content content = contentFactory.createContent(amplificationResultWindow.getContent(),
                                                            amplificationResultWindow.getDisplayName(), false);
             content.setCloseable(true);

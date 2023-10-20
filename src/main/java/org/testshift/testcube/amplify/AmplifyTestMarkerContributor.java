@@ -52,8 +52,8 @@ public class AmplifyTestMarkerContributor extends RunLineMarkerContributor {
 //                }
                 VirtualFile file = parent.getContainingFile().getVirtualFile();
                 if (file != null) {
-                    VirtualFile moduleRoot = ProjectFileIndex.SERVICE.getInstance(parent.getProject())
-                                                                     .getContentRootForFile(file);
+                    VirtualFile moduleRoot = ProjectFileIndex.getInstance(parent.getProject())
+                                                             .getContentRootForFile(file);
                     String moduleRootPath;
                     if (moduleRoot == null) {
                         moduleRootPath = parent.getProject().getBasePath();
