@@ -16,7 +16,7 @@ public class AppSettingsConfigurable implements Configurable {
     // A default constructor with no arguments is required because this implementation
     // is registered as an applicationConfigurable EP
 
-    @Nls(capitalization = Nls.Capitalization.Title)
+//    @Nls(capitalization = Nls.Capitalization.Title)
     @Override
     public String getDisplayName() {
         return "Test Cube Settings";

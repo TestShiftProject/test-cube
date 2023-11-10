@@ -48,7 +48,7 @@ public class StartTestCubeAction extends AnAction {
     public StartTestCubeAction() {
     }
 
-    public StartTestCubeAction(@Nullable @Nls(capitalization = Nls.Capitalization.Title) String text,
+    public StartTestCubeAction(@Nullable /*@Nls(capitalization = Nls.Capitalization.Title)*/ String text,
                                @NotNull String testClass, @Nullable("null means whole class") String testMethod,
                                String moduleRootPath) {
         super(text, "Improves the selected test case by applying amplification operators", TestCubeIcons.AMPLIFY_TEST);

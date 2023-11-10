@@ -26,8 +26,7 @@ public class TestCaseEditorField extends LanguageTextField {
 
         EditorSettings settings = editor.getSettings();
         settings.setLineNumbersShown(true);
-        settings.setAdditionalPageAtBottom(true);
-
+        settings.setAdditionalPageAtBottom(false);
         return editor;
     }
 }

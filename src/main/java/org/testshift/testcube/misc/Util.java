@@ -5,12 +5,18 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectUtil;
 import com.intellij.psi.PsiMethod;
 import com.intellij.psi.util.ClassUtil;
+import eu.stamp_project.dspot.common.report.output.selector.branchcoverage.json.TestClassBranchCoverageJSON;
 import eu.stamp_project.dspot.common.report.output.selector.extendedcoverage.json.TestClassJSON;
+import eu.stamp_project.dspot.selector.branchcoverageselector.BranchCoverage;
+import eu.stamp_project.dspot.selector.branchcoverageselector.LineCoverage;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 import java.util.regex.Matcher;
 
 public class Util {
@@ -47,6 +53,58 @@ public class Util {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public static TestClassBranchCoverageJSON getBranchCoverageJSON(Project project, String testClass) {
+        Gson gson = new Gson();
+        try {
+            return gson.fromJson(new FileReader(
+                                         project.getBasePath() + Config.OUTPUT_PATH_DSPOT + File.separator + testClass + "_report.json"),
+                                 TestClassBranchCoverageJSON.class);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public static Set<String> getInitialCoveredLine(TestClassBranchCoverageJSON result){
+        Set<String> coveredLines = new HashSet<>();
+        List<LineCoverage> lineCoverages = result.getInitialLineCoverage();
+        for(LineCoverage lineCoverage: lineCoverages){
+            coveredLines.add(lineCoverage.getLine()+"");
+        }
+        return coveredLines;
+    }
+
+    public static class Branch {
+        private String line;
+        private String symbol;
+        public Branch(String line, String symbol){
+            this.line = line;
+            this.symbol = symbol;
+        }
+
+        public String getLine() {
+            return line;
+        }
+
+        public String getSymbol() {
+            return symbol;
+        }
+    }
+
+    public static Set<Branch> getInitialCoveredBranch(TestClassBranchCoverageJSON result){
+        Set<Branch> coveredBranches = new HashSet<>();
+        List<BranchCoverage> branchCoverages = result.getInitialBranchCoverage();
+        for(BranchCoverage branchCoverage: branchCoverages){
+            if(branchCoverage.getTrueHitCount()>0){
+                coveredBranches.add(new Branch(branchCoverage.getRegion().getStartLine() + "", "True"));
+            }
+            if(branchCoverage.getFalseHitCount()>0){
+                coveredBranches.add(new Branch(branchCoverage.getRegion().getStartLine() + "", "False"));
+            }
+        }
+        return coveredBranches;
     }
 
     public static boolean matchMethodNameAndDescriptor(PsiMethod psiMethod, String name, String descriptor) {

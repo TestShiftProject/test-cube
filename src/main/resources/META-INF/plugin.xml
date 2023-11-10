@@ -33,8 +33,8 @@
         <!--        <action id="org.testshift.testcube.amplify.StartTestCubeAction" class="org.testshift.testcube.amplify.StartTestCubeAction" text="Start Test Cube" description="SDK action example">-->
         <!--            <add-to-group group-id="ToolsMenu" anchor="first"/>-->
         <!--        </action>-->
-        <!--        <action id="org.testshift.testcube.InspectTestCubeResultsAction" class="org.testshift.testcube.InspectTestCubeResultsAction" text="Inspect Test Cube Results" description="SDK action example">-->
-        <!--            <add-to-group group-id="ToolsMenu" anchor="first"/>-->
-        <!--        </action>-->
+<!--                <action id="org.testshift.testcube.InspectTestCubeResultsAction" class="org.testshift.testcube.InspectTestCubeResultsAction" text="Inspect Test Cube Results" description="SDK action example">-->
+<!--                    <add-to-group group-id="ToolsMenu" anchor="first"/>-->
+<!--                </action>-->
     </actions>
 </idea-plugin>
