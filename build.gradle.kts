@@ -71,7 +71,7 @@ tasks {
     }
 
     patchPluginXml {
-        changeNotes.set("Support for IntelliJ 2023.1 and 2023.2")
+        changeNotes.set("Support for IntelliJ 2023.3")
     }
 
 //    patchPluginXml {
