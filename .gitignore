@@ -9,3 +9,4 @@ build.properties
 .gradle
 .DS_Store
 bin/
+.intellijPlatform
